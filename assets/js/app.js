@@ -347,6 +347,10 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         loading: false,
         productGroups: null,
         records: [],
+        pg_code: $stateParams.pg_code,
+        productgroup: $stateParams.productgroup,
+        subgroup: $stateParams.subgroup
+
     }
     $scope.d = data;
 
@@ -358,6 +362,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     loadProductGroups();
 
     var load = (param) => {
+        debugger;
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
 
@@ -377,13 +382,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
     loadBestSelling('hr', $stateParams.pg_code, 3);
-
-
-
-    //$scope.get = (x) => {
-    //    debugger;
-    //    $state.go('product', { title_seo: x.title_seo, id: x.id });
-    //}
 
 }])
 
@@ -466,6 +464,24 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.mainImgIdx = idx;
     }
 
+    $scope.sticker = (x) => {
+        var a = {
+            style: null,
+            title: null
+        }
+        if (x.outlet) {
+            a.style = 'type-2';
+            a.title = 'akcija';
+        } else if (x.isnew) {
+            a.style = 'type-1';
+            a.title = 'novo';
+        } else {
+            a.style = null;
+            a.title = null;
+        }
+        return a;
+    }
+
 
     //$scope.addToCart = (x) => {
     //    debugger;
@@ -481,7 +497,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 .controller('cartCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', '$localStorage', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams, $localStorage) {
 
     var data = {
-        cart: []
+        cart: [],
+        bestsellingall: null
     }
     $scope.d = data;
 
@@ -529,6 +546,15 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
+    var loadBestSellingAll = (lang, pg, limit) => {
+        $scope.d.loading = true;
+        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+            $scope.d.bestsellingall = d;
+            $scope.d.loading = false;
+        });
+    }
+    loadBestSellingAll('hr', null, 4);
+
 }])
 
 .controller('checkoutCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', '$localStorage', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams, $localStorage) {
@@ -563,8 +589,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             }
         });
     }
-
-
 
 }])
 
@@ -653,7 +677,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 
     var loadPosts = (lang) => {
-        debugger;
         $scope.d.loading = true;
         f.post(service, 'Load', { lang: lang, order: true, productGroupId: $rootScope.config.postsId }).then((d) => {
             $scope.d.records = d;
@@ -724,17 +747,34 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 })
 .controller('bestsellingCtrl', ['$scope', 'f', '$rootScope', '$state', ($scope, f, $rootScope, $state) => {
     $scope.get = (x) => {
-        debugger;
         $state.go('product', { title_seo: x.title_seo, id: x.id });
     }
 
     $scope.addToCart = (x) => {
-        debugger;
         f.post('Cart', 'AddToCart', { cart: $rootScope.d.cart, x: x }).then((d) => {
             $rootScope.d.cart = d;
             localStorage.cart = JSON.stringify(d);
         });
     }
+
+    $scope.sticker = (x) => {
+        var a = {
+            style: null,
+            title: null
+        }
+        if (x.outlet) {
+            a.style = 'type-2';
+            a.title = 'akcija';
+        } else if (x.isnew) {
+            a.style = 'type-1';
+            a.title = 'novo';
+        } else {
+            a.style = null;
+            a.title = null;
+        }
+        return a;
+    }
+
 }])
 
 

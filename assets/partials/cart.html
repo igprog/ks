@@ -74,7 +74,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <button class="btn btn-default" type="submit">Continue shopping <i class="fa fa-shopping-cart"></i></button>
+                        <button class="btn btn-default" type="submit" ng-click="go('shop')">Nastavi kupovinu <i class="fa fa-shopping-cart"></i></button>
                         <button class="btn btn-danger" type="submit" ng-click="clearCart()">Briši sve <i class="fa fa-trash-o"></i></button>
                         <button class="btn btn-primary" type="submit" ng-click="go('checkout')">Checkout <i class="fa fa-check"></i></button>
                     </div>
@@ -83,9 +83,12 @@
             </div>
             <!-- END SIDEBAR & CONTENT -->
             <!-- BEGIN SIMILAR PRODUCTS -->
-            <div class="row margin-bottom-40">
+            <div ng-if="d.bestsellingall" class="row margin-bottom-40">
                 <div class="col-md-12 col-sm-12">
-                    <h2>Most popular products</h2>
+                    <h2>Najpopularniji proizvodi</h2>
+                    <bestselling-directive data="d.bestsellingall"></bestselling-directive>
+
+                    <!--<h2>Most popular products</h2>
                     <div class="owl-carousel owl-carousel4">
                         <div>
                             <div class="product-item">
@@ -173,7 +176,7 @@
                                 <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <!-- END SIMILAR PRODUCTS -->

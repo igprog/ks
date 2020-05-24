@@ -253,7 +253,7 @@ public class Products : System.Web.Services.WebService {
         DB.CreateDataBase(G.db.products);
         string sql = string.Format(@"{0} {1} {2} {3}"
                     , mainSql
-                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("WHERE p.productGroup = '{0}'", productGroup)
+                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("WHERE p.productGroup = '{0}' OR pg.parent = '{0}'", productGroup)
                     , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("WHERE p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
                     , order == true ? "ORDER BY p.productorder" : "");
 
@@ -331,7 +331,7 @@ public class Products : System.Web.Services.WebService {
         x.price.net_discount = x.price.net - (x.price.net * x.discount);
         x.price.gross = x.price.net_discount + (x.price.net_discount * 0.25);
         x.price.gross_discount = x.price.gross - (x.price.gross * x.discount);
-        if (loadAllData) {
+        //if (loadAllData) {
             x.stock = G.ReadI(reader, 10);
             x.isnew = G.ReadB(reader, 11);
             x.outlet = G.ReadB(reader, 12);
@@ -340,7 +340,7 @@ public class Products : System.Web.Services.WebService {
             x.features = F.GetProductFeatures(features, G.ReadS(reader, 15));
             x.productorder = G.ReadI(reader, 16);
             x.gallery = GetGallery(x.id);
-        }
+        //}
         x.qty = 1;
         return x;
     }

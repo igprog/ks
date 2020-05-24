@@ -13,7 +13,10 @@
                     <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
                     <div class="pi-price">{{x.price.net_discount | number}} kn</div>
                     <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
-                    <div class="sticker sticker-sale"></div>
+                    <!--<div class="sticker sticker-sale"></div>-->
+                    <div class="product-image-label {{sticker(x).style}}">
+                        <span>{{sticker(x).title}}</span>
+                    </div>
                 </div>
             </div>
         </div>

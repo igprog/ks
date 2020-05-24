@@ -24,6 +24,7 @@
                             </ul>
                         </li>
                     </ul>-->
+
                     <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix">
                         <h2>Najprodavanije</h2>
                         <div class="item" ng-repeat="x in d.bestselling">
@@ -41,9 +42,12 @@
                             <div class="col-md-6 col-sm-6">
                                 <div class="product-main-image">
                                     <img src="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}" alt="{{x}}" class="img-responsive" data-BigImgsrc="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}">
+                                    <div class="product-image-label {{sticker(d.record).style}}">
+                                        <span>{{sticker(d.record).title}}</span>
+                                    </div>
                                 </div>
                                 <div class="product-other-images">
-                                    <a ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
+                                    <a href="" ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
@@ -207,7 +211,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="sticker sticker-sale"></div>
+                            <!--<div class="sticker sticker-sale"></div>-->
                         </div>
                     </div>
                 </div>
@@ -215,7 +219,7 @@
             </div>
             <!-- END SIDEBAR & CONTENT -->
             <!-- BEGIN SIMILAR PRODUCTS -->
-            <div class="row margin-bottom-40">
+            <div ng-if="d.bestsellingall" class="row margin-bottom-40">
                 <div class="col-md-12 col-sm-12">
                     <h2>Najpopularniji proizvodi</h2>
                     <bestselling-directive data="d.bestsellingall"></bestselling-directive>

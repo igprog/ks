@@ -275,6 +275,12 @@ header {
     width:60px;
 }
 
+.product-image-label{border-radius: 50% !important; -webkit-border-radius: 50%; position: absolute; z-index: 1;}
+.product-image-label span{position: absolute; width: 100%; left: 0; top: 50%; transform: translateY(-50%); -moz-transform: translateY(-50%); -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%); font-size: 11px; line-height: 12px; color: #fff; font-weight: 700; text-transform: uppercase; text-align: center;}
+.product-image-label.type-1{left: 7px; top: 7px; width: 40px; height: 40px; background: #44c464; margin-left: 10px;}
+.product-image-label.type-2{right: 7px; top: 7px; width: 40px; height: 40px; background: #d41b1b; margin-right: 10px;}
+.product-image-label.type-3{left: 50%; top: 50%; margin: -32px 0 0 -32px; width: 65px; height: 65px; background: rgba(64,64,64,0.95);}
+
 
 /********** Sidebar **********/
 #body-row {

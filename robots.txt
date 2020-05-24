@@ -1,5 +1,5 @@
 User-agent: *
 Disallow: /admin.html
 
-SITEMAP: https://www.dizajn911.com/sitemap.xml
+SITEMAP: https://www.kaminstudio.hr/sitemap.xml
 
