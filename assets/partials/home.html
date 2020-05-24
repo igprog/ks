@@ -1,0 +1,235 @@
+﻿<div>
+    <!-- BEGIN SLIDER -->
+    <div class="page-slider margin-bottom-35">
+        <div id="carousel-example-generic" class="carousel slide carousel-slider">
+
+            <!--<ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+            </ol>-->
+
+            <div class="carousel-inner" role="listbox">
+
+                <div class="item carousel-item-four active">
+                    <div class="container">
+                        <div class="carousel-position-four text-center">
+                            <h2 class="margin-bottom-20 animate-delay carousel-title-v3 border-bottom-title text-uppercase" data-animation="animated fadeInDown">
+                                KAMIN STUDION <br /><span class="color-red-v2">MJESTO PRAVOG IZBORA</span><br />
+                            </h2>
+                            <p class="carousel-subtitle-v2 text-dark" data-animation="animated fadeInUp">
+                                Vodeći proizvođači grijaćih tijela na jednom mjestu
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="item carousel-item-five">
+                    <div class="container">
+                        <div class="carousel-position-four text-center">
+                            <h2 class="animate-delay carousel-title-v4" data-animation="animated fadeInDown">
+                                Unlimted
+                            </h2>
+                            <p class="carousel-subtitle-v2" data-animation="animated fadeInDown">
+                                Layout Options
+                            </p>
+                            <p class="carousel-subtitle-v3 margin-bottom-30" data-animation="animated fadeInUp">
+                                Fully Responsive
+                            </p>
+                            <a class="carousel-btn" href="#" data-animation="animated fadeInUp">See More Details</a>
+                        </div>
+                        <img class="carousel-position-five animate-delay hidden-sm hidden-xs" src="assets/pages/img/shop-slider/slide2/price.png" alt="Price" data-animation="animated zoomIn">
+                    </div>
+                </div>
+
+                <div class="item carousel-item-six">
+                    <div class="container">
+                        <div class="carousel-position-four text-center">
+                            <span class="carousel-subtitle-v3 margin-bottom-15" data-animation="animated fadeInDown">
+                                Full Admin &amp; Frontend
+                            </span>
+                            <p class="carousel-subtitle-v4" data-animation="animated fadeInDown">
+                                eCommerce UI
+                            </p>
+                            <p class="carousel-subtitle-v3" data-animation="animated fadeInDown">
+                                Is Ready For Your Project
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item carousel-item-seven">
+                    <div class="center-block">
+                        <div class="center-block-wrap">
+                            <div class="center-block-body">
+                                <h2 class="carousel-title-v1 margin-bottom-20" data-animation="animated fadeInDown">
+                                    The most <br />
+                                    wanted bijouterie
+                                </h2>
+                                <a class="carousel-btn" href="#" data-animation="animated fadeInUp">But It Now!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+
+            <!--<a class="left carousel-control carousel-control-shop" href="#carousel-example-generic" role="button" data-slide="prev">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </a>
+            <a class="right carousel-control carousel-control-shop" href="#carousel-example-generic" role="button" data-slide="next">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </a>-->
+        </div>
+    </div>
+    <!-- END SLIDER -->
+    <!--<div class="banner">
+        <div class="container-fluid">
+            <div class="text-center" style="padding-top:20vh" ng-click="go('shop')">
+                <h1><span>KAMIN STUDION</span></h1>
+                <h2>MJESTO PRAVOG <span>IZBORA</span></h2>
+            </div>
+        </div>
+    </div>-->
+
+    <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+
+
+    <div class="container-fluid text-center pt-3" onclick="closeNav()">
+
+        <div class="container p-3">
+            <p>Godine iskustva poučile su nas da se kvaliteta uvijek isplati. Kamin Studio s ponosom promovira ekološki prihvatljiva rješenja. Na našim stranicama pronaći ćete široki izbor kamina i peći na drva, električnih kamina, kamina na bioetanol, norveških radijatora te plinskih kamina kao i našu stručnu pomoć pri svakom koraku.</p>
+        </div>
+        <!-- BEGIN SALE PRODUCT & NEW ARRIVALS -->
+        <div ng-if="d.bestselling.length>0" class="bg-light pt-5">
+            <div class="container">
+                <div class="row margin-bottom-40">
+                    <!-- BEGIN SALE PRODUCT -->
+                    <div class="col-md-12 sale-product">
+                        <h2>Najprodavanije</h2>
+                        <div class="owl-carousel owl-carousel5 owl-theme owl-loaded">
+                            <div class="row">
+                                <div class="col-sm-3" ng-repeat="x in d.bestselling">
+                                    <div>
+                                        <div class="product-item">
+                                            <div class="pi-img-wrapper">
+                                                <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
+                                                <div>
+                                                    <a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">Zoom</a>
+                                                    <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                                </div>
+                                            </div>
+                                            <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
+                                            <div class="pi-price">{{x.price.net_discount | number}} kn</div>
+                                            <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
+                                            <div class="sticker sticker-sale"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div class="col-sm-3">
+                                    <div>
+                                        <div class="product-item">
+                                            <div class="pi-img-wrapper">
+                                                <img src="assets/pages/img/products/model1.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                                <div>
+                                                    <a href="assets/pages/img/products/model1.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                                    <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                                </div>
+                                            </div>
+                                            <h3><a href="shop-item.html">Berry Lace Dress</a></h3>
+                                            <div class="pi-price">$29.00</div>
+                                            <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                            <div class="sticker sticker-sale"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div>
+                                        <div class="product-item">
+                                            <div class="pi-img-wrapper">
+                                                <img src="assets/pages/img/products/model1.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                                <div>
+                                                    <a href="assets/pages/img/products/model1.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                                    <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                                </div>
+                                            </div>
+                                            <h3><a href="shop-item.html">Berry Lace Dress</a></h3>
+                                            <div class="pi-price">$29.00</div>
+                                            <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                            <div class="sticker sticker-sale"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div>
+                                        <div class="product-item">
+                                            <div class="pi-img-wrapper">
+                                                <img src="assets/pages/img/products/model1.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                                <div>
+                                                    <a href="assets/pages/img/products/model1.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                                    <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                                </div>
+                                            </div>
+                                            <h3><a href="shop-item.html">Berry Lace Dress</a></h3>
+                                            <div class="pi-price">$29.00</div>
+                                            <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                            <div class="sticker sticker-sale"></div>
+                                        </div>
+                                    </div>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END SALE PRODUCT -->
+                </div>
+            </div>
+        </div>
+        <!-- END SALE PRODUCT & NEW ARRIVALS -->
+
+
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-md-4 col-lg-4">
+                    <div class="banner-wrapper mb-30">
+                        <a href="" ng-click="go('shop', 'najnoviji-proizvodi')"><img src="assets/img/banner/jotul-peci-i-kamini.jpg" alt="image"></a>
+                        <div class="banner-content">
+                            <h2>NAJNOVIJI PROIZVODI</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="banner-wrapper mb-30">
+                        <a href=""><img src="assets/img/banner/scan-noviteti.jpg" alt="image"></a>
+                        <div class="banner-content">
+                            <h2>NOVITETI</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="banner-wrapper mb-30">
+                        <a href=""><img src="assets/img/banner/atra-otvoreni-kamini.jpg" alt="image"></a>
+                        <div class="banner-content">
+                            <h2>KAMINI BEZ DIMNJAKA</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-area pb-190 p-5">
+            <div class="container text-center">
+                <div class="question-area">
+                    <h4>IMATE PITANJA? </h4>
+                    <p>Nazovite nas na broj 091 2828 911 ili pošaljite poruku i dogovorite besplatno savjetovanje našeg stručnjaka u Vašem domu!</p>
+                    <div class="question-contact">
+                        <div class="question-icon">
+                            <i class="icofont icofont-phone"></i>
+                        </div>
+                        <div class="question-content-number">
+                            <h6> 091/2828 911; 091/1599 181</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

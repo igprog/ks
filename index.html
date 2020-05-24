@@ -1,0 +1,521 @@
+﻿<!DOCTYPE html>
+<html ng-app="app" ng-controller="appCtrl" lang="hr">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-156515575-1"></script>
+    <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-156515575-1');
+    </script>-->
+    <title>Kamin Studio</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Kamin Studio...">
+    <meta name="author" content="IG PROG, vl. Igor Gašparović">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kamin Studio" />
+    <meta property="og:description" content="Kamin Studio..." />
+    <meta property="og:url" content="https://www.kaminstudio.hr" />
+    <meta property="og:image" content="https://www.kaminstudio.hr/assets/img//logo/logo.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="200">
+    <meta property="og:image:height" content="200">
+    <link href="../assets/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../assets/css/vendor/angular-material.min.css">-->
+    <link href="../assets/css/style.css" rel="stylesheet">
+
+    <!-- Fonts START -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css"><!--- fonts for slider on the index page -->
+    <!-- Fonts END -->
+    <!-- Global styles START -->
+    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Global styles END -->
+    <!-- Page level plugin styles START -->
+    <link href="assets/pages/css/animate.css" rel="stylesheet">
+    <link href="assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
+    <link href="../assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+    <!-- Page level plugin styles END -->
+    <!-- Theme styles START -->
+    <link href="assets/pages/css/components.css" rel="stylesheet">
+    <link href="assets/pages/css/slider.css" rel="stylesheet">
+    <link href="assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
+    <link href="assets/corporate/css/style.css" rel="stylesheet">
+    <link href="assets/corporate/css/style-responsive.css" rel="stylesheet">
+    <link href="assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
+    <link href="assets/corporate/css/custom.css" rel="stylesheet">
+    <!-- Theme styles END -->
+    
+    <script src="../assets/js/vendor/angular.min.js"></script>
+    <script src="../assets/js/vendor/angular-animate.min.js"></script>
+    <script src="../assets/js/vendor/angular-aria.min.js"></script>
+    <script src="../assets/js/vendor/angular-material.min.js"></script>
+    <script src="../assets/js/vendor/ngStorage.min.js"></script>
+    <script src="../assets/js/vendor/angular-ui-router.min.js"></script>
+    <script src="../assets/js/vendor/angular-translate.min.js"></script>
+    <script src="../assets/js/vendor/angular-translate-loader-partial.min.js"></script>
+    <script src="../assets/js/vendor/lazysizes.min.js" async></script>
+
+    <link href="https://rawgit.com/rzajac/angularjs-slider/master/dist/rzslider.min.css" rel="stylesheet">
+    <script src="https://rawgit.com/rzajac/angularjs-slider/master/dist/rzslider.js"></script>
+    <!--<link href="https://fonts.googleapis.com/css?family=Montserrat:300&display=swap" rel="stylesheet">-->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
+
+    <style>
+        /*body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+        }*/
+        /* Make the image fully responsive */
+        /*.carousel-inner img {
+            width: 100%;
+            height: 100%;
+        }*/
+    </style>
+</head>
+<!-- Body BEGIN -->
+<body class="ecommerce">
+    <!-- BEGIN TOP BAR -->
+    <div class="pre-header">
+        <div class="container">
+            <div class="row">
+                <!-- BEGIN TOP BAR LEFT PART -->
+                <div class="col-md-6 col-sm-6 additional-shop-info">
+                    <ul class="list-unstyled list-inline">
+                        <li><i class="fa fa-phone"></i><span>+1 456 6717</span></li>
+                        <!-- BEGIN CURRENCIES -->
+                        <!--<li class="shop-currencies">
+                            <a href="javascript:void(0);">€</a>
+                            <a href="javascript:void(0);">£</a>
+                            <a href="javascript:void(0);" class="current">$</a>
+                        </li>-->
+                        <!-- END CURRENCIES -->
+                        <!-- BEGIN LANGS -->
+                        <!--<li class="langs-block">
+                            <a href="javascript:void(0);" class="current">English </a>
+                            <div class="langs-block-others-wrapper">
+                                <div class="langs-block-others">
+                                    <a href="javascript:void(0);">French</a>
+                                    <a href="javascript:void(0);">Germany</a>
+                                    <a href="javascript:void(0);">Turkish</a>
+                                </div>
+                            </div>
+                        </li>-->
+                        <!-- END LANGS -->
+                    </ul>
+                </div>
+                <!-- END TOP BAR LEFT PART -->
+                <!-- BEGIN TOP BAR MENU -->
+                <div class="col-md-6 col-sm-6 additional-nav">
+                    <ul class="list-unstyled list-inline pull-right">
+                        <li><a href="shop-account.html">My Account</a></li>
+                        <li><a href="shop-wishlist.html">My Wishlist</a></li>
+                        <li><a href="shop-checkout.html">Checkout</a></li>
+                        <li><a href="page-login.html">Log In</a></li>
+                    </ul>
+                </div>
+                <!-- END TOP BAR MENU -->
+            </div>
+        </div>
+    </div>
+    <!-- END TOP BAR -->
+    <!-- BEGIN HEADER -->
+    <div class="header">
+        <div class="container">
+            <a class="site-logo" href="index.html"><img src="assets/img/logo/logo.png" alt="Metronic Shop UI"></a>
+            <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>
+            <!-- BEGIN CART -->
+            <div class="top-cart-block">
+                <div class="top-cart-info">
+                    <a href="javascript:void(0);" class="top-cart-info-count">{{d.cart.items.length}} items</a>
+                    <a href="javascript:void(0);" class="top-cart-info-value">{{d.cart.cartPrice.sub_tot | number}} kn</a>
+                </div>
+                <i class="fa fa-shopping-cart"></i>
+
+                <div class="top-cart-content-wrapper">
+                    <div class="top-cart-content">
+                        <ul class="scroller" style="height: 250px;">
+                            <li ng-repeat="x in d.cart.items track by $index">
+                                <a href=""><img src="../upload/{{x.product.id}}/gallery/{{x.product.img}}" alt="Rolex Classic Watch" width="37" height="34"></a>
+                                <span class="cart-content-count">x {{x.product.qty}}</span>
+                                <strong><a href="shop-item.html">{{x.product.title}}</a></strong>
+                                <em>{{x.price_net_tot | number}} kn</em>
+                                <a href="" class="del-goods" ng-click="removeCartItem(x, $index)">&nbsp;</a>
+                            </li>
+                        </ul>
+                        <div class="text-right">
+                            <a href="" class="btn btn-default" ng-click="go('cart')">View Cart</a>
+                            <a href="" class="btn btn-primary" ng-click="go('checkout')">Checkout</a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <!--END CART -->
+            <!-- BEGIN NAVIGATION -->
+            <div class="header-navigation">
+                <ul>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
+                            Proizvođači
+                        </a>
+                        <!-- BEGIN DROPDOWN MENU -->
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="x in d.brands track by $index"><a href="" ng-click="brand(x.code, x.title_seo)">{{x.title}}</a></li>
+                        </ul>
+                        <!-- END DROPDOWN MENU -->
+                    </li>
+                    <li class="dropdown dropdown-megamenu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
+                            Proizvodi
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="header-navigation-content">
+                                    <div class="row">
+                                        <div class="col-md-4 header-navigation-col" ng-repeat="x in d.productGroups track by $index">
+                                            <h4 ng-click="shop(x.code, x.title_seo, null)">{{x.title}}</h4>
+                                            <ul ng-if="x.subGroups.length>0">
+                                                <li ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="shop(x.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--<li><a href="shop-item.html">Kids</a></li>-->
+                    <li class="dropdown dropdown100 nav-catalogue">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
+                            Akcije
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="header-navigation-content">
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="x in d.outlet">
+                                            <div class="product-item">
+                                                <div class="pi-img-wrapper">
+                                                    <a href="shop-item.html"><img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}"></a>
+                                                </div>
+                                                <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
+                                                <div class="pi-price">{{x.price.net_discount | number}} kn</div>
+                                                <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--<li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
+                            Pages
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a href="shop-index.html">Home Default</a></li>
+                            <li><a href="shop-index-header-fix.html">Home Header Fixed</a></li>
+                            <li><a href="shop-index-light-footer.html">Home Light Footer</a></li>
+                            <li><a href="shop-product-list.html">Product List</a></li>
+                            <li><a href="shop-search-result.html">Search Result</a></li>
+                            <li><a href="shop-item.html">Product Page</a></li>
+                            <li><a href="shop-shopping-cart-null.html">Shopping Cart (Null Cart)</a></li>
+                            <li><a href="shop-shopping-cart.html">Shopping Cart</a></li>
+                            <li><a href="shop-checkout.html">Checkout</a></li>
+                            <li><a href="shop-about.html">About</a></li>
+                            <li><a href="shop-contacts.html">Contacts</a></li>
+                            <li><a href="shop-account.html">My account</a></li>
+                            <li><a href="shop-wishlist.html">My Wish List</a></li>
+                            <li><a href="shop-goods-compare.html">Product Comparison</a></li>
+                            <li><a href="shop-standart-forms.html">Standart Forms</a></li>
+                            <li><a href="shop-faq.html">FAQ</a></li>
+                            <li><a href="shop-privacy-policy.html">Privacy Policy</a></li>
+                            <li><a href="shop-terms-conditions-page.html">Terms &amp; Conditions</a></li>
+                        </ul>
+                    </li>-->
+                    <!-- BEGIN TOP SEARCH -->
+                    <li class="menu-search">
+                        <span class="sep"></span>
+                        <i class="fa fa-search search-btn"></i>
+                        <div class="search-box">
+                            <form action="#">
+                                <div class="input-group">
+                                    <input type="text" placeholder="Search" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit">Search</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    <!-- END TOP SEARCH -->
+                </ul>
+            </div>
+            <!-- END NAVIGATION -->
+        </div>
+    </div>
+    <!-- Header END -->
+
+    <ui-view autoscroll="true"></ui-view>
+
+    <!-- BEGIN BRANDS -->
+    <div class="brands">
+        <div class="container">
+            <div class="owl-carousel owl-carousel6-brands">
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/canon.jpg" alt="canon" title="canon"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/esprit.jpg" alt="esprit" title="esprit"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/gap.jpg" alt="gap" title="gap"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/next.jpg" alt="next" title="next"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/puma.jpg" alt="puma" title="puma"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/zara.jpg" alt="zara" title="zara"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/canon.jpg" alt="canon" title="canon"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/esprit.jpg" alt="esprit" title="esprit"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/gap.jpg" alt="gap" title="gap"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/next.jpg" alt="next" title="next"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/puma.jpg" alt="puma" title="puma"></a>
+                <a href="shop-product-list.html"><img src="assets/pages/img/brands/zara.jpg" alt="zara" title="zara"></a>
+            </div>
+        </div>
+    </div>
+    <!-- END BRANDS -->
+
+    <!-- BEGIN STEPS -->
+    <div class="steps-block steps-block-red">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 steps-block-col">
+                    <i class="fa fa-truck"></i>
+                    <div>
+                        <h2>Free shipping</h2>
+                        <em>Express delivery withing 3 days</em>
+                    </div>
+                    <span>&nbsp;</span>
+                </div>
+                <div class="col-md-4 steps-block-col">
+                    <i class="fa fa-gift"></i>
+                    <div>
+                        <h2>Daily Gifts</h2>
+                        <em>3 Gifts daily for lucky customers</em>
+                    </div>
+                    <span>&nbsp;</span>
+                </div>
+                <div class="col-md-4 steps-block-col">
+                    <i class="fa fa-phone"></i>
+                    <div>
+                        <h2>477 505 8877</h2>
+                        <em>24/7 customer care available</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END STEPS -->
+
+    <!-- BEGIN PRE-FOOTER -->
+    <div class="pre-footer">
+        <div class="container">
+            <div class="row">
+                <!-- BEGIN BOTTOM ABOUT BLOCK -->
+                <div class="col-md-3 col-sm-6 pre-footer-col">
+                    <h2>O nama</h2>
+                    <p>{{info.about}}</p>
+                </div>
+                <!-- END BOTTOM ABOUT BLOCK -->
+                <!-- BEGIN BOTTOM INFO BLOCK -->
+                <div class="col-md-3 col-sm-6 pre-footer-col">
+                    <h2>Informacije</h2>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Delivery Information</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Customer Service</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Order Tracking</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Shipping &amp; Returns</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="contacts.html">Contact Us</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Careers</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Payment Methods</a></li>
+                    </ul>
+                </div>
+                <!-- END INFO BLOCK -->
+                <!-- BEGIN TWITTER BLOCK -->
+                <div class="col-md-3 col-sm-6 pre-footer-col">
+                    <h2 class="margin-bottom-0">Latest Tweets</h2>
+                    <a class="twitter-timeline" href="https://twitter.com/twitterapi" data-tweet-limit="2" data-theme="dark" data-link-color="#57C8EB" data-widget-id="455411516829736961" data-chrome="noheader nofooter noscrollbar noborders transparent">Loading tweets by @keenthemes...</a>
+                </div>
+                <!-- END TWITTER BLOCK -->
+                <!-- BEGIN BOTTOM CONTACTS -->
+                <div class="col-md-3 col-sm-6 pre-footer-col">
+                    <h2>Our Contacts</h2>
+                    <address class="margin-bottom-40">
+                        35, Lorem Lis Street, Park Ave<br>
+                        California, US<br>
+                        Phone: 300 323 3456<br>
+                        Fax: 300 323 1456<br>
+                        Email: <a href="mailto:info@metronic.com">info@metronic.com</a><br>
+                        Skype: <a href="skype:metronic">metronic</a>
+                    </address>
+                </div>
+                <!-- END BOTTOM CONTACTS -->
+            </div>
+            <hr>
+            <div class="row">
+                <!-- BEGIN SOCIAL ICONS -->
+                <div class="col-md-6 col-sm-6">
+                    <ul class="social-icons">
+                        <li><a class="rss" data-original-title="rss" href="javascript:;"></a></li>
+                        <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
+                        <li><a class="twitter" data-original-title="twitter" href="javascript:;"></a></li>
+                        <li><a class="googleplus" data-original-title="googleplus" href="javascript:;"></a></li>
+                        <li><a class="linkedin" data-original-title="linkedin" href="javascript:;"></a></li>
+                        <li><a class="youtube" data-original-title="youtube" href="javascript:;"></a></li>
+                        <li><a class="vimeo" data-original-title="vimeo" href="javascript:;"></a></li>
+                        <li><a class="skype" data-original-title="skype" href="javascript:;"></a></li>
+                    </ul>
+                </div>
+                <!-- END SOCIAL ICONS -->
+                <!-- BEGIN NEWLETTER -->
+                <div class="col-md-6 col-sm-6">
+                    <div class="pre-footer-subscribe-box pull-right">
+                        <h2>Newsletter</h2>
+                        <form action="#">
+                            <div class="input-group">
+                                <input type="text" placeholder="youremail@mail.com" class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">Subscribe</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- END NEWLETTER -->
+            </div>
+        </div>
+    </div>
+    <!-- END PRE-FOOTER -->
+    <!-- BEGIN FOOTER -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <!-- BEGIN COPYRIGHT -->
+                <div class="col-md-4 col-sm-4 padding-top-10">
+                    2015 © IG PROG.
+                </div>
+                <!-- END COPYRIGHT -->
+                <!-- BEGIN PAYMENTS -->
+                <div class="col-md-4 col-sm-4">
+                    <ul class="list-unstyled list-inline pull-right">
+                        <li><img src="assets/corporate/img/payments/western-union.jpg" alt="We accept Western Union" title="We accept Western Union"></li>
+                        <li><img src="assets/corporate/img/payments/american-express.jpg" alt="We accept American Express" title="We accept American Express"></li>
+                        <li><img src="assets/corporate/img/payments/MasterCard.jpg" alt="We accept MasterCard" title="We accept MasterCard"></li>
+                        <li><img src="assets/corporate/img/payments/PayPal.jpg" alt="We accept PayPal" title="We accept PayPal"></li>
+                        <li><img src="assets/corporate/img/payments/visa.jpg" alt="We accept Visa" title="We accept Visa"></li>
+                    </ul>
+                </div>
+                <!-- END PAYMENTS -->
+                <!-- BEGIN POWERED -->
+                <div class="col-md-4 col-sm-4 text-right">
+                    <p class="powered">Powered by: <a href="https://www.igprog.hr/">igprog.com</a></p>
+                </div>
+                <!-- END POWERED -->
+            </div>
+        </div>
+    </div>
+    <!-- END FOOTER -->
+    <!-- BEGIN fast view of a product -->
+    <div id="product-pop-up" style="display: none; width: 700px;">
+        <div class="product-page product-pop-up">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-3">
+                    <div class="product-main-image">
+                        <img src="assets/pages/img/products/model7.jpg" alt="Cool green dress with red bell" class="img-responsive">
+                    </div>
+                    <div class="product-other-images">
+                        <a href="javascript:;" class="active"><img alt="Berry Lace Dress" src="assets/pages/img/products/model3.jpg"></a>
+                        <a href="javascript:;"><img alt="Berry Lace Dress" src="assets/pages/img/products/model4.jpg"></a>
+                        <a href="javascript:;"><img alt="Berry Lace Dress" src="assets/pages/img/products/model5.jpg"></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-9">
+                    <h2>Cool green dress with red bell</h2>
+                    <div class="price-availability-block clearfix">
+                        <div class="price">
+                            <strong><span>$</span>47.00</strong>
+                            <em>$<span>62.00</span></em>
+                        </div>
+                        <div class="availability">
+                            Availability: <strong>In Stock</strong>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <p>Lorem ipsum dolor ut sit ame dolore  adipiscing elit, sed nonumy nibh sed euismod laoreet dolore magna aliquarm erat volutpat Nostrud duis molestie at dolore.</p>
+                    </div>
+                    <div class="product-page-options">
+                        <div class="pull-left">
+                            <label class="control-label">Size:</label>
+                            <select class="form-control input-sm">
+                                <option>L</option>
+                                <option>M</option>
+                                <option>XL</option>
+                            </select>
+                        </div>
+                        <div class="pull-left">
+                            <label class="control-label">Color:</label>
+                            <select class="form-control input-sm">
+                                <option>Red</option>
+                                <option>Blue</option>
+                                <option>Black</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-page-cart">
+                        <div class="product-quantity">
+                            <input id="product-quantity" type="text" value="1" readonly name="product-quantity" class="form-control input-sm">
+                        </div>
+                        <button class="btn btn-primary" type="submit">Add to cart</button>
+                        <a href="shop-item.html" class="btn btn-default">More details</a>
+                    </div>
+                </div>
+                <div class="sticker sticker-sale"></div>
+            </div>
+        </div>
+    </div>
+    <!-- END fast view of a product -->
+    <!-- Load javascripts at bottom, this will reduce page load time -->
+    <!-- BEGIN CORE PLUGINS (REQUIRED FOR ALL PAGES) -->
+    <!--[if lt IE 9]>
+    <script src="assets/plugins/respond.min.js"></script>
+    <![endif]-->
+    <script src="assets/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="assets/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="assets/corporate/scripts/back-to-top.js" type="text/javascript"></script>
+    <script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+    <!-- BEGIN PAGE LEVEL JAVASCRIPTS (REQUIRED ONLY FOR CURRENT PAGE) -->
+    <script src="assets/plugins/fancybox/source/jquery.fancybox.pack.js" type="text/javascript"></script><!-- pop up -->
+    <script src="assets/plugins/owl.carousel/owl.carousel.min.js" type="text/javascript"></script><!-- slider for products -->
+    <script src='assets/plugins/zoom/jquery.zoom.min.js' type="text/javascript"></script><!-- product zoom -->
+    <script src="assets/plugins/bootstrap-touchspin/bootstrap.touchspin.js" type="text/javascript"></script><!-- Quantity -->
+    <script src="../assets/corporate/scripts/layout.js" type="text/javascript"></script>
+    <script src="../assets/pages/scripts/bs-carousel.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            Layout.init();
+            Layout.initOWL();
+            Layout.initImageZoom();
+            Layout.initTouchspin();
+            Layout.initTwitter();
+
+            Layout.initFixHeaderWithPreHeader();
+            Layout.initNavScrolling();
+        });
+    </script>
+    <!-- END PAGE LEVEL JAVASCRIPTS -->
+
+    <script src="../assets/js/app.js"></script>
+
+</body>
+<!-- END BODY -->
+</html>

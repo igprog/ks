@@ -1,0 +1,720 @@
+﻿<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <title>Admin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="IG PROG, vl. Igor Gašparović">
+    <link href="../assets/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/vendor/angular-material.min.css">
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/vendor/jquery.floating-social-share.min.css" />-->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="assets/js/vendor/jquery.min.js"></script>
+    <script src="../assets/js/vendor/popper.min.js"></script>
+    <script src="../assets/js/vendor/bootstrap.min.js"></script>
+    <script src="../assets/js/vendor/angular.min.js"></script>
+    <script src="../assets/js/vendor/angular-animate.min.js"></script>
+    <script src="../assets/js/vendor/angular-aria.min.js"></script>
+    <script src="../assets/js/vendor/angular-material.min.js"></script>
+    <!--<script src="assets/js/vendor/aui-min.js"></script>
+    <script src="assets/js/vendor/moment.js"></script>
+    <script src="assets/js/vendor/ui-scheduler-event-recorder.js"></script>-->
+    <script src="../assets/js/vendor/angular-translate.min.js"></script>
+    <script src="../assets/js/vendor/angular-translate-loader-partial.min.js"></script>
+    <script src="assets/js/vendor/ngStorage.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Encode Sans Expanded' rel='stylesheet'>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
+    <style>
+         body {
+             color: #000;
+             background: #fff;
+        }
+    </style>
+</head>
+<body id="home" ng-app="admin" ng-controller="adminCtrl" data-spy="scroll" data-target=".navbar" data-offset="60" ng-cloak>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <a href="index.html" target="_blank" title="{{config.sitename}}">
+            <img src="../assets/img/logo/logo.png" style="height:50px" alt="{{config.sitename}}" />
+            <!--<label class="text-primary font-beauty" style="font-size:20px">DIZAJN 911</label>-->
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+                <i class="fas fa-bars" style="color:#fff; font-size:28px;"></i>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" title="naslovna"><i class="fa fa-home"></i> Naslovna</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="grupe proizvoda" ng-click="toggleTpl('productGroups')">Grupe Proizvoda</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="brendovi" ng-click="toggleTpl('brands')">Brendovi (proizvođači)</a>
+                </li>
+                <!--<li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="opcije" ng-click="toggleTpl('options')">Opcije</a>
+                </li>-->
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="značajke" ng-click="toggleTpl('features')">Značajke proizvoda</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="proizvodi" ng-click="toggleTpl('products')">Proizvodi</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('info')">Informacije</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item">
+                    <a class="nav-link" href="" title="odjava" ng-click="f.logout()"><i class="fa fa-sign-out-alt"></i> Odjava</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div ng-if="!d.isLogin">
+        <ng-include src="tpl"></ng-include>
+    </div>
+
+    <div ng-if="d.isLogin" class="row" id="body-row">
+        <div id="sidebar-container" class="sidebar-expanded d-none d-sm-block bg-light">
+            <ul class="list-group" style="padding-top:100px">
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('info')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-info-circle fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Informacije</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('productGroups')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-layer-group fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Grupe proizvoda</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('brands')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-industry fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Brendovi (proizvođači)</span>
+                    </a>
+                </li>
+                <!--<li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('options')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-filter fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Opcije</span>
+                    </a>
+                </li>-->
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('features')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-align-left fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Značajke proizvoda</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('products')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-edit fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Proizvodi</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col bg-light" style="padding:100px 0 50px 0">
+            <div style="min-height:50px">
+                <ng-include src="tpl"></ng-include>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="login">
+        <div class="container">
+            <div ng-if="!d.isLogin" class="row justify-content-center" style="padding-top:160px">
+                <div class="col-sm-6 shadow p-5" style="border:solid 1px #fff; border-radius:10px;">
+                    <h2>Prijava</h2>
+                    <form id="loginform">
+                        <div class="form-group">
+                            <label for="username">Korisničko ime:</label>
+                            <input ng-model="d.admin.userName" type="text" class="form-control" name="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Lozinka:</label>
+                            <input ng-model="d.admin.password" type="password" class="form-control" name="password" placeholder="lozinka">
+                        </div>
+                    </form>
+                    <div class="text-right">
+                        <button type="submit" form="loginform" ng-click="f.login(d.admin)" class="btn btn-default"><span class="fa fa-unlock-altfa fa-key" aria-hidden="true"></span> <span class="text-capitalize">Prijava</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="info">
+        <div ng-if="d.isLogin" ng-controller="infoCtrl">
+            <form id="infoform">
+                <div class="card shadow m-3">
+                    <div class="card-header">
+                        <h2>Informacije</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="company">Tvrtka:</label>
+                                    <input ng-model="d.company" class="form-control" name="company">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Adresa:</label>
+                                    <input ng-model="d.address" class="form-control" name="address" placeholder="Ulica i broj, grad i država...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pin">OIB:</label>
+                                    <input ng-model="d.pin" class="form-control" name="pin">
+                                </div>
+                                <div class="form-group">
+                                    <label for="firstName">Ime:</label>
+                                    <input ng-model="d.firstName" class="form-control" name="firstName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Prezime:</label>
+                                    <input ng-model="d.lastName" class="form-control" name="lastName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Telefon:</label>
+                                    <input ng-model="d.phone" class="form-control" name="phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input ng-model="d.email" class="form-control" name="email">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="services">Usluge:</label>
+                                    <textarea ng-model="d.services" class="form-control" name="services" rows="10"></textarea>
+                                    <tran-btn ng-click="f.openTranPopup(d.services, 'services')"></tran-btn>
+                                </div>
+                                <div class="form-group">
+                                    <label for="about">O nama:</label>
+                                    <textarea ng-model="d.about" class="form-control" name="about" rows="10"></textarea>
+                                    <tran-btn ng-click="f.openTranPopup(d.about, 'about')"></tran-btn>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="text-success">Informacije o računu</label>
+                                <hr class="mt-0" />
+                                <div class="form-group">
+                                    <label for="recipient">Primatelj:</label>
+                                    <input ng-model="d.paymentDetails.recipient" class="form-control" name="recipient" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="iban">IBAN:</label>
+                                    <input ng-model="d.paymentDetails.iban" class="form-control" name="iban" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="swift">SWIFT:</label>
+                                    <input ng-model="d.paymentDetails.swift" class="form-control" name="swift" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="bank">Banka:</label>
+                                    <input ng-model="d.paymentDetails.bank" class="form-control" name="bank" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankAddress">Adresa banke:</label>
+                                    <input ng-model="d.paymentDetails.bankAddress" class="form-control" name="bankAddress" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="text-success">Društvene mreže</label>
+                                <hr class="mt-0" />
+                                <div class="form-group">
+                                    <label for="facebook">Facebook:</label>
+                                    <input ng-model="d.social.facebook" class="form-control" name="facebook" placeholder="https://www.facebook.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="instagram">Instagram:</label>
+                                    <input ng-model="d.social.instagram" class="form-control" name="instagram" placeholder="https://www.instagram.com/...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" form="infoform" ng-click="f.save(d)" class="btn btn-outline-success"><i class="fa fa-save" aria-hidden="true"></i> Spremi</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--<div class="row">
+                <div class="col-lg-12">
+                    <div class="card shadow m-3">
+                        <div class="card-header">
+                            <h2>Glavne slike</h2>
+                        </div>
+                        <div class="card-body">
+                            <upload-directive id="'01'" img="'01.jpg'"></upload-directive>
+                            <upload-directive id="'02'" img="'02.jpg'"></upload-directive>
+                            <upload-directive id="'03'" img="'03.jpg'"></upload-directive>
+                            <upload-directive id="'04'" img="'04.jpg'"></upload-directive>
+                            <upload-directive id="'05'" img="'05.jpg'"></upload-directive>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="productGroups">
+        <div ng-if="d.isLogin" ng-controller="productGroupsCtrl">
+            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+            <h2 class="ml-3">Grupe proizvoda</h2>
+            <div class="row">
+                <div ng-repeat="x in d.records track by $index" class="col-lg-4">
+                    <div class="card shadow m-3">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    Grupa br. {{$index+1}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div ng-if="d.records.length>0&&!d.loading">
+                                <form>
+                                    <div class="form-group">
+                                        <label>Kod:</label>
+                                        <input ng-model="x.code" type="text" class="form-control" maxlength="30">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Naziv:</label>
+                                        <input ng-model="x.title" type="text" class="form-control" maxlength="200">
+                                    </div>
+                                    <!--<div class="form-group">
+                                        <label>Naziv (SEO):</label>
+                                        <input ng-model="x.title_seo" type="text" class="form-control" maxlength="200">
+                                    </div>-->
+                                    <!--<div class="form-group">
+                                        <label>Parent Group:</label>
+                                        <input ng-model="x.parent" type="text" class="form-control" maxlength="30">
+                                    </div>-->
+                                    <div class="form-group">
+                                        <label>Redosljed:</label>
+                                        <input ng-model="x.order" type="number" class="form-control" maxlength="30">
+                                    </div>
+                                    <div class="text-right">
+                                        <button ng-disabled="d.adminType==='admin'" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
+                                        <button ng-click="f.save(x)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
+                                    </div>
+                                </form>
+                                <div class="card mt-2">
+                                    <div class="card-header" data-toggle="collapse" data-target="#sg_{{$index}}">
+                                        Podgrupe proizvoda
+                                        <i class="float-right fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
+                                    </div>
+                                    <div id="sg_{{$index}}" class="card-body collapse">
+                                        <div ng-repeat="y in x.subGroups track by $index">
+                                            <div class="card mt-3">
+                                                <div class="card-header">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            Pod grupa br. {{$index+1}}
+                                                        </div>
+                                                        <div class="col-sm-6 text-right">
+                                                            <button ng-disabled="d.adminType==='admin'" ng-click="f.remove(y)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form>
+                                                        <div class="form-group">
+                                                            <label>Kod:</label>
+                                                            <input ng-model="y.code" type="text" class="form-control" maxlength="30">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Naziv:</label>
+                                                            <input ng-model="y.title" type="text" class="form-control" maxlength="200">
+                                                        </div>
+                                                        <!--<div class="form-group">
+                                                            <label>Naziv (SEO):</label>
+                                                            <input ng-model="y.title_seo" type="text" class="form-control" maxlength="200">
+                                                        </div>-->
+                                                        <!--<div class="form-group">
+                                                            <label>Parent Group:</label>
+                                                            <input ng-model="y.parent" type="text" class="form-control" maxlength="30">
+                                                        </div>-->
+                                                        <div class="form-group">
+                                                            <label>Redosljed:</label>
+                                                            <input ng-model="y.order" type="number" class="form-control" maxlength="30">
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <button ng-click="f.saveSubGroup(y)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-outline-primary m-3" ng-click="f.initSubGroup(x)"><i class="fa fa-plus"></i> Nova podgrupu</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button ng-disabled="d.adminType==='admin'" ng-click="f.init()" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Nova grupa</button>
+            </div>
+            <json-directive data="d" desc="'d'" debug="true"></json-directive>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="brands">
+        <div ng-if="d.isLogin" ng-controller="brandsCtrl">
+            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+            <h2 class="ml-3">Brendovi (proizvođači)</h2>
+            <div class="row">
+                <div ng-repeat="x in d.records track by $index" class="col-lg-4">
+                    <div class="card shadow m-3">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    Brend br. {{$index+1}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div ng-if="d.records.length>0&&!d.loading">
+                                <form>
+                                    <div class="form-group">
+                                        <label>Kod:</label>
+                                        <input ng-model="x.code" type="text" class="form-control" maxlength="30">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Naziv:</label>
+                                        <input ng-model="x.title" type="text" class="form-control" maxlength="200">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Redosljed:</label>
+                                        <input ng-model="x.order" type="number" class="form-control" maxlength="30">
+                                    </div>
+                                    <div class="text-right">
+                                        <button ng-disabled="d.adminType==='admin'" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
+                                        <button ng-click="f.save(x)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button ng-disabled="d.adminType==='admin'" ng-click="f.init()" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Novi brend</button>
+            </div>
+            <json-directive data="d" desc="'d'" debug="true"></json-directive>
+        </div>
+    </script>
+
+    <!--<script type="text/ng-template" id="options">
+        <div ng-if="d.isLogin" ng-controller="optionsCtrl">
+            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+            <div class="card shadow m-3">
+                <div class="card-header">
+                    <h2>Opcije</h2>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed">
+                                <tr>
+                                    <th style="width:30px"></th>
+                                    <th style="width:200px">Kod</th>
+                                    <th style="min-width:200px">Naziv (EN)</th>
+                                    <th style="min-width:200px">Opis (EN)</th>
+                                    <th style="min-width:100px">Jedinica</th>
+                                    <th style="width:200px">Ikona</th>
+                                    <th style="width:200px">Fa icon</th>
+                                    <th style="min-width:100px">Tip</th>
+                                    <th style="width:30px">Redosljed</th>
+                                </tr>
+                                <tr ng-repeat="x in d.records track by $index">
+                                    <td><button class="btn btn-outline-danger" ng-click="f.remove(d.records, $index)"><i class="fa fa-trash"></i></button></td>
+                                    <td><input ng-model="x.code" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.title" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.desc" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.unit" type="text" class="form-control" /></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input ng-model="x.icon" type="text" class="form-control" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><img src="./assets/img/icon/{{x.icon}}" style="width:20px" /></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input ng-model="x.faicon" type="text" class="form-control" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="fa fa-{{x.faicon}}"></i></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><input ng-model="x.type" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.order" type="number" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-outline-warning" ng-click="f.add()"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <button ng-click="f.save(d.records)" type="submit" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Spremi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <json-directive data="d" debug="config.debug"></json-directive>
+        </div>
+    </script>-->
+
+    <script type="text/ng-template" id="features">
+        <div ng-if="d.isLogin" ng-controller="featuresCtrl">
+            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+            <div class="card shadow m-3">
+                <div class="card-header">
+                    <h2>Opcije</h2>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed">
+                                <tr>
+                                    <th style="width:30px"></th>
+                                    <th style="width:200px">Kod</th>
+                                    <th style="min-width:200px">Naziv</th>
+                                    <th style="min-width:200px">Opis (vrijednost)</th>
+                                    <th style="min-width:100px">Jedinica</th>
+                                    <th style="width:200px">Ikona</th>
+                                    <th style="width:200px">Fa icon</th>
+                                    <th style="min-width:100px">Tip</th>
+                                    <th style="width:30px">Redosljed</th>
+                                </tr>
+                                <tr ng-repeat="x in d.records track by $index">
+                                    <td><button class="btn btn-outline-danger" ng-click="f.remove(d.records, $index)"><i class="fa fa-trash"></i></button></td>
+                                    <td><input ng-model="x.code" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.title" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.val" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.unit" type="text" class="form-control" /></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input ng-model="x.icon" type="text" class="form-control" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><img src="./assets/img/icon/{{x.icon}}" style="width:20px" /></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input ng-model="x.faicon" type="text" class="form-control" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="fa fa-{{x.faicon}}"></i></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><input ng-model="x.type" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.order" type="number" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-outline-warning" ng-click="f.add()"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <button ng-click="f.save(d.records)" type="submit" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Spremi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <json-directive data="d" debug="config.debug"></json-directive>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="products">
+        <div ng-if="d.isLogin" ng-controller="productsCtrl">
+            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+            <div class="ml-3">
+                <h2>Proizvodi</h2>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Grupa:</label>
+                            <select ng-model="d.productGroup" class="form-control" ng-change="f.load(d.productGroup)">
+                                <option value="">Svi proizvodi</option>
+                                <option ng-repeat="x in d.productGroups" value="{{x.code}}">{{x.title}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="d.records.length>0&&!d.loading" ng-repeat="x in d.records track by $index" class="card shadow m-3">
+                <div class="card-header" data-toggle="collapse" data-target="#p_{{$index}}">
+                    
+                    <div ng-if="x!==null" class="mt-2">
+                        <img ng-if="x.img" class="img-thumbnail" src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}" style="height:80px">
+                        <span class="ml-2"><strong>{{x.title}}</strong></span>
+                    </div>
+                    <div ng-if="x.id===null">
+                        Uredi proizvod
+                    </div>
+                    <span class="float-right">
+                        Detalji <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
+                    </span>
+                    <!--<div class="row">
+                        <div class="col-sm-6">
+                            Proizvod br. {{$index+1}}
+                        </div>
+                    </div>-->
+                </div>
+                <div id="p_{{$index}}" class="card-body collapse">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form>
+                                <div class="form-group">
+                                    <label>Grupa:</label>
+                                    <select ng-model="x.productGroup.code" class="form-control">
+                                        <option ng-repeat="pg in d.productGroups" value="{{pg.code}}">{{pg.title}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Brand (proizvođač):</label>
+                                    <select ng-model="x.brand.code" class="form-control">
+                                        <option ng-repeat="b in d.brands" value="{{b.code}}">{{b.title}}</option>
+                                    </select>
+                                </div>
+                                <!--<div class="form-group">
+                                    <label>Pozicija na stranici:</label>
+                                    <select ng-model="x.displayType" class="form-control">
+                                        <option value="0" ng-selected="x.displayType===0">Portfolio</option>
+                                    </select>
+                                </div>-->
+                                <div class="form-group">
+                                    <label>SKU:</label>
+                                    <input ng-model="x.sku" type="text" class="form-control" maxlength="200">
+                                </div>
+                                <div class="form-group">
+                                    <label>Naziv:</label>
+                                    <input ng-model="x.title" type="text" class="form-control" maxlength="200">
+                                    <tran-btn ng-click="f.openTranPopup(x, 'productTitle')"></tran-btn>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kratki opis:</label>
+                                    <input ng-model="x.shortdesc" type="text" class="form-control" maxlength="200">
+                                    <tran-btn ng-click="f.openTranPopup(x, 'productShortDesc')"></tran-btn>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dugi opis:</label>
+                                    <textarea ng-model="x.longdesc" rows="6" class="form-control" maxlength="4000"></textarea>
+                                    <tran-btn ng-click="f.openTranPopup(x, 'productLongDesc')"></tran-btn>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cijena:</label>
+                                    <input ng-model="x.price.net" type="text" class="form-control" allow-only-numbers >
+                                </div>
+                                <div class="form-group">
+                                    <label>Popust (koeficjent):</label>
+                                    <input ng-model="x.discount" type="text" class="form-control" allow-only-numbers>
+                                </div>
+                                <div class="form-group">
+                                    <input id="isnew_{{$index}}" type="checkbox" ng-model="x.isnew" title="Novi proizvod" class="m-2"/> <label for="isnew_{{$index}}">Novi proizvod</label>
+                                    <input id="outlet_{{$index}}" type="checkbox" ng-model="x.outlet" title="Akcija" class="m-2" /> <label for="outlet_{{$index}}">Akcija</label>
+                                    <input id="bestselling_{{$index}}" type="checkbox" ng-model="x.bestselling" title="Akcija" class="m-2" /> <label for="bestselling_{{$index}}">Najprodavaniji</label>
+                                    <input id="isactive_{{$index}}" type="checkbox" ng-model="x.isactive" title="Aktivan" class="m-2" /> <label for="isactive_{{$index}}">Aktivan</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Zaliha (komada):</label>
+                                    <input ng-model="x.stock" type="text" class="form-control" allow-only-numbers>
+                                </div>
+                                <div class="form-group">
+                                    <label>Redosljed:</label>
+                                    <input ng-model="x.productorder" type="number" class="form-control"  style="width:100px">
+                                </div>
+                                <label class="text-success">Značajke:</label>
+                                <hr class="mt-0" />
+                                <div class="form-group" ng-repeat="y in x.features">
+                                    <label>{{y.title | translate}} <em>({{y.unit}})</em>:</label>
+                                    <input ng-model="y.val" type="text" class="form-control" maxlength="200">
+                                </div>
+                                <!--<div class="form-group">
+                                    <label>Objavio:</label>
+                                    <input ng-model="x.owner" class="form-control" maxlength="200" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Datum:</label>
+                                    <input ng-model="x.productDate" class="form-control" maxlength="30" />
+                                </div>
+                                <div class="form-group">
+                                    <label>URL:</label>
+                                    <input ng-model="x.url" class="form-control" maxlength="4000" />
+                                </div>
+                                <label>Opcije:</label>
+                                <hr style="margin-top:0" />
+                                <div class="form-group" ng-repeat="y in x.productOptions">
+                                    <label>{{y.title | translate}} <span>{{y.unit}}</span>:</label>
+                                    <input ng-model="y.desc" type="text" class="form-control" maxlength="200">
+                                </div>-->
+                                <div class="text-right">
+                                    <button ng-disabled="x.id==null" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
+                                    <button ng-click="f.save(x)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-6">
+                            <div ng-if="x.id">
+                                <label>Galerija:</label>
+                                <form id="formUpload_{{x.id}}" ng-submit="f.upload(x, $index)" enctype="multipart/form-data" method="post">
+                                    <input id="imgId" name="imgId" ng-model="x.id" type="text" hidden="hidden">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <input ng-model="file" name="UploadedFile" id="UploadedFile" type="file" accept="image/*" class="form-control">
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <button type="submit" class="btn btn-primary text-capitalize"><i class="fa fa-upload"></i> Upload</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div style="max-height:1000px; overflow-x:hidden;">
+                                    <div ng-if="x.img" class="mt-2">
+                                        <img class="img-thumbnail" src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}" style="max-height:500px">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4" ng-repeat="y in x.gallery track by $index">
+                                            <div class="card shadow mt-2">
+                                                <img class="card-img-top" src="../upload/{{x.id}}/gallery/{{y}}" alt="{{x.title}}">
+                                                <div class="card-body">
+                                                    <div>
+                                                        <input id="{{y}}_{{x.id}}" type="radio" name="mainimg_{{x.id}}" ng-click="f.setMainImg(x, y)" value="{{y}}" title="Postavi kao glavnu sliku" /> <label for="{{y}}_{{x.id}}" title="Postavi kao glavnu sliku">Glavna</label>
+                                                        <div class="float-right">
+                                                            <button ng-click="f.deleteImg(x, y)" class="btn btn-outline-danger btn-circle" title="Briši"><i class="fa fa-trash-alt"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <json-directive data="x" debug="config.debug"></json-directive>
+                </div>
+            </div>
+            <div class="m-3">
+                <button ng-click="f.newProduct()" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Novi proizvod</button>
+            </div>
+            <json-directive data="d" desc="'d'"  debug="config.debug"></json-directive>
+        </div>
+    </script>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

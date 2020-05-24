@@ -1,0 +1,16 @@
+﻿<div class="form-inline">
+    <form id="formUpload_{{id}}" ng-submit="f.upload(id)" enctype="multipart/form-data" method="post">
+        <input id="imgId" name="imgId" value="{{img}}" type="text" hidden="hidden">
+        <input id="imgFolder" name="imgFolder" value="main" type="text" hidden="hidden">
+        <div class="row">
+            <div class="col-sm-8">
+                <input ng-model="file" name="UploadedFile" id="UploadedFile" type="file" accept="image/*" class="form-control">
+            </div>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary text-capitalize"><i class="fa fa-upload"></i> Upload</button>
+            </div>
+        </div>
+    </form>
+    <img src="../upload/main/{{img}}?v={{tick}}" class="img-thumbnail" alt="{{img}}" style="width:100px" />
+    <!--<button ng-click="f.removeMainImg(img)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>-->
+</div>

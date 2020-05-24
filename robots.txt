@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin.html
+
+SITEMAP: https://www.dizajn911.com/sitemap.xml
+

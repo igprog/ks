@@ -1,0 +1,183 @@
+﻿<div>
+    <div class="main">
+        <div class="container">
+            <!-- BEGIN SIDEBAR & CONTENT -->
+            <div class="row margin-bottom-40">
+                <!-- BEGIN CONTENT -->
+                <div class="col-md-12 col-sm-12">
+                    <h1>Shopping cart</h1>
+                    <div ng-if="d.cart.items.length===0" class="shopping-cart-page">
+                        <div class="shopping-cart-data clearfix">
+                            <p>Your shopping cart is empty!</p>
+                        </div>
+                    </div>
+                    <div ng-if="d.cart.items.length>0" class="goods-page">
+                        <div class="goods-data clearfix">
+                            <div class="table-wrapper-responsive">
+                                <table summary="Shopping cart">
+                                    <tr>
+                                        <th class="goods-page-image">Slika</th>
+                                        <th class="goods-page-description">Opis</th>
+                                        <th class="goods-page-ref-no">SKU</th>
+                                        <th class="goods-page-quantity">Količina</th>
+                                        <th class="goods-page-price">Jedinična cijena</th>
+                                        <th class="goods-page-total" colspan="2">Ukupno</th>
+                                    </tr>
+                                    <tr ng-repeat="x in d.cart.items track by $index" ng-cloak>
+                                        <td class="goods-page-image">
+                                            <a href=""><img src="../upload/{{x.product.id}}/gallery/{{x.product.gallery[0]}}" alt="{{x.product.title}}"></a>
+                                        </td>
+                                        <td class="goods-page-description">
+                                            <h3><a href="">{{x.product.shortdesc}}</a></h3>
+                                            <p><strong>{{x.product.title}}</strong></p>
+                                            <em>More info is here</em>
+                                        </td>
+                                        <td class="goods-page-ref-no">
+                                            {{x.product.sku}}
+                                        </td>
+                                        <td class="goods-page-quantity">
+                                            <div class="product-quantity">
+                                                <input ng-model="x.product.qty" type="number" value="1" class="form-control input-sm" style="width:70px" ng-change="calcItemPrice(d.cart, $index)">
+                                                <!--<input id="product-quantity" type="text" value="1" readonly class="form-control input-sm">-->
+                                            </div>
+                                        </td>
+                                        <td class="goods-page-price">
+                                            <strong>{{x.product.price.net_discount | number}} <span>kn</span></strong>
+                                        </td>
+                                        <td class="goods-page-total">
+                                            <strong>{{x.price_net_tot | number}} <span>kn</span></strong>
+                                        </td>
+                                        <td class="del-goods-col">
+                                            <a class="del-goods" href="" ng-click="removeItem(x, $index)">&nbsp;</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="shopping-total">
+                                <ul>
+                                    <li>
+                                        <em>Ukupno (Neto)</em>
+                                        <strong class="price">{{d.cart.cartPrice.sub_tot | number}} <span>kn</span></strong>
+                                    </li>
+                                    <li>
+                                        <em>Cijena dostave</em>
+                                        <strong class="price">{{d.cart.cartPrice.shipping | number}} <span>kn</span></strong>
+                                    </li>
+                                    <li>
+                                        <em>PDV (25%)</em>
+                                        <strong class="price">{{d.cart.cartPrice.tot_vat | number}} <span>kn</span></strong>
+                                    </li>
+                                    <li class="shopping-total-price">
+                                        <em>Ukupno</em>
+                                        <strong class="price">{{d.cart.cartPrice.tot | number}} <span>kn</span></strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button class="btn btn-default" type="submit">Continue shopping <i class="fa fa-shopping-cart"></i></button>
+                        <button class="btn btn-danger" type="submit" ng-click="clearCart()">Briši sve <i class="fa fa-trash-o"></i></button>
+                        <button class="btn btn-primary" type="submit" ng-click="go('checkout')">Checkout <i class="fa fa-check"></i></button>
+                    </div>
+                </div>
+                <!-- END CONTENT -->
+            </div>
+            <!-- END SIDEBAR & CONTENT -->
+            <!-- BEGIN SIMILAR PRODUCTS -->
+            <div class="row margin-bottom-40">
+                <div class="col-md-12 col-sm-12">
+                    <h2>Most popular products</h2>
+                    <div class="owl-carousel owl-carousel4">
+                        <div>
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="assets/pages/img/products/k1.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                    <div>
+                                        <a href="assets/pages/img/products/k1.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                        <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                    </div>
+                                </div>
+                                <h3><a href="shop-item.html">Berry Lace Dress</a></h3>
+                                <div class="pi-price">$29.00</div>
+                                <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                <div class="sticker sticker-new"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="assets/pages/img/products/k2.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                    <div>
+                                        <a href="assets/pages/img/products/k2.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                        <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                    </div>
+                                </div>
+                                <h3><a href="shop-item.html">Berry Lace Dress2</a></h3>
+                                <div class="pi-price">$29.00</div>
+                                <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="assets/pages/img/products/k3.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                    <div>
+                                        <a href="assets/pages/img/products/k3.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                        <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                    </div>
+                                </div>
+                                <h3><a href="shop-item.html">Berry Lace Dress3</a></h3>
+                                <div class="pi-price">$29.00</div>
+                                <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="assets/pages/img/products/k4.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                    <div>
+                                        <a href="assets/pages/img/products/k4.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                        <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                    </div>
+                                </div>
+                                <h3><a href="shop-item.html">Berry Lace Dress4</a></h3>
+                                <div class="pi-price">$29.00</div>
+                                <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                <div class="sticker sticker-sale"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="assets/pages/img/products/k1.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                    <div>
+                                        <a href="assets/pages/img/products/k1.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                        <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                    </div>
+                                </div>
+                                <h3><a href="shop-item.html">Berry Lace Dress5</a></h3>
+                                <div class="pi-price">$29.00</div>
+                                <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="assets/pages/img/products/k2.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                    <div>
+                                        <a href="assets/pages/img/products/k2.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                        <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                    </div>
+                                </div>
+                                <h3><a href="shop-item.html">Berry Lace Dress6</a></h3>
+                                <div class="pi-price">$29.00</div>
+                                <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END SIMILAR PRODUCTS -->
+        </div>
+    </div>
+    <json-directive data="d" desc="'d'" debug="true"></json-directive>
+</div>

@@ -1,0 +1,296 @@
+﻿<div>
+    <div class="main">
+        <div class="container">
+            <ul class="breadcrumb">
+                <li><a href="index.html">Naslovna</a></li>
+                <li><a href="" ng-click="go('shop')">Shop</a></li>
+                <li><a href="" ng-click="shop(d.record.productGroup.code, d.record.productGroup.title_seo, '')">{{d.record.productGroup.title}}</a></li>
+                <li class="active">{{d.record.title}}</li>
+            </ul>
+            <!-- BEGIN SIDEBAR & CONTENT -->
+            <div class="row margin-bottom-40">
+                <!-- BEGIN SIDEBAR -->
+                <div class="sidebar col-md-3 col-sm-5">
+                    <ul class="list-group margin-bottom-25 sidebar-menu">
+                        <li class="list-group-item clearfix dropdown {{x.code===d.record.productGroup.code?'active':''}}" ng-repeat="x in d.productGroups track by $index">
+                            <a href="" ng-click="shop(x.code, x.title_seo, null)"><i class="fa fa-angle-right"></i> {{x.title}}</a>
+                            <ul class="dropdown-menu" ng-repeat="y in x.subGroups track by $index">
+                                <li class="list-group-item dropdown clearfix {{y.code===d.record.productGroup.code?'active':''}}">
+                                    <a href="">{{y.title}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="sidebar-products clearfix">
+                        <h2>Bestsellers</h2>
+                        <div class="item">
+                            <a href="shop-item.html"><img src="assets/pages/img/products/k1.jpg" alt="Some Shoes in Animal with Cut Out"></a>
+                            <h3><a href="shop-item.html">Some Shoes in Animal with Cut Out</a></h3>
+                            <div class="price">$31.00</div>
+                        </div>
+                        <div class="item">
+                            <a href="shop-item.html"><img src="assets/pages/img/products/k4.jpg" alt="Some Shoes in Animal with Cut Out"></a>
+                            <h3><a href="shop-item.html">Some Shoes in Animal with Cut Out</a></h3>
+                            <div class="price">$23.00</div>
+                        </div>
+                        <div class="item">
+                            <a href="shop-item.html"><img src="assets/pages/img/products/k3.jpg" alt="Some Shoes in Animal with Cut Out"></a>
+                            <h3><a href="shop-item.html">Some Shoes in Animal with Cut Out</a></h3>
+                            <div class="price">$86.00</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END SIDEBAR -->
+                <!-- BEGIN CONTENT -->
+                <div class="col-md-9 col-sm-7">
+                    <div class="product-page">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="product-main-image">
+                                    <img src="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}" alt="{{x}}" class="img-responsive" data-BigImgsrc="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}">
+                                </div>
+                                <div class="product-other-images">
+                                    <a ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <h1>{{d.record.title}}</h1>
+                                <div class="price-availability-block clearfix">
+                                    <div class="price">
+                                        <strong>VPC: {{d.record.price.net_discount | number}} <span>kn</span></strong>
+                                        <span ng-if="d.record.discount>0">
+                                            <em><span>{{d.record.price.net | number}}</span> kn</em>
+                                        </span>
+                                    </div>
+                                    <!--<div class="price">
+                                        <strong>MPC: {{d.record.price.gross_discount | number}} <span>kn</span></strong>
+                                        <span ng-if="d.record.discount>0">
+                                            <em>kn<span>{{d.record.price.gross | number}}</span> kn</em>
+                                        </span>
+                                    </div>-->
+                                    <div class="availability">
+                                        Availability: <strong>In Stock</strong>
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <p>
+                                        {{d.record.longdesc}}
+                                    </p>
+                                </div>
+                                <div class="product-page-options">
+                                    <div class="pull-left">
+                                        <label class="control-label">Size:</label>
+                                        <select class="form-control input-sm">
+                                            <option>L</option>
+                                            <option>M</option>
+                                            <option>XL</option>
+                                        </select>
+                                    </div>
+                                    <div class="pull-left">
+                                        <label class="control-label">Color:</label>
+                                        <select class="form-control input-sm">
+                                            <option>Red</option>
+                                            <option>Blue</option>
+                                            <option>Black</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="product-page-cart">
+                                    <div class="product-quantity">
+                                        <input ng-model="d.record.qty" type="number" value="1" class="form-control input-sm" style="width:70px">
+                                        <!--<input id="product-quantity" type="text" value="1" readonly class="form-control input-sm">-->
+                                    </div>
+                                    <button class="btn btn-primary" type="submit" ng-click="addToCart(d.record)">Dodaj u košaricu</button>
+                                </div>
+                                <!--<div class="review">
+                                    <input type="range" value="4" step="0.25" id="backing4">
+                                    <div class="rateit" data-rateit-backingfld="#backing4" data-rateit-resetable="false" data-rateit-ispreset="true" data-rateit-min="0" data-rateit-max="5">
+                                    </div>
+                                    <a href="javascript:;">7 reviews</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:;">Write a review</a>
+                                </div>-->
+                                <div class="product-page-cart form-inline">
+                                    <!--<span starating></span>-->
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                    <a href="javascript:;" class="pl-3">7 reviews</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#/review">Write a review</a>
+                                </div>
+                                <ul class="social-icons">
+                                    <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
+                                    <li><a class="twitter" data-original-title="twitter" href="javascript:;"></a></li>
+                                    <li><a class="googleplus" data-original-title="googleplus" href="javascript:;"></a></li>
+                                    <li><a class="evernote" data-original-title="evernote" href="javascript:;"></a></li>
+                                    <li><a class="tumblr" data-original-title="tumblr" href="javascript:;"></a></li>
+                                </ul>
+                            </div>
+                            <div class="product-page-content">
+                                <ul id="myTab" class="nav nav-tabs">
+                                    <li class="active"><a href="/#Description" data-toggle="tab">Opis</a></li>
+                                    <li><a href="/#Information" data-toggle="tab">Informacje</a></li>
+                                    <li><a href="/#Reviews" data-toggle="tab">Recenzije (2)</a></li>
+                                </ul>
+                                <div id="myTabContent" class="tab-content">
+                                    <div class="tab-pane fade in active" id="Description">
+                                        <p>{{d.record.longdesc}}</p>
+                                    </div>
+                                    <div class="tab-pane fade" id="Information">
+                                        <table class="datasheet">
+                                            <tr>
+                                                <th colspan="2">Dodatne značajke</th>
+                                            </tr>
+                                            <tr ng-if="x.val" ng-repeat="x in d.record.features track by $index">
+                                                <td class="datasheet-features-type">{{x.title}}</td>
+                                                <td>{{x.val}} {{x.unit}}</td>
+                                            </tr>
+                                            <!--<tr>
+                                                <td class="datasheet-features-type">Value 2</td>
+                                                <td>700 gr.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="datasheet-features-type">Value 3</td>
+                                                <td>10 person</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="datasheet-features-type">Value 4</td>
+                                                <td>14 cm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="datasheet-features-type">Value 5</td>
+                                                <td>plastic</td>
+                                            </tr>-->
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="Reviews">
+                                        <!--<p>There are no reviews for this product.</p>-->
+                                        <div class="review-item clearfix">
+                                            <div class="review-item-submitted">
+                                                <strong>Bob</strong>
+                                                <em>30/12/2013 - 07:37</em>
+                                                <div class="rateit" data-rateit-value="5" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+                                            </div>
+                                            <div class="review-item-content">
+                                                <p>Sed velit quam, auctor id semper a, hendrerit eget justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis vel arcu pulvinar dolor tempus feugiat id in orci. Phasellus sed erat leo. Donec luctus, justo eget ultricies tristique, enim mauris bibendum orci, a sodales lectus purus ut lorem.</p>
+                                            </div>
+                                        </div>
+                                        <div class="review-item clearfix">
+                                            <div class="review-item-submitted">
+                                                <strong>Mary</strong>
+                                                <em>13/12/2013 - 17:49</em>
+                                                <div class="rateit" data-rateit-value="2.5" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+                                            </div>
+                                            <div class="review-item-content">
+                                                <p>Sed velit quam, auctor id semper a, hendrerit eget justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis vel arcu pulvinar dolor tempus feugiat id in orci. Phasellus sed erat leo. Donec luctus, justo eget ultricies tristique, enim mauris bibendum orci, a sodales lectus purus ut lorem.</p>
+                                            </div>
+                                        </div>
+                                        <!-- BEGIN FORM-->
+                                        <form id="review" action="#" class="reviews-form" role="form">
+                                            <h2>Write a review</h2>
+                                            <div class="form-group">
+                                                <label for="name">Name <span class="require">*</span></label>
+                                                <input ng-model="d.review.name" type="text" class="form-control" id="name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input ng-model="d.review.email" type="text" class="form-control" id="email">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="review">Review <span class="require">*</span></label>
+                                                <textarea ng-model="d.review.rewiew" class="form-control" rows="8" id="review"></textarea>
+                                            </div>
+                                            <div class="form-group form-inline">
+                                                <label class="pr-3">Rating</label>
+                                                <span starating></span>
+                                                <!--<input type="range" value="4" step="0.25" id="backing5">
+                                                <div class="rateit" data-rateit-backingfld="#backing5" data-rateit-resetable="false" data-rateit-ispreset="true" data-rateit-min="0" data-rateit-max="5">
+                                                </div>-->
+                                            </div>
+                                            <div class="padding-top-20">
+                                                <button type="submit" class="btn btn-primary">Send</button>
+                                            </div>
+                                        </form>
+                                        <!-- END FORM-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sticker sticker-sale"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END CONTENT -->
+            </div>
+            <!-- END SIDEBAR & CONTENT -->
+            <!-- BEGIN SIMILAR PRODUCTS -->
+            <div class="row margin-bottom-40">
+                <div class="col-md-12 col-sm-12">
+                    <h2>Najpopularniji proizvodi</h2>
+                    <div class="owl-carousel owl-carousel4 owl-theme owl-loaded">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="assets/pages/img/products/k1.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                        <div>
+                                            <a href="assets/pages/img/products/k1.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                            <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                        </div>
+                                    </div>
+                                    <h3><a href="shop-item.html">Berry Lace Dress</a></h3>
+                                    <div class="pi-price">$29.00</div>
+                                    <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                    <div class="sticker sticker-new"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="assets/pages/img/products/k2.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                        <div>
+                                            <a href="assets/pages/img/products/k2.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                            <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                        </div>
+                                    </div>
+                                    <h3><a href="shop-item.html">Berry Lace Dress2</a></h3>
+                                    <div class="pi-price">$29.00</div>
+                                    <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="assets/pages/img/products/k3.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                        <div>
+                                            <a href="assets/pages/img/products/k3.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                            <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                        </div>
+                                    </div>
+                                    <h3><a href="shop-item.html">Berry Lace Dress3</a></h3>
+                                    <div class="pi-price">$29.00</div>
+                                    <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="assets/pages/img/products/k4.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                        <div>
+                                            <a href="assets/pages/img/products/k4.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                            <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
+                                        </div>
+                                    </div>
+                                    <h3><a href="shop-item.html">Berry Lace Dress4</a></h3>
+                                    <div class="pi-price">$29.00</div>
+                                    <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
+                                    <div class="sticker sticker-sale"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END SIMILAR PRODUCTS -->
+        </div>
+    </div>
+    <json-directive data="d" desc="'product (d)'" debug="true"></json-directive>
+</div>

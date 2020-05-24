@@ -1,0 +1,33 @@
+﻿{
+  "debug": true,
+  "url": "https://www.kaminstudio.hr",
+  "version": "1.0.7",
+  "domain": "kaminstudio.hr",
+  "sitename": "Kamin Studio",
+  "phone1": "091/2828 911",
+  "phone2": "091/1599 181",
+  "showcarddesc": false,
+  "showgooglemap": false,
+  "showlang": true,
+  "languages": [
+    {
+      "code": "hr",
+      "title": "croatian"
+    },
+    {
+      "code": "en",
+      "title": "english"
+    },
+    {
+      "code": "ru",
+      "title": "russian"
+    }
+  ],
+  "lang": {
+    "code": "hr",
+    "title": "croatian"
+  },
+  "productGroupId": "bdb9c0ad-4f6b-471a-843e-d1f1a0abba12",
+  "postsId": "ca7763d7-9193-49a4-baf5-2e0650567b23"
+
+}

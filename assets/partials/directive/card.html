@@ -1,0 +1,14 @@
+﻿<div class="card shadow zoom bg-light" style="min-height:{{showdesc===true?'600px':'0px'}}">
+    <a href="../{{link}}.html?id={{data.id}}&lang={{lang}}" title="{{data.title}}">
+        <img class="card-img-top" src="../upload/{{data.id}}/gallery/{{data.img}}" alt="{{link}}" >
+        <div class="stretch hilight">
+            <div class="bottom-left">
+                <h2 ng-if="data.title" class="lead" >{{data.title}}</h2>
+            </div>
+        </div>
+        <div ng-if="showdesc" class="card-body">
+            <h3 ng-if="data.title" class="card-title" >{{data.title}}</h3>
+            <p ng-if="data.shortDesc" class="card-text">{{data.shortDesc}}...</p>
+        </div>
+    </a>
+</div>

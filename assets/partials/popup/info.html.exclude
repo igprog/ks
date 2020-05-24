@@ -1,0 +1,12 @@
+﻿<div ng-controller="appCtrl">
+    <pre>
+        <strong>KUP - Janaf</strong>
+        Verzija: {{config.version}} ({{config.date}})
+        <br />
+        &copy; {{g.year}} IG PROG, obrt za računalno programiranje
+        Autor: Igor Gašparović
+        web: www.igprog.hr
+        e-mail: info@igprog.hr
+        mob: +38598330966
+    </pre>
+</div>

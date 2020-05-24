@@ -1,0 +1,83 @@
+﻿<div ng-controller="contactCtrl" class="footer">
+    <div class="row tranparent">
+        <div class="col-lg-6 contact-padding">
+            <div ng-if="loading" class="text-left">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw text-white"></i>
+            </div>
+            <div ng-if="!loading">
+                <div ng-if="!d.response.isSent">
+                    <h3>{{'send inquiry' | translate}}</h3>
+                    <div>
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <input ng-model="d.name" class="form-control dark-input" name="name" placeholder="{{'name' | translate}}" type="text" required>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <input ng-model="d.email" class="form-control dark-input" name="email" placeholder="{{'email' | translate}}" type="email" required>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <input ng-model="d.phone" class="form-control dark-input" name="phone" placeholder="{{'phone' | translate}}" type="text" required>
+                            </div>
+                        </div>
+                        <textarea ng-model="d.msg" class="form-control dark-input" name="comments" placeholder="{{'message' | translate}}" rows="5"></textarea><br>
+                        <fieldset class="fieldset-border">
+                            <legend class="fieldset-border">{{'project' | translate}} <em>({{'floor plans' | translate}}, {{'cross sections' | translate}})</em></legend>
+                            <form id="formUpload_" ng-submit="upload(d)" enctype="multipart/form-data" method="post">
+                                <input id="imgFolder" name="imgFolder" value="temp" type="text" hidden="hidden">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="custom-file mb-3">
+                                            <input ng-model="d.file" name="UploadedFile" id="UploadedFile" type="file" class="custom-file-input" style="background-color:transparent">
+                                            <label class="custom-file-label" for="UploadedFile">{{'attach the file' | translate}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="submit" class="btn btn-outline-light text-capitalize"><i class="fa fa-upload"></i> Upload</button>
+                                    </div>
+                                </div>
+                                <script>
+                                $(".custom-file-input").on("change", function () {
+                                    var fileName = $(this).val().split("\\").pop();
+                                    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                                });
+                                </script>
+                            </form>
+                            <div ng-if="d.file" class="card mt-2 tranparent">
+                                <div class="card-body">
+                                    <img src="/upload/temp/{{d.file}}" alt="{{d.file}}" style="width:100px" /><span class="pl-5">{{d.file}}</span>
+                                    <a href="" ng-click="removeImg()" class="float-right text-light" title="{{'remove' | translate}}"><i class="fa fa-times"></i></a>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="row text-right">
+                            <div class="col-sm-12 form-group">
+                                <button class="btn btn-outline-light pull-right" ng-click="send(d)"><i class="fa fa-paper-plane"></i> {{'send' | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="d.response.msg" class="alert alert-{{d.response.isSent?'success':'danger'}}">
+                    <strong>{{d.response.msg | translate}}!</strong>
+                    <p>{{d.response.msg1 | translate}}.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 p-3">
+            <iframe ng-if="config.showgooglemap===true" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22421.808747663108!2d14.336609035584376!3d45.374520359290536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4764a60af9f92e03%3A0xebf4091255fc80a8!2sKastav!5e0!3m2!1shr!2shr!4v1575537226935!5m2!1shr!2shr" frameborder="0" style="border:0; width:100%; height:100%" allowfullscreen=""></iframe>
+        </div>
+
+        <div class="col-lg-4" style="margin-top:80px">
+            <!--<h2 class="text-white text-uppercase">{{'contact' | translate}}</h2>-->
+            <div>
+                <img src="../assets/img/logo.png" class="mb-3" style="height:50px" alt="{{config.sitename}}" />
+                <!--<label><p ng-if="info.company"><strong>{{info.company}}</strong></p></label>-->
+                <p ng-if="info.pin" class="text-uppercase">{{'pin' | translate}}: {{info.pin}}</p>
+                <p ng-if="info.address"><i class="fa fa-map-marker-alt"></i> {{info.address}}</p>
+                <p><a href="tel:{{info.phone}}" class="text-white" title="{{'phone' | translate}}"><img src="../assets/img/icon/phone.png" style="width:50px" /> {{info.phone}}</a></p>
+                <p><a href="mailto:{{info.email}}" class="text-white" title="email"><img src="../assets/img/icon/mail.png" style="width:50px" /> {{info.email}}</a></p>
+                <!--<p><a href="{{config.url}}" class="text-white" title="url"><i class="fa fa-globe"></i> {{config.domain}}</a></p>-->
+            </div>
+        </div>
+
+    </div>
+</div>

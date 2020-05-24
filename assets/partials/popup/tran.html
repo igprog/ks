@@ -1,0 +1,25 @@
+﻿<md-dialog flex class="fixed-top mt-5 ml-5">
+    <form ng-cloak>
+        <md-toolbar class="main-background">
+            <div class="md-toolbar-tools">
+                <h2 class="text-capitalize">Prijevod</h2>
+                <span flex></span>
+                <a href="" class="btn btn-primary" ng-click="cancel()" title="Zatvori">x</a>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div ng-repeat="x in d.langs">
+                    <div class="form-group">
+                        <label class="text-uppercase">{{x.lang}}:</label>
+                        <textarea ng-model="x.tran" rows="6" class="form-control" maxlength="4000"></textarea>
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary text-capitalize" ng-click="confirm(d, x)"><i class="fa fa-save"></i> Spremi</button>
+                    </div>
+                </div>
+                <!--<json-directive data="d" debug="true"></json-directive>-->
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>
