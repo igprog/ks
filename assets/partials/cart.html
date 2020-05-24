@@ -28,9 +28,9 @@
                                             <a href=""><img src="../upload/{{x.product.id}}/gallery/{{x.product.gallery[0]}}" alt="{{x.product.title}}"></a>
                                         </td>
                                         <td class="goods-page-description">
-                                            <h3><a href="">{{x.product.shortdesc}}</a></h3>
+                                            <h3><a href="" ng-click="get(x.product)">{{x.product.shortdesc}}</a></h3>
                                             <p><strong>{{x.product.title}}</strong></p>
-                                            <em>More info is here</em>
+                                            <em ng-click="get(x.product)">Više informacija...</em>
                                         </td>
                                         <td class="goods-page-ref-no">
                                             {{x.product.sku}}

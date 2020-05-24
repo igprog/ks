@@ -56,60 +56,6 @@ public class ProductGroups : System.Web.Services.WebService {
         }
     }
 
-    public List<NewProductGroup> LoadData() {
-        DB.CreateDataBase(G.db.productGroups);
-        string sql = "SELECT id, code, title, parent, pg_order FROM productGroups WHERE code = parent";
-        List<NewProductGroup> xx = new List<NewProductGroup>();
-        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
-            connection.Open();
-            using (var command = new SQLiteCommand(sql, connection)) {
-                using (var reader = command.ExecuteReader()) {
-                    xx = new List<NewProductGroup>();
-                    while (reader.Read()) {
-                        NewProductGroup x = new NewProductGroup();
-                        x.id = G.ReadS(reader, 0);
-                        x.code = G.ReadS(reader, 1);
-                        x.title = G.ReadS(reader, 2);
-                        x.title_seo = G.GetSeoTitle(x.title);
-                        x.parent = G.ReadS(reader, 3);
-                        x.order = G.ReadI(reader, 4);
-                        x.subGroups = GetSubGroups(x.code);
-                        xx.Add(x);
-                    }
-                }
-            }
-            connection.Close();
-        }
-        return xx;
-    }
-
-    public List<NewProductGroup> GetSubGroups(string parent) {
-        DB.CreateDataBase(G.db.productGroups);
-        string sql = string.Format("SELECT id, code, title, parent, pg_order FROM productGroups WHERE code <> '{0}' AND parent = '{0}'", parent);
-        List<NewProductGroup> xx = new List<NewProductGroup>();
-        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
-            connection.Open();
-            using (var command = new SQLiteCommand(sql, connection)) {
-                using (var reader = command.ExecuteReader()) {
-                    xx = new List<NewProductGroup>();
-                    while (reader.Read()) {
-                        NewProductGroup x = new NewProductGroup();
-                        x.id = G.ReadS(reader, 0);
-                        x.code = G.ReadS(reader, 1);
-                        x.title = G.ReadS(reader, 2);
-                        x.title_seo = G.GetSeoTitle(x.title);
-                        x.parent = G.ReadS(reader, 3);
-                        x.order = G.ReadI(reader, 4);
-                        x.subGroups = null;  // TODO: isprogramirati za vise od 1 podgrupe GetSubGroups(x.code);
-                        xx.Add(x);
-                    }
-                }
-            }
-            connection.Close();
-        }
-        return xx;
-    }
-
     [WebMethod]
     public string Get(string id) {
         try {
@@ -180,5 +126,78 @@ public class ProductGroups : System.Web.Services.WebService {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
     }
+
+    public List<NewProductGroup> LoadData() {
+        DB.CreateDataBase(G.db.productGroups);
+        string sql = "SELECT id, code, title, parent, pg_order FROM productGroups WHERE code = parent";
+        List<NewProductGroup> xx = new List<NewProductGroup>();
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            using (var command = new SQLiteCommand(sql, connection)) {
+                using (var reader = command.ExecuteReader()) {
+                    xx = new List<NewProductGroup>();
+                    while (reader.Read()) {
+                        NewProductGroup x = new NewProductGroup();
+                        x.id = G.ReadS(reader, 0);
+                        x.code = G.ReadS(reader, 1);
+                        x.title = G.ReadS(reader, 2);
+                        x.title_seo = G.GetSeoTitle(x.title);
+                        x.parent = G.ReadS(reader, 3);
+                        x.order = G.ReadI(reader, 4);
+                        x.subGroups = GetSubGroups(x.code);
+                        xx.Add(x);
+                    }
+                }
+            }
+            connection.Close();
+        }
+        return xx;
+    }
+
+    public List<NewProductGroup> GetSubGroups(string parent) {
+        DB.CreateDataBase(G.db.productGroups);
+        string sql = string.Format("SELECT id, code, title, parent, pg_order FROM productGroups WHERE code <> '{0}' AND parent = '{0}'", parent);
+        List<NewProductGroup> xx = new List<NewProductGroup>();
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            using (var command = new SQLiteCommand(sql, connection)) {
+                using (var reader = command.ExecuteReader()) {
+                    xx = new List<NewProductGroup>();
+                    while (reader.Read()) {
+                        NewProductGroup x = new NewProductGroup();
+                        x.id = G.ReadS(reader, 0);
+                        x.code = G.ReadS(reader, 1);
+                        x.title = G.ReadS(reader, 2);
+                        x.title_seo = G.GetSeoTitle(x.title);
+                        x.parent = G.ReadS(reader, 3);
+                        x.order = G.ReadI(reader, 4);
+                        x.subGroups = null;  // TODO: isprogramirati za vise od 1 podgrupe GetSubGroups(x.code);
+                        xx.Add(x);
+                    }
+                }
+            }
+            connection.Close();
+        }
+        return xx;
+    }
+
+    public string GetParentGroup(string subGroup) {
+        DB.CreateDataBase(G.db.productGroups);
+        string x = null;
+        string sql = string.Format("SELECT parent FROM productGroups WHERE code = '{0}'", subGroup);
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            using (var command = new SQLiteCommand(sql, connection)) {
+                using (var reader = command.ExecuteReader()) {
+                    while (reader.Read()) {
+                        x = G.ReadS(reader, 0);
+                    }
+                }
+            }
+            connection.Close();
+        }
+        return x;
+    }
+
    
 }

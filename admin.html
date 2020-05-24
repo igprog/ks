@@ -546,12 +546,20 @@
                 <h2>Proizvodi</h2>
                 <div class="row">
                     <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Grupa:</label>
-                            <select ng-model="d.productGroup" class="form-control" ng-change="f.load(d.productGroup)">
-                                <option value="">Svi proizvodi</option>
-                                <option ng-repeat="x in d.productGroups" value="{{x.code}}">{{x.title}}</option>
-                            </select>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                Grupa proizvoda: <span ng-if="d.currProductGroup===null">Sve grupe</span><span ng-if="d.currProductGroup!==null">{{d.currProductGroup.title}}</span>
+                                <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
+                            </button>
+                            <ul class="dropdown-menu p-2">
+                                <li><a href="" ng-click="f.load(null)"><strong>Sve grupe</strong></a></li>
+                                <li ng-repeat="x in d.productGroups">
+                                    <a href="" ng-click="f.load(x)"><strong>{{x.title}}</strong></a>
+                                    <ul>
+                                        <li ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="f.load(y)"><em class="pl-2">{{y.title}}</em></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -579,12 +587,26 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <form>
-                                <div class="form-group">
+                                <div class="dropdown pt-20 pb-0 mb-3">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                        Grupa proizvoda: <span>{{x.productGroup.title}}</span>
+                                        <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
+                                    </button>
+                                    <ul class="dropdown-menu p-2">
+                                        <li ng-repeat="pg in d.productGroups">
+                                            <a href=""><strong>{{pg.title}}</strong></a>
+                                            <ul>
+                                                <li ng-repeat="sg in pg.subGroups track by $index"><a href="" ng-click="f.setProductGroup(x, sg)"><em class="pl-2">{{sg.title}}</em></a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--<div class="form-group">
                                     <label>Grupa:</label>
                                     <select ng-model="x.productGroup.code" class="form-control">
                                         <option ng-repeat="pg in d.productGroups" value="{{pg.code}}">{{pg.title}}</option>
                                     </select>
-                                </div>
+                                </div>-->
                                 <div class="form-group">
                                     <label>Brand (proizvođač):</label>
                                     <select ng-model="x.brand.code" class="form-control">
@@ -716,5 +738,6 @@
     </script>
 
     <script src="assets/js/admin.js"></script>
+
 </body>
 </html>

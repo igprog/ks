@@ -175,6 +175,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.d.loading = true;
         f.post('ProductGroups', 'Load', {}).then((d) => {
             $scope.d.productGroups = d;
+            $rootScope.d.productGroups = d;
             $scope.d.loading = false;
         });
     }
@@ -299,6 +300,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     var data = {
         loading: false,
         productGroups: null,
+        bestselling: [],
         records: [],
         info: null,
         mainGallery: null,
@@ -315,14 +317,14 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadProductGroups();
 
-    var loadBestSelling = (lang, limit) => {
+    var loadBestSelling = (lang, pg, limit) => {
         $scope.d.loading = true;
-        f.post('Products', 'LoadBestSelling', { lang: lang, limit: limit }).then((d) => {
+        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
             $scope.d.bestselling = d;
             $scope.d.loading = false;
         });
     }
-    loadBestSelling('hr', 4);
+    loadBestSelling('hr', null, 4);
 
 }])
 
@@ -348,8 +350,14 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $scope.d = data;
 
+    var loadProductGroups = () => {
+        f.post('ProductGroups', 'Load', {}).then((d) => {
+            $scope.d.productGroups = d;
+        });
+    }
+    loadProductGroups();
+
     var load = (param) => {
-        debugger;
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
 
@@ -359,8 +367,18 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.loading = false;
         });
     }
-    debugger;
     load($stateParams);
+
+    var loadBestSelling = (lang, pg, limit) => {
+        $scope.d.loading = true;
+        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+            $scope.d.bestselling = d;
+            $scope.d.loading = false;
+        });
+    }
+    loadBestSelling('hr', $stateParams.pg_code, 3);
+
+
 
     //$scope.get = (x) => {
     //    debugger;
@@ -374,6 +392,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     var data = {
         loading: false,
         productGroups: null,
+        bestselling: [],
+        bestsellingall: [],
         record: [],
         review: {
             name: null,
@@ -414,10 +434,28 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadProductGroups();
 
+    var loadBestSelling = (lang, pg, limit) => {
+        $scope.d.loading = true;
+        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+            $scope.d.bestselling = d;
+            $scope.d.loading = false;
+        });
+    }
+
+    var loadBestSellingAll = (lang, pg, limit) => {
+        $scope.d.loading = true;
+        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+            $scope.d.bestsellingall = d;
+            $scope.d.loading = false;
+        });
+    }
+
     var get = (id) => {
         $scope.d.loading = true;
         f.post('Products', 'Get', { id: id, lang: 'hr' }).then((d) => {
             $scope.d.record = d;
+            loadBestSelling('hr', $scope.d.record.productGroup.code, 3);
+            loadBestSellingAll('hr', null, 4);
             $scope.d.loading = false;
         });
     }
@@ -427,6 +465,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $scope.selectImg = function (idx) {
         $scope.mainImgIdx = idx;
     }
+
 
     //$scope.addToCart = (x) => {
     //    debugger;
@@ -654,6 +693,51 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 //        templateUrl: '../assets/partials/directive/details.html'
 //    };
 //})
+
+.directive('pgDirective', () => {
+    return {
+        restrict: 'E',
+        scope: {
+            pg: '=',
+            record: '='
+        },
+        templateUrl: '../assets/partials/directive/pgcategories.html',
+        controller: 'pgCtrl'
+    };
+})
+.controller('pgCtrl', ['$scope', '$state', ($scope, $state) => {
+    $scope.shop = (pg_code, productgroup, subgroup) => {
+        $state.go('shop', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
+    }
+}])
+
+.directive('bestsellingDirective', () => {
+    return {
+        restrict: 'E',
+        scope: {
+            data: '=',
+            record: '='
+        },
+        templateUrl: '../assets/partials/directive/bestselling.html',
+        controller: 'bestsellingCtrl'
+    };
+})
+.controller('bestsellingCtrl', ['$scope', 'f', '$rootScope', '$state', ($scope, f, $rootScope, $state) => {
+    $scope.get = (x) => {
+        debugger;
+        $state.go('product', { title_seo: x.title_seo, id: x.id });
+    }
+
+    $scope.addToCart = (x) => {
+        debugger;
+        f.post('Cart', 'AddToCart', { cart: $rootScope.d.cart, x: x }).then((d) => {
+            $rootScope.d.cart = d;
+            localStorage.cart = JSON.stringify(d);
+        });
+    }
+}])
+
+
 .directive('detailsDirective', () => {
     return {
         restrict: 'E',

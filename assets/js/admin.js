@@ -243,12 +243,21 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         brands: [],
         records: [],
         currProduct: null,
+        currProductGroup: null,
         productGroupId: null
     }
     $scope.d = data;
 
     var load = (productGroup) => {
-        f.post(service, 'Load', { lang: 'hr', order: false, productGroup: productGroup, brand: null }).then((d) => {
+        if (productGroup === null) {
+            var pg_code = null;
+            $scope.d.currProductGroup = null;
+        } else {
+            var pg_code = productGroup.code;
+            $scope.d.currProductGroup = productGroup;
+        }
+        $scope.d.currProductGroup = productGroup;
+        f.post(service, 'Load', { lang: 'hr', order: false, productGroup: pg_code, brand: null }).then((d) => {
             $scope.d.records = d;
         });
     }
@@ -257,7 +266,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         $scope.d.loading = true;
         f.post('ProductGroups', 'Load', {}).then((d) => {
             $scope.d.productGroups = d;
-            load($scope.d.productGroups[0].code);
+            //load($scope.d.productGroups[0]);
+            load(null);
             $scope.d.productGroupId = $scope.d.productGroups[0].id;
             $scope.d.loading = false;
 
@@ -405,6 +415,10 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
     };
 
+    var setProductGroup = (x, pg) => {
+        x.productGroup = pg;
+    }
+
     $scope.f = {
         load: (productGroup) => {
             debugger;
@@ -430,6 +444,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         openTranPopup: (x, type) => {
             return openTranPopup(x, type);
+        },
+        setProductGroup: (x, pg) => {
+            return setProductGroup(x, pg);
         }
     }
 }])

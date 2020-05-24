@@ -11,8 +11,11 @@
             <div class="row margin-bottom-40">
                 <!-- BEGIN SIDEBAR -->
                 <div class="sidebar col-md-3 col-sm-5">
-                    <ul class="list-group margin-bottom-25 sidebar-menu">
-                        <li class="list-group-item clearfix dropdown {{x.code===d.record.productGroup.code?'active':''}}" ng-repeat="x in d.productGroups track by $index">
+
+                    <pg-directive pg="d.productGroups" record="d.record"></pg-directive>
+
+                    <!--<ul class="list-group margin-bottom-25 sidebar-menu">
+                        <li class="list-group-item clearfix dropdown {{x.code===d.record.productGroup.parent?'active':''}}" ng-repeat="x in d.productGroups track by $index">
                             <a href="" ng-click="shop(x.code, x.title_seo, null)"><i class="fa fa-angle-right"></i> {{x.title}}</a>
                             <ul class="dropdown-menu" ng-repeat="y in x.subGroups track by $index">
                                 <li class="list-group-item dropdown clearfix {{y.code===d.record.productGroup.code?'active':''}}">
@@ -20,23 +23,13 @@
                                 </li>
                             </ul>
                         </li>
-                    </ul>
-                    <div class="sidebar-products clearfix">
-                        <h2>Bestsellers</h2>
-                        <div class="item">
-                            <a href="shop-item.html"><img src="assets/pages/img/products/k1.jpg" alt="Some Shoes in Animal with Cut Out"></a>
-                            <h3><a href="shop-item.html">Some Shoes in Animal with Cut Out</a></h3>
-                            <div class="price">$31.00</div>
-                        </div>
-                        <div class="item">
-                            <a href="shop-item.html"><img src="assets/pages/img/products/k4.jpg" alt="Some Shoes in Animal with Cut Out"></a>
-                            <h3><a href="shop-item.html">Some Shoes in Animal with Cut Out</a></h3>
-                            <div class="price">$23.00</div>
-                        </div>
-                        <div class="item">
-                            <a href="shop-item.html"><img src="assets/pages/img/products/k3.jpg" alt="Some Shoes in Animal with Cut Out"></a>
-                            <h3><a href="shop-item.html">Some Shoes in Animal with Cut Out</a></h3>
-                            <div class="price">$86.00</div>
+                    </ul>-->
+                    <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix">
+                        <h2>Najprodavanije</h2>
+                        <div class="item" ng-repeat="x in d.bestselling">
+                            <a href=""><img src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}"></a>
+                            <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
+                            <div class="price">{{x.price.net_discount | number}} kn</div>
                         </div>
                     </div>
                 </div>
@@ -74,7 +67,7 @@
                                 </div>
                                 <div class="description">
                                     <p>
-                                        {{d.record.longdesc}}
+                                        {{d.record.shortdesc}}
                                     </p>
                                 </div>
                                 <div class="product-page-options">
@@ -225,7 +218,9 @@
             <div class="row margin-bottom-40">
                 <div class="col-md-12 col-sm-12">
                     <h2>Najpopularniji proizvodi</h2>
-                    <div class="owl-carousel owl-carousel4 owl-theme owl-loaded">
+                    <bestselling-directive data="d.bestsellingall"></bestselling-directive>
+
+                    <!--<div class="owl-carousel owl-carousel4 owl-theme owl-loaded">
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="product-item">
@@ -286,7 +281,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <!-- END SIMILAR PRODUCTS -->

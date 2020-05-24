@@ -60,6 +60,7 @@ public class Cart : System.Web.Services.WebService {
         Products.NewProduct product = P.GetProduct(x.id, "hr");
         CartItem item = new CartItem();
         item.product = product;
+        item.product.qty = x.qty;
         //item.qty = x.qty;
         item = c_CalcItemPrice(item); // x.price.net_discount * x.qty;
         cart.items.Add(item);
