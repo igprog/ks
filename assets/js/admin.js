@@ -36,6 +36,16 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             (response) => {
                 return response.data.d;
             });
+        },
+        initCodeName: (x) => {
+            if (x.id === null) {
+                x.code = x.title
+                        .replace(/č/g, 'c').replace(/ć/g, 'c').replace(/š/g, 's').replace(/đ/g, 'd').replace(/ž/g, 'z')
+                        .replace(/\s/g, "")
+                        .substr(0, 16)
+                        .toUpperCase();
+            }
+            return x;
         }
     }
 }])
@@ -140,7 +150,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
         var save = (x) => {
             f.post(service, 'Save', { x: x }).then((d) => {
-                $scope.d.records = d;
+                //$scope.d.records = d;
+                alert(d);
             });
         }
 
@@ -175,6 +186,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                     d.parent = x.code;
                     x.subGroups.push(d);
                 });
+            },
+            initCodeName: (x) => {
+                x = f.initCodeName(x);
             }
         }
 }])
@@ -231,6 +245,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         remove: (x) => {
             return remove(x)
+        },
+        initCodeName: (x) => {
+            x = f.initCodeName(x);
         }
     }
 }])

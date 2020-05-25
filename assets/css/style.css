@@ -461,6 +461,14 @@ legend.fieldset-border {
     line-height: 1.42857;
 }
 
+.rzslider .rz-pointer {
+    border-radius:50% !important;
+    background-color: #e84d1c !important;
+}
+.rzslider .rz-selection {
+    background: #e84d1c !important;
+}
+
 @media (min-width: 1600px) {
     .contact-padding {
         padding: 10px 0px 20px 300px;

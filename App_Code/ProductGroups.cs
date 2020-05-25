@@ -104,7 +104,7 @@ public class ProductGroups : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            return JsonConvert.SerializeObject(LoadData(), Formatting.None);
+            return JsonConvert.SerializeObject("Spremljeno", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -113,7 +113,8 @@ public class ProductGroups : System.Web.Services.WebService {
     [WebMethod]
     public string Delete(NewProductGroup x) {
         try {
-            string sql = string.Format(" DELETE FROM ProductGroups WHERE id = '{0}'", x.id);
+            string sql = string.Format(@"DELETE FROM ProductGroups WHERE {0}"
+                        , x.code == x.parent ? string.Format("parent = '{0}'", x.code) : string.Format("code = '{0}'", x.code));
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
                 using (var command = new SQLiteCommand(sql, connection)) {
@@ -129,7 +130,7 @@ public class ProductGroups : System.Web.Services.WebService {
 
     public List<NewProductGroup> LoadData() {
         DB.CreateDataBase(G.db.productGroups);
-        string sql = "SELECT id, code, title, parent, pg_order FROM productGroups WHERE code = parent";
+        string sql = "SELECT id, code, title, parent, pg_order FROM productGroups WHERE code = parent ORDER BY pg_order";
         List<NewProductGroup> xx = new List<NewProductGroup>();
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
@@ -156,7 +157,7 @@ public class ProductGroups : System.Web.Services.WebService {
 
     public List<NewProductGroup> GetSubGroups(string parent) {
         DB.CreateDataBase(G.db.productGroups);
-        string sql = string.Format("SELECT id, code, title, parent, pg_order FROM productGroups WHERE code <> '{0}' AND parent = '{0}'", parent);
+        string sql = string.Format("SELECT id, code, title, parent, pg_order FROM productGroups WHERE code <> '{0}' AND parent = '{0}' ORDER BY pg_order", parent);
         List<NewProductGroup> xx = new List<NewProductGroup>();
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();

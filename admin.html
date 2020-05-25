@@ -283,24 +283,18 @@
                             <div ng-if="d.records.length>0&&!d.loading">
                                 <form>
                                     <div class="form-group">
-                                        <label>Kod:</label>
-                                        <input ng-model="x.code" type="text" class="form-control" maxlength="30">
-                                    </div>
-                                    <div class="form-group">
                                         <label>Naziv:</label>
-                                        <input ng-model="x.title" type="text" class="form-control" maxlength="200">
+                                        <input ng-model="x.title" type="text" class="form-control" maxlength="200" ng-change="f.initCodeName(x)">
                                     </div>
-                                    <!--<div class="form-group">
-                                        <label>Naziv (SEO):</label>
-                                        <input ng-model="x.title_seo" type="text" class="form-control" maxlength="200">
-                                    </div>-->
-                                    <!--<div class="form-group">
-                                        <label>Parent Group:</label>
-                                        <input ng-model="x.parent" type="text" class="form-control" maxlength="30">
-                                    </div>-->
-                                    <div class="form-group">
-                                        <label>Redosljed:</label>
-                                        <input ng-model="x.order" type="number" class="form-control" maxlength="30">
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Kod:</label>
+                                            <input ng-model="x.code" type="text" class="form-control bg-light" maxlength="30">
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Redosljed:</label>
+                                            <input ng-model="x.order" type="number" class="form-control" maxlength="30">
+                                        </div>
                                     </div>
                                     <div class="text-right">
                                         <button ng-disabled="d.adminType==='admin'" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
@@ -328,24 +322,18 @@
                                                 <div class="card-body">
                                                     <form>
                                                         <div class="form-group">
-                                                            <label>Kod:</label>
-                                                            <input ng-model="y.code" type="text" class="form-control" maxlength="30">
-                                                        </div>
-                                                        <div class="form-group">
                                                             <label>Naziv:</label>
-                                                            <input ng-model="y.title" type="text" class="form-control" maxlength="200">
+                                                            <input ng-model="y.title" type="text" class="form-control" maxlength="200" ng-change="f.initCodeName(y)">
                                                         </div>
-                                                        <!--<div class="form-group">
-                                                            <label>Naziv (SEO):</label>
-                                                            <input ng-model="y.title_seo" type="text" class="form-control" maxlength="200">
-                                                        </div>-->
-                                                        <!--<div class="form-group">
-                                                            <label>Parent Group:</label>
-                                                            <input ng-model="y.parent" type="text" class="form-control" maxlength="30">
-                                                        </div>-->
-                                                        <div class="form-group">
-                                                            <label>Redosljed:</label>
-                                                            <input ng-model="y.order" type="number" class="form-control" maxlength="30">
+                                                        <div class="row">
+                                                            <div class="col-sm-6 form-group">
+                                                                <label>Kod:</label>
+                                                                <input ng-model="y.code" type="text" class="form-control bg-light" maxlength="30">
+                                                            </div>
+                                                            <div class="col-sm-6 form-group">
+                                                                <label>Redosljed:</label>
+                                                                <input ng-model="y.order" type="number" class="form-control" maxlength="30">
+                                                            </div>
                                                         </div>
                                                         <div class="text-right">
                                                             <button ng-click="f.saveSubGroup(y)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
@@ -387,17 +375,20 @@
                             <div ng-if="d.records.length>0&&!d.loading">
                                 <form>
                                     <div class="form-group">
-                                        <label>Kod:</label>
-                                        <input ng-model="x.code" type="text" class="form-control" maxlength="30">
-                                    </div>
-                                    <div class="form-group">
                                         <label>Naziv:</label>
-                                        <input ng-model="x.title" type="text" class="form-control" maxlength="200">
+                                        <input ng-model="x.title" type="text" class="form-control" maxlength="200" ng-change="f.initCodeName(x)">
                                     </div>
-                                    <div class="form-group">
-                                        <label>Redosljed:</label>
-                                        <input ng-model="x.order" type="number" class="form-control" maxlength="30">
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Kod:</label>
+                                            <input ng-model="x.code" type="text" class="form-control bg-light" maxlength="30">
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Redosljed:</label>
+                                            <input ng-model="x.order" type="number" class="form-control" maxlength="30">
+                                        </div>
                                     </div>
+                                    
                                     <div class="text-right">
                                         <button ng-disabled="d.adminType==='admin'" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
                                         <button ng-click="f.save(x)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
@@ -414,68 +405,6 @@
             <json-directive data="d" desc="'d'" debug="true"></json-directive>
         </div>
     </script>
-
-    <!--<script type="text/ng-template" id="options">
-        <div ng-if="d.isLogin" ng-controller="optionsCtrl">
-            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
-            <div class="card shadow m-3">
-                <div class="card-header">
-                    <h2>Opcije</h2>
-                </div>
-                <div class="card-body">
-                    <form>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-condensed">
-                                <tr>
-                                    <th style="width:30px"></th>
-                                    <th style="width:200px">Kod</th>
-                                    <th style="min-width:200px">Naziv (EN)</th>
-                                    <th style="min-width:200px">Opis (EN)</th>
-                                    <th style="min-width:100px">Jedinica</th>
-                                    <th style="width:200px">Ikona</th>
-                                    <th style="width:200px">Fa icon</th>
-                                    <th style="min-width:100px">Tip</th>
-                                    <th style="width:30px">Redosljed</th>
-                                </tr>
-                                <tr ng-repeat="x in d.records track by $index">
-                                    <td><button class="btn btn-outline-danger" ng-click="f.remove(d.records, $index)"><i class="fa fa-trash"></i></button></td>
-                                    <td><input ng-model="x.code" type="text" class="form-control" /></td>
-                                    <td><input ng-model="x.title" type="text" class="form-control" /></td>
-                                    <td><input ng-model="x.desc" type="text" class="form-control" /></td>
-                                    <td><input ng-model="x.unit" type="text" class="form-control" /></td>
-                                    <td>
-                                        <div class="input-group">
-                                            <input ng-model="x.icon" type="text" class="form-control" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text"><img src="./assets/img/icon/{{x.icon}}" style="width:20px" /></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group">
-                                            <input ng-model="x.faicon" type="text" class="form-control" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text"><i class="fa fa-{{x.faicon}}"></i></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><input ng-model="x.type" type="text" class="form-control" /></td>
-                                    <td><input ng-model="x.order" type="number" class="form-control" /></td>
-                                </tr>
-                                <tr>
-                                    <td><button class="btn btn-outline-warning" ng-click="f.add()"><i class="fa fa-plus"></i></button></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div>
-                            <button ng-click="f.save(d.records)" type="submit" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Spremi</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <json-directive data="d" debug="config.debug"></json-directive>
-        </div>
-    </script>-->
 
     <script type="text/ng-template" id="features">
         <div ng-if="d.isLogin" ng-controller="featuresCtrl">
@@ -577,11 +506,6 @@
                     <span class="float-right">
                         Detalji <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
                     </span>
-                    <!--<div class="row">
-                        <div class="col-sm-6">
-                            Proizvod br. {{$index+1}}
-                        </div>
-                    </div>-->
                 </div>
                 <div id="p_{{$index}}" class="card-body collapse">
                     <div class="row">
@@ -601,24 +525,12 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <!--<div class="form-group">
-                                    <label>Grupa:</label>
-                                    <select ng-model="x.productGroup.code" class="form-control">
-                                        <option ng-repeat="pg in d.productGroups" value="{{pg.code}}">{{pg.title}}</option>
-                                    </select>
-                                </div>-->
                                 <div class="form-group">
                                     <label>Brand (proizvođač):</label>
                                     <select ng-model="x.brand.code" class="form-control">
                                         <option ng-repeat="b in d.brands" value="{{b.code}}">{{b.title}}</option>
                                     </select>
                                 </div>
-                                <!--<div class="form-group">
-                                    <label>Pozicija na stranici:</label>
-                                    <select ng-model="x.displayType" class="form-control">
-                                        <option value="0" ng-selected="x.displayType===0">Portfolio</option>
-                                    </select>
-                                </div>-->
                                 <div class="form-group">
                                     <label>SKU:</label>
                                     <input ng-model="x.sku" type="text" class="form-control" maxlength="200">
@@ -639,51 +551,37 @@
                                     <tran-btn ng-click="f.openTranPopup(x, 'productLongDesc')"></tran-btn>
                                 </div>
                                 <div class="form-group">
-                                    <label>Cijena:</label>
-                                    <input ng-model="x.price.net" type="text" class="form-control" allow-only-numbers >
+                                    <label>Redosljed:</label>
+                                    <input ng-model="x.productorder" type="number" class="form-control" style="width:100px">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4 form-group">
+                                        <label>Cijena:</label>
+                                        <input ng-model="x.price.net" type="text" class="form-control" allow-only-numbers>
+                                    </div>
+                                    <div class="col-sm-4 form-group">
+                                        <label>Popust (koeficjent):</label>
+                                        <input ng-model="x.discount" type="number" class="form-control" allow-only-numbers>
+                                    </div>
+                                    <div class="col-sm-4 form-group">
+                                        <label>Zaliha (komada):</label>
+                                        <input ng-model="x.stock" type="text" class="form-control" allow-only-numbers>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Popust (koeficjent):</label>
-                                    <input ng-model="x.discount" type="text" class="form-control" allow-only-numbers>
-                                </div>
-                                <div class="form-group">
-                                    <input id="isnew_{{$index}}" type="checkbox" ng-model="x.isnew" title="Novi proizvod" class="m-2"/> <label for="isnew_{{$index}}">Novi proizvod</label>
+                                    <input id="isnew_{{$index}}" type="checkbox" ng-model="x.isnew" title="Novi proizvod" class="m-2" /> <label for="isnew_{{$index}}">Novi proizvod</label>
                                     <input id="outlet_{{$index}}" type="checkbox" ng-model="x.outlet" title="Akcija" class="m-2" /> <label for="outlet_{{$index}}">Akcija</label>
                                     <input id="bestselling_{{$index}}" type="checkbox" ng-model="x.bestselling" title="Akcija" class="m-2" /> <label for="bestselling_{{$index}}">Najprodavaniji</label>
                                     <input id="isactive_{{$index}}" type="checkbox" ng-model="x.isactive" title="Aktivan" class="m-2" /> <label for="isactive_{{$index}}">Aktivan</label>
                                 </div>
-                                <div class="form-group">
-                                    <label>Zaliha (komada):</label>
-                                    <input ng-model="x.stock" type="text" class="form-control" allow-only-numbers>
-                                </div>
-                                <div class="form-group">
-                                    <label>Redosljed:</label>
-                                    <input ng-model="x.productorder" type="number" class="form-control"  style="width:100px">
-                                </div>
                                 <label class="text-success">Značajke:</label>
                                 <hr class="mt-0" />
-                                <div class="form-group" ng-repeat="y in x.features">
-                                    <label>{{y.title | translate}} <em>({{y.unit}})</em>:</label>
-                                    <input ng-model="y.val" type="text" class="form-control" maxlength="200">
+                                <div class="row">
+                                    <div class="col-sm-4 form-group" ng-repeat="y in x.features">
+                                        <label>{{y.title | translate}} <em>({{y.unit}})</em>:</label>
+                                        <input ng-model="y.val" type="text" class="form-control" maxlength="200">
+                                    </div>
                                 </div>
-                                <!--<div class="form-group">
-                                    <label>Objavio:</label>
-                                    <input ng-model="x.owner" class="form-control" maxlength="200" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Datum:</label>
-                                    <input ng-model="x.productDate" class="form-control" maxlength="30" />
-                                </div>
-                                <div class="form-group">
-                                    <label>URL:</label>
-                                    <input ng-model="x.url" class="form-control" maxlength="4000" />
-                                </div>
-                                <label>Opcije:</label>
-                                <hr style="margin-top:0" />
-                                <div class="form-group" ng-repeat="y in x.productOptions">
-                                    <label>{{y.title | translate}} <span>{{y.unit}}</span>:</label>
-                                    <input ng-model="y.desc" type="text" class="form-control" maxlength="200">
-                                </div>-->
                                 <div class="text-right">
                                     <button ng-disabled="x.id==null" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
                                     <button ng-click="f.save(x)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
