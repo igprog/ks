@@ -337,7 +337,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     var deleteImg = (x, img) => {
         if (confirm('Briši sliku?')) {
             f.post(service, 'DeleteImg', { x: x, img: img }).then((d) => {
-                $scope.d.records = d;
+                //$scope.d.records = d;
             });
         }
     }
@@ -351,14 +351,15 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     var remove = (x) => {
         if (confirm('Briši proizvod?')) {
             f.post(service, 'Delete', { x: x }).then((d) => {
-                $scope.d.records.push(d);
+                //$scope.d.records.push(d);
+                //alert(d);
             });
         }
     }
 
     var setMainImg = (x, img) => {
         f.post(service, 'SetMainImg', { x: x, img: img }).then((d) => {
-            $scope.d.records = d;
+            //$scope.d.records = d;
         });
     }
 

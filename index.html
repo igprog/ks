@@ -178,9 +178,9 @@
                                 <div class="header-navigation-content">
                                     <div class="row">
                                         <div class="col-md-4 header-navigation-col" ng-repeat="x in d.productGroups track by $index">
-                                            <h4 ng-click="shop(x.code, x.title_seo, null)">{{x.title}}</h4>
+                                            <h4 ng-click="goCategory(x.code, x.title_seo, null)">{{x.title}}</h4>
                                             <ul ng-if="x.subGroups.length>0">
-                                                <li ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="shop(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
+                                                <li ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -212,6 +212,31 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="dropdown dropdown100 nav-catalogue">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
+                            Novo
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="header-navigation-content">
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="x in d.newproducts">
+                                            <div class="product-item">
+                                                <div class="pi-img-wrapper">
+                                                    <a href="shop-item.html"><img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}"></a>
+                                                </div>
+                                                <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
+                                                <div class="pi-price">{{x.price.net_discount | number}} kn</div>
+                                                <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="">O nama</a></li>
+                    <li><a href="">Kontakt</a></li>
                     <!--<li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
                             Pages
@@ -242,11 +267,11 @@
                         <span class="sep"></span>
                         <i class="fa fa-search search-btn"></i>
                         <div class="search-box">
-                            <form action="#">
+                            <form id="search_form_1">
                                 <div class="input-group">
-                                    <input type="text" placeholder="Search" class="form-control">
+                                    <input ng-model="d.search" type="text" placeholder="Pretraži..." class="form-control">
                                     <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="submit">Search</button>
+                                        <button class="btn btn-primary" type="submit" form="search_form_1" ng-click="search(d.search)">Pretraži</button>
                                     </span>
                                 </div>
                             </form>

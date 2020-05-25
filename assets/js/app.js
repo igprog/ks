@@ -9,8 +9,17 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         .state('home', {
             url: '/', templateUrl: './assets/partials/home.html', controller: 'homeCtrl'
         })
+        //.state('shop', {
+        //    url: '/shop/:productgroup/:subgroup', params: { pg_code: null }, templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
+        //})
         .state('shop', {
-            url: '/shop/:productgroup/:subgroup', params: { pg_code: null }, templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
+            url: '/shop/', templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
+        })
+        .state('category', {
+            url: '/category/:productgroup/:subgroup', params: { pg_code: null }, templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
+        })
+        .state('search', {
+            url: '/search/:search', templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
         })
         .state('brand', {
             url: '/brand/:brand', params: { brand_code: null }, templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
@@ -82,7 +91,17 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     //    $state.go('shop', { pg_code: code, productgroup: productgroup, subgroup: subgroup });
     //}
     $scope.shop = (pg_code, productgroup, subgroup) => {
-        $state.go('shop', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
+        //$state.go('shop', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
+        $state.go('shop');
+    }
+
+    $scope.goCategory = (pg_code, productgroup, subgroup) => {
+        $state.go('category', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
+    }
+
+    $scope.search = (search) => {
+        debugger;
+        $state.go('search', { search: search });
     }
 
     $scope.brand = (brand_code, brand_seo) => {
@@ -94,8 +113,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $state.go('home');
     }
 
-    $scope.go = (x, param) => {
-        $state.go(x, { name: param});
+    //$scope.go = (x, param) => {
+    //    $state.go(x, { name: param });
+    //}
+    $scope.go = (x) => {
+        $state.go(x);
     }
     $state.go('home');
 
@@ -118,9 +140,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         productGroups: null,
         brands: null,
         outlet: [],
+        newproducts: [],
         bestselling: [],
         records: [],
         cart: null,
+        search: null,
         info: null,
         mainGallery: null,
         services: []
@@ -203,6 +227,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.loading = false;
         });
     }
+    var loadNewProducts = (lang, limit) => {
+        $scope.d.loading = true;
+        f.post('Products', 'LoadNewProducts', { lang: lang, limit: limit }).then((d) => {
+            $scope.d.newproducts = d;
+            $scope.d.loading = false;
+        });
+    }
 
     var loadInfo = (lang) => {
         f.post('Info', 'Load', { lang: lang }).then((d) => {
@@ -227,6 +258,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         loadProductGroups();
         loadBrands();
         loadOutlet('hr', 4);
+        loadNewProducts('hr', 4);
         //loadProducts($rootScope.lang);
         loadInfo($rootScope.lang);
         loadServices();
@@ -349,8 +381,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         records: [],
         pg_code: $stateParams.pg_code,
         productgroup: $stateParams.productgroup,
-        subgroup: $stateParams.subgroup
-
+        subgroup: $stateParams.subgroup,
+        search: null
     }
     $scope.d = data;
 
@@ -362,21 +394,25 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     loadProductGroups();
 
     var load = (param) => {
-        debugger;
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
+        var search = param.search !== undefined ? param.search : null;
 
         $scope.d.loading = true;
-        f.post('Products', 'Load', { lang: 'hr', order: true, productGroup: pg_code, brand: brand_code }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', order: true, productGroup: pg_code, brand: brand_code, search: search }).then((d) => {
             $scope.d.records = d;
+            if (search !== null) {
+                $scope.d.search = search;
+            }
             $scope.d.loading = false;
         });
     }
     load($stateParams);
 
     var loadBestSelling = (lang, pg, limit) => {
+        var pg_code = pg !== undefined ? pg : null;
         $scope.d.loading = true;
-        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg_code, limit: limit }).then((d) => {
             $scope.d.bestselling = d;
             $scope.d.loading = false;
         });
@@ -664,30 +700,30 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 }])
 
-.controller('postsCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', '$timeout', function ($scope, $http, $rootScope, f, $translate, $timeout) {
-    var service = 'Products';
-    var data = {
-        loading: false,
-        records: [],
-        info: null,
-        mainGallery: null,
-        services: []
-    }
-    $scope.d = data;
+//.controller('postsCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', '$timeout', function ($scope, $http, $rootScope, f, $translate, $timeout) {
+//    var service = 'Products';
+//    var data = {
+//        loading: false,
+//        records: [],
+//        info: null,
+//        mainGallery: null,
+//        services: []
+//    }
+//    $scope.d = data;
 
 
-    var loadPosts = (lang) => {
-        $scope.d.loading = true;
-        f.post(service, 'Load', { lang: lang, order: true, productGroupId: $rootScope.config.postsId }).then((d) => {
-            $scope.d.records = d;
-            $scope.d.loading = false;
-        });
-    }
-    $timeout(function () {
-        loadPosts($rootScope.lang);
-    }, 500);
+//    var loadPosts = (lang) => {
+//        $scope.d.loading = true;
+//        f.post(service, 'Load', { lang: lang, order: true, productGroupId: $rootScope.config.postsId }).then((d) => {
+//            $scope.d.records = d;
+//            $scope.d.loading = false;
+//        });
+//    }
+//    $timeout(function () {
+//        loadPosts($rootScope.lang);
+//    }, 500);
 
-}])
+//}])
 
 /********** Directives **********/
 //.directive('reservationDirective', () => {
@@ -729,8 +765,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     };
 })
 .controller('pgCtrl', ['$scope', '$state', ($scope, $state) => {
-    $scope.shop = (pg_code, productgroup, subgroup) => {
-        $state.go('shop', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
+    $scope.goCategory = (pg_code, productgroup, subgroup) => {
+        $state.go('category', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
     }
 }])
 
@@ -778,26 +814,26 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 }])
 
 
-.directive('detailsDirective', () => {
-    return {
-        restrict: 'E',
-        scope: {
-            data: '='
-        },
-        templateUrl: '../assets/partials/directive/details.html'
-    };
-})
+//.directive('detailsDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            data: '='
+//        },
+//        templateUrl: '../assets/partials/directive/details.html'
+//    };
+//})
 
-.directive('navbarDirective', () => {
-    return {
-        restrict: 'E',
-        scope: {
-            site: '=',
-            lang: '='
-        },
-        templateUrl: '../assets/partials/directive/navbar.html'
-    };
-})
+//.directive('navbarDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            site: '=',
+//            lang: '='
+//        },
+//        templateUrl: '../assets/partials/directive/navbar.html'
+//    };
+//})
 
 .directive('cardDirective', () => {
     return {
@@ -840,96 +876,96 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $scope.year = (new Date).getFullYear();
 }])
 
-.directive('corouselDirective', () => {
-    return {
-        restrict: 'E',
-        scope: {
-            showdes: '='
-        },
-        templateUrl: '../assets/partials/directive/corousel.html',
-        controller: 'corouselCtrl'
-    };
-})
-.controller('corouselCtrl', ['$scope', ($scope) => {
-    $scope.tick = 0;
-    var getTime = () => {
-        var d = new Date();
-        $scope.tick = d.getTime();
-    }
-    getTime();
-}])
+//.directive('corouselDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            showdes: '='
+//        },
+//        templateUrl: '../assets/partials/directive/corousel.html',
+//        controller: 'corouselCtrl'
+//    };
+//})
+//.controller('corouselCtrl', ['$scope', ($scope) => {
+//    $scope.tick = 0;
+//    var getTime = () => {
+//        var d = new Date();
+//        $scope.tick = d.getTime();
+//    }
+//    getTime();
+//}])
 
-.directive('galleryDirective', () => {
-    return {
-        restrict: 'E',
-        scope: {
-            data: '='
-        },
-        templateUrl: '../assets/partials/directive/gallery.html',
-        controller: 'galleryCtrl'
-    };
-})
-.controller('galleryCtrl', ['$scope', '$translate', '$mdDialog', ($scope, $translate, $mdDialog) => {
+//.directive('galleryDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            data: '='
+//        },
+//        templateUrl: '../assets/partials/directive/gallery.html',
+//        controller: 'galleryCtrl'
+//    };
+//})
+//.controller('galleryCtrl', ['$scope', '$translate', '$mdDialog', ($scope, $translate, $mdDialog) => {
 
-    var openPopup = function (x, idx) {
-        if ($(window).innerWidth() < 560) { return false; }
-        $mdDialog.show({
-            controller: popupCtrl,
-            templateUrl: '../assets/partials/popup/gallery.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: true,
-            d: { data: x, idx: idx }
-        })
-       .then(function (x) {
-       }, function () {
-       });
-    }
+//    var openPopup = function (x, idx) {
+//        if ($(window).innerWidth() < 560) { return false; }
+//        $mdDialog.show({
+//            controller: popupCtrl,
+//            templateUrl: '../assets/partials/popup/gallery.html',
+//            parent: angular.element(document.body),
+//            clickOutsideToClose: true,
+//            d: { data: x, idx: idx }
+//        })
+//       .then(function (x) {
+//       }, function () {
+//       });
+//    }
 
-    var popupCtrl = function ($scope, $mdDialog, $http, d, f) {
-        $scope.d = d;
+//    var popupCtrl = function ($scope, $mdDialog, $http, d, f) {
+//        $scope.d = d;
 
-        $scope.back = (idx) => {
-            if (idx > 0) {
-                $scope.d.idx = idx - 1;
-            }
-        }
+//        $scope.back = (idx) => {
+//            if (idx > 0) {
+//                $scope.d.idx = idx - 1;
+//            }
+//        }
 
-        $scope.forward = (idx) => {
-            if (idx >= 0 && idx < $scope.d.data.gallery.length - 1) {
-                $scope.d.idx = idx + 1;
-            }
-        }
+//        $scope.forward = (idx) => {
+//            if (idx >= 0 && idx < $scope.d.data.gallery.length - 1) {
+//                $scope.d.idx = idx + 1;
+//            }
+//        }
 
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-    };
+//        $scope.cancel = function () {
+//            $mdDialog.cancel();
+//        };
+//    };
 
-    $scope.openPopup = (x, idx) => {
-        return openPopup(x, idx);
-    }
+//    $scope.openPopup = (x, idx) => {
+//        return openPopup(x, idx);
+//    }
 
-}])
+//}])
 
-.directive('servicesDirective', () => {
-    return {
-        restrict: 'E',
-        scope: {
-            data: '='
-        },
-        templateUrl: '../assets/partials/directive/services.html'
-    };
-})
+//.directive('servicesDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            data: '='
+//        },
+//        templateUrl: '../assets/partials/directive/services.html'
+//    };
+//})
 
-.directive('postDirective', () => {
-    return {
-        restrict: 'E',
-        scope: {
-            data: '='
-        },
-        templateUrl: '../assets/partials/directive/post.html'
-    };
-})
+//.directive('postDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            data: '='
+//        },
+//        templateUrl: '../assets/partials/directive/post.html'
+//    };
+//})
 
 .directive('jsonDirective', function () {
     return {

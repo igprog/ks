@@ -1,10 +1,10 @@
 ﻿<div>
     <ul class="list-group margin-bottom-25 sidebar-menu">
         <li class="list-group-item clearfix dropdown {{x.code===record.productGroup.parent?'active':''}}" ng-repeat="x in pg track by $index">
-            <a href="" ng-click="shop(x.code, x.title_seo, null)"><i class="fa fa-angle-right"></i> {{x.title}}</a>
+            <a href="" ng-click="goCategory(x.code, x.title_seo, null)"><i class="fa fa-angle-right"></i> {{x.title}}</a>
             <ul class="dropdown-menu" ng-repeat="y in x.subGroups track by $index">
                 <li class="list-group-item dropdown clearfix {{y.code===record.productGroup.code?'active':''}}">
-                    <a href="" ng-click="shop(y.code, x.title_seo, y.title_seo)">{{y.title}}</a>
+                    <a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a>
                 </li>
             </ul>
         </li>

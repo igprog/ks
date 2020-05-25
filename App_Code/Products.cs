@@ -101,9 +101,9 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Load(string lang, bool order, string productGroup, string brand) {
+    public string Load(string lang, bool order, string productGroup, string brand, string search) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, order, productGroup, brand), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, order, productGroup, brand, search), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -114,6 +114,20 @@ public class Products : System.Web.Services.WebService {
         try {
             DB.CreateDataBase(G.db.products);
             string sql = string.Format(@"{0} WHERE p.outlet = 'True' AND p.stock > 0 {1}"
+                                    , mainSql
+                                    , string.Format("LIMIT {0}", limit));
+            List<NewProduct> xx = DataCollection(sql, lang, false);
+            return JsonConvert.SerializeObject(xx, Formatting.None);
+        } catch (Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string LoadNewProducts(string lang, int limit) {
+        try {
+            DB.CreateDataBase(G.db.products);
+            string sql = string.Format(@"{0} WHERE p.isnew = 'True' AND p.stock > 0 {1}"
                                     , mainSql
                                     , string.Format("LIMIT {0}", limit));
             List<NewProduct> xx = DataCollection(sql, lang, false);
@@ -160,7 +174,7 @@ public class Products : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code), Formatting.None);
+            return JsonConvert.SerializeObject("OK", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -221,7 +235,8 @@ public class Products : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code), Formatting.None);
+            //return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code), Formatting.None);
+            return JsonConvert.SerializeObject("Proizvod izbrisan", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -241,7 +256,8 @@ public class Products : System.Web.Services.WebService {
                     }
                 }
             }
-            return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code), Formatting.None);
+            //return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code, null), Formatting.None);
+            return JsonConvert.SerializeObject("OK", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -249,13 +265,20 @@ public class Products : System.Web.Services.WebService {
     #endregion WebMethod
 
     #region Class
-    public List<NewProduct> LoadData(string lang, bool order, string productGroup, string brand) {
+    public List<NewProduct> LoadData(string lang, bool order, string productGroup, string brand, string search) {
         DB.CreateDataBase(G.db.products);
-        string sql = string.Format(@"{0} {1} {2} {3}"
-                    , mainSql
-                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("WHERE p.productGroup = '{0}' OR pg.parent = '{0}'", productGroup)
-                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("WHERE p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-                    , order == true ? "ORDER BY p.productorder" : "");
+        string sql = string.Format(@"{0} {1} {2} {3} {4} {5}"
+                   , mainSql
+                   , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? "" : "WHERE"
+                   , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
+                   , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
+                   , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+                   , order == true ? "ORDER BY p.productorder" : "");
+        //string sql = string.Format(@"{0} {1} {2} {3}"
+        //            , mainSql
+        //            , string.IsNullOrEmpty(productGroup) ? "" : string.Format("WHERE p.productGroup = '{0}' OR pg.parent = '{0}'", productGroup)
+        //            , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("WHERE p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
+        //            , order == true ? "ORDER BY p.productorder" : "");
 
         List<NewProduct> xx = DataCollection(sql, lang, true);
         return xx;
