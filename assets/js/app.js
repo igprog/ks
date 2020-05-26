@@ -213,24 +213,17 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
-    //var loadProducts = (lang) => {
-    //    $scope.d.loading = true;
-    //    f.post('Products', 'Load', { lang: lang, order: true, productGroup: null }).then((d) => {
-    //        $scope.d.records = d;
-    //        $scope.d.loading = false;
-    //    });
-    //}
-
-    var loadOutlet = (lang, limit) => {
+    var loadOutlet = (lang, pg, limit) => {
         $scope.d.loading = true;
-        f.post('Products', 'LoadOutlet', { lang: lang, limit: limit }).then((d) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'outlet', limit: limit }).then((d) => {
             $scope.d.outlet = d;
             $scope.d.loading = false;
         });
     }
-    var loadNewProducts = (lang, limit) => {
+
+    var loadNewProducts = (lang, pg, limit) => {
         $scope.d.loading = true;
-        f.post('Products', 'LoadNewProducts', { lang: lang, limit: limit }).then((d) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'isnew', limit: limit }).then((d) => {
             $scope.d.newproducts = d;
             $scope.d.loading = false;
         });
@@ -243,27 +236,12 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
-    //var loadMainGallery = () => {
-    //    f.post('Info', 'LoadMainGellery', {}).then((d) => {
-    //        $scope.d.mainGallery = d;
-    //    });
-    //}
-    //loadMainGallery();
-
-    //var loadServices = () => {
-    //    f.post('Options', 'Load', { type: 'services' }).then((d) => {
-    //        $scope.d.services = d;
-    //    });
-    //}
-
     var loadData = () => {
         loadProductGroups();
         loadBrands();
-        loadOutlet('hr', 4);
-        loadNewProducts('hr', 4);
-        //loadProducts($rootScope.lang);
+        loadOutlet('hr', null, 4);
+        loadNewProducts('hr', null, 4);
         loadInfo($rootScope.lang);
-        //loadServices();
     }
 
     var getConfig = function () {
@@ -315,9 +293,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $translate.use(x.code);
         $translatePartialLoader.addPart('main');
         //window.location.href = window.location.origin + '?lang=' + x.code;
-        //loadProducts(x.code);
         loadInfo(x.code);
-        //loadServices();
     };
 
     $scope.tick = 0;
@@ -353,7 +329,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadBestSelling = (lang, pg, limit) => {
         $scope.d.loading = true;
-        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'bestselling', limit: limit }).then((d) => {
             $scope.d.bestselling = d;
             $scope.d.loading = false;
         });
@@ -372,7 +348,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         options: {
             floor: 0,
             ceil: 100,
-            step: 1,
+            step: 100,
             minRange: 10
         }
     };
@@ -384,7 +360,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         pg_code: $stateParams.pg_code,
         productgroup: $stateParams.productgroup,
         subgroup: $stateParams.subgroup,
-        search: null
+        search: null,
+        responseTime: 0,
+        priceRange: { min:0, max:0 }
     }
     $scope.d = data;
 
@@ -402,7 +380,14 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
         $scope.d.loading = true;
         f.post('Products', 'Load', { lang: 'hr', order: true, productGroup: pg_code, brand: brand_code, search: search }).then((d) => {
-            $scope.d.records = d;
+            $scope.d.records = d.data;
+            $scope.d.priceRange = d.priceRange;
+
+            $scope.slider.minValue = $scope.d.priceRange.min;
+            $scope.slider.maxValue = $scope.d.priceRange.max;
+            $scope.slider.options.ceil = $scope.d.priceRange.max;
+
+            $scope.d.responseTime = d.responseTime;
             if (search !== null) {
                 $scope.d.search = search;
             }
@@ -413,10 +398,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadBestSelling = (lang, pg, limit) => {
         var pg_code = pg !== undefined ? pg : null;
-        $scope.d.loading = true;
-        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg_code, limit: limit }).then((d) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg_code, type: 'bestselling', limit: limit }).then((d) => {
             $scope.d.bestselling = d;
-            $scope.d.loading = false;
         });
     }
     loadBestSelling('hr', $stateParams.pg_code, 3);
@@ -440,22 +423,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $scope.d = data;
 
-    //var initCart = () => {
-    //    $scope.d.loading = true;
-    //    f.post('Cart', 'Init', {}).then((d) => {
-    //        $scope.d.cart = d;
-    //        $scope.d.loading = false;
-    //    });
-    //}
-    ////initCart();
-
-    //if (localStorage.cart != undefined && localStorage.cart != 'undefined' && localStorage.cart != '') {
-    //    $scope.d.cart = JSON.parse(localStorage.cart);
-    //} else {
-    //    initCart();
-    //    //$scope.cart = [];
-    //}
-
     $scope.getRate = function (rate) {
         $scope.d.review.rating = rate;
     }
@@ -472,7 +439,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadBestSelling = (lang, pg, limit) => {
         $scope.d.loading = true;
-        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'bestselling', limit: limit }).then((d) => {
             $scope.d.bestselling = d;
             $scope.d.loading = false;
         });
@@ -480,7 +447,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadBestSellingAll = (lang, pg, limit) => {
         $scope.d.loading = true;
-        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'bestselling', limit: limit }).then((d) => {
             $scope.d.bestsellingall = d;
             $scope.d.loading = false;
         });
@@ -519,16 +486,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         }
         return a;
     }
-
-
-    //$scope.addToCart = (x) => {
-    //    debugger;
-    //    $scope.d.loading = true;
-    //    f.post('Cart', 'AddToCart', { cart: $scope.d.cart, x: x }).then((d) => {
-    //        localStorage.cart = JSON.stringify(d);
-    //        $scope.d.loading = false;
-    //    });
-    //}
 
 }])
 
@@ -586,7 +543,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadBestSellingAll = (lang, pg, limit) => {
         $scope.d.loading = true;
-        f.post('Products', 'LoadBestSelling', { lang: lang, productGroup: pg, limit: limit }).then((d) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'bestselling', limit: limit }).then((d) => {
             $scope.d.bestsellingall = d;
             $scope.d.loading = false;
         });

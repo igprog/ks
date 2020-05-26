@@ -38,7 +38,7 @@
                     </div>
                     <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix">
                         <h2>Najprodavanije</h2>
-                        <div class="item" ng-repeat="x in d.bestselling">
+                        <div class="item" ng-repeat="x in d.bestselling track by $index">
                             <a href=""><img src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}"></a>
                             <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
                             <div class="price">{{x.price.net_discount | number}} kn</div>
@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                                 <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                <div class="pi-price">{{x.price.net | number}} kn</div>
+                                <div class="pi-price">{{x.price.net_discount | number}} kn</div>
                                 <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
                             </div>
                         </div>

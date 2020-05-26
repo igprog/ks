@@ -474,7 +474,6 @@
 
     <script type="text/ng-template" id="products">
         <div ng-if="d.isLogin" ng-controller="productsCtrl">
-            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
             <div class="ml-3">
                 <h2>Proizvodi</h2>
                 <div class="row">
@@ -505,8 +504,12 @@
                             </div>
                         </form>
                     </div>
+                    <div class="col-sm-4">
+                        <em>Vrijeme učitavanja: {{d.responseTime}} s</em>
+                    </div>
                 </div>
             </div>
+            <!--<loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>-->
             <div ng-if="d.records.length>0&&!d.loading" ng-repeat="x in d.records track by $index" class="card shadow m-3">
                 <div class="card-header" data-toggle="collapse" data-target="#p_{{$index}}">
                     <div ng-if="x!==null" class="mt-2">

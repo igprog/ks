@@ -262,7 +262,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         currProduct: null,
         currProductGroup: null,
         productGroupId: null,
-        search: null
+        search: null,
+        responseTime: 0
     }
     $scope.d = data;
 
@@ -275,29 +276,32 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             $scope.d.currProductGroup = productGroup;
         }
         $scope.d.currProductGroup = productGroup;
+        $scope.d.loading = true;
         f.post(service, 'Load', { lang: 'hr', order: false, productGroup: pg_code, brand: null, search: search }).then((d) => {
-            $scope.d.records = d;
+            $scope.d.records = d.data;
+            $scope.d.responseTime = d.responseTime;
+            $scope.d.loading = false;
         });
     }
 
     var loadProductGroups = () => {
-        $scope.d.loading = true;
+        //$scope.d.loading = true;
         f.post('ProductGroups', 'Load', {}).then((d) => {
             $scope.d.productGroups = d;
             //load($scope.d.productGroups[0]);
             load(null, null);
             $scope.d.productGroupId = $scope.d.productGroups[0].id;
-            $scope.d.loading = false;
+            //$scope.d.loading = false;
 
         });
     }
     loadProductGroups();
 
     var loadBrands = () => {
-        $scope.d.loading = true;
+        //$scope.d.loading = true;
         f.post('Brands', 'Load', {}).then((d) => {
             $scope.d.brands = d;
-            $scope.d.loading = false;
+            //$scope.d.loading = false;
 
         });
     }
