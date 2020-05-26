@@ -164,7 +164,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="address">Adresa:</label>
-                                    <input ng-model="d.address" class="form-control" name="address" placeholder="Ulica i broj, grad i država...">
+                                    <input ng-model="d.address" class="form-control" name="address" placeholder="Ulica i broj i grad">
+                                </div>
+                                <div class="form-group">
+                                    <label for="country">Država:</label>
+                                    <input ng-model="d.country" class="form-control" name="country" placeholder="Država">
                                 </div>
                                 <div class="form-group">
                                     <label for="pin">OIB:</label>
@@ -481,21 +485,30 @@
                                 <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
                             </button>
                             <ul class="dropdown-menu p-2">
-                                <li><a href="" ng-click="f.load(null)"><strong>Sve grupe</strong></a></li>
+                                <li><a href="" ng-click="f.load(null, null)"><strong>Sve grupe</strong></a></li>
                                 <li ng-repeat="x in d.productGroups">
-                                    <a href="" ng-click="f.load(x)"><strong>{{x.title}}</strong></a>
+                                    <a href="" ng-click="f.load(x, null)"><strong>{{x.title}}</strong></a>
                                     <ul>
-                                        <li ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="f.load(y)"><em class="pl-2">{{y.title}}</em></a></li>
+                                        <li ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="f.load(y, null)"><em class="pl-2">{{y.title}}</em></a></li>
                                     </ul>
                                 </li>
                             </ul>
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <form>
+                            <div class="input-group mb-3">
+                                <input ng-model="d.search" type="text" class="form-control" placeholder="Pretraži..." aria-label="Recipient's username" aria-describedby="search">
+                                <div class="input-group-append" ng-click="f.load(null, d.search)">
+                                    <button class="input-group-text" type="submit" id="search"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div ng-if="d.records.length>0&&!d.loading" ng-repeat="x in d.records track by $index" class="card shadow m-3">
                 <div class="card-header" data-toggle="collapse" data-target="#p_{{$index}}">
-                    
                     <div ng-if="x!==null" class="mt-2">
                         <img ng-if="x.img" class="img-thumbnail" src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}" style="height:80px">
                         <span class="ml-2"><strong>{{x.title}}</strong></span>

@@ -36,8 +36,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         .state('checkout', {
             url: '/checkout', templateUrl: './assets/partials/checkout.html', controller: 'checkoutCtrl'
         })
+        .state('about', {
+            url: '/about', templateUrl: './assets/partials/about.html', controller: 'aboutCtrl'
+        })
         .state('contact', {
-            url: '/contact', templateUrl: './assets/partials/contact.html', controller: 'contactsCtrl'
+            url: '/contact', templateUrl: './assets/partials/contact.html', controller: 'contactCtrl'
         })
 
     $urlRouterProvider.otherwise("/");
@@ -145,9 +148,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         records: [],
         cart: null,
         search: null,
-        info: null,
-        mainGallery: null,
-        services: []
+        info: null
     }
     $rootScope.d = data;
 
@@ -237,22 +238,23 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadInfo = (lang) => {
         f.post('Info', 'Load', { lang: lang }).then((d) => {
-            $rootScope.info = d;
+            //$rootScope.info = d;
+            $scope.d.info = d;
         });
     }
 
-    var loadMainGallery = () => {
-        f.post('Info', 'LoadMainGellery', {}).then((d) => {
-            $scope.d.mainGallery = d;
-        });
-    }
-    loadMainGallery();
+    //var loadMainGallery = () => {
+    //    f.post('Info', 'LoadMainGellery', {}).then((d) => {
+    //        $scope.d.mainGallery = d;
+    //    });
+    //}
+    //loadMainGallery();
 
-    var loadServices = () => {
-        f.post('Options', 'Load', { type: 'services' }).then((d) => {
-            $scope.d.services = d;
-        });
-    }
+    //var loadServices = () => {
+    //    f.post('Options', 'Load', { type: 'services' }).then((d) => {
+    //        $scope.d.services = d;
+    //    });
+    //}
 
     var loadData = () => {
         loadProductGroups();
@@ -261,7 +263,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         loadNewProducts('hr', 4);
         //loadProducts($rootScope.lang);
         loadInfo($rootScope.lang);
-        loadServices();
+        //loadServices();
     }
 
     var getConfig = function () {
@@ -315,7 +317,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         //window.location.href = window.location.origin + '?lang=' + x.code;
         //loadProducts(x.code);
         loadInfo(x.code);
-        loadServices();
+        //loadServices();
     };
 
     $scope.tick = 0;
@@ -659,6 +661,21 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     get(id);
 
 }])
+
+.controller('aboutCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', function ($scope, $http, $rootScope, f, $translate) {
+    var data = {
+        info: []
+    }
+    $scope.d = data;
+
+    var load = (lang) => {
+        f.post('Info', 'Load', { lang: lang }).then((d) => {
+            $scope.d.info = d;
+        });
+    }
+    load('hr');
+
+    }])
 
 .controller('contactCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', function ($scope, $http, $rootScope, f, $translate) {
     var service = 'Contact';

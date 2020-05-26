@@ -25,6 +25,7 @@ public class Info : System.Web.Services.WebService {
     public class NewInfo {
         public string company;
         public string address;
+        public string country;
         public string pin;
         public string firstName;
         public string lastName;
