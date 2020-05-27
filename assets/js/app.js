@@ -476,19 +476,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         bestselling: [],
         bestsellingall: [],
         record: [],
-        review: {
-            name: null,
-            email: null,
-            rewiew: null,
-            rating: 0
-        }
+        review: null,
+        tpl: 'descTpl',
+        stars: [1,2,3,4,5]
     }
     $scope.d = data;
-
-    $scope.getRate = function (rate) {
-        $scope.d.review.rating = rate;
-    }
-    $scope.rating = 0;
 
     var loadProductGroups = () => {
         $scope.d.loading = true;
@@ -519,6 +511,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.d.loading = true;
         f.post('Products', 'Get', { id: id, lang: 'hr' }).then((d) => {
             $scope.d.record = d;
+            initReview(d.sku);
             loadBestSelling('hr', $scope.d.record.productGroup.code, 3);
             loadBestSellingAll('hr', null, 4);
             $scope.d.loading = false;
@@ -548,6 +541,30 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         }
         return a;
     }
+
+    $scope.toggleTpl = (x) => {
+        $scope.d.tpl = x;
+    }
+
+    /**** Review & Rating *****/
+    $scope.getRate = function (rate) {
+        $scope.d.review.rating = rate;
+    }
+    //$scope.rating = 0;
+
+    var initReview = (sku) => {
+        f.post('Review', 'Init', {sku: sku}).then((d) => {
+            $scope.d.review = d;
+        });
+    }
+
+    $scope.saveRating = (x) => {
+        f.post('Review', 'Save', { x: x }).then((d) => {
+            $scope.d.record.reviews = d;
+        });
+    }
+    /**** Review & Rating *****/
+   
 
 }])
 

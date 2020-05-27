@@ -55,6 +55,20 @@ public class DataBase {
         CreateTable(path, sql);
     }
 
+    public void Review(string path) {
+        string sql = @"
+                CREATE TABLE IF NOT EXISTS review
+                (id NVARCHAR(50) PRIMARY KEY,
+                sku NVARCHAR(50),
+                name NVARCHAR(50),
+                email VARCHAR(50),
+                desc NVARCHAR(200),
+                rating VARCHAR(50),
+                reviewdate VARCHAR(50),
+                isactive VARCHAR(50))";
+        CreateTable(path, sql);
+    }
+
     public void Tran(string path) {
         string sql = @"CREATE TABLE IF NOT EXISTS tran
                     (id VARCHAR(50),
@@ -103,12 +117,15 @@ public class DataBase {
                 case "products":
                     Products(path);
                     break;
+                case "review":
+                    Review(path);
+                    break;
                 case "tran":
-                    Tran(path);
-                    break;
-            default:
-                    break;
-            }
+                        Tran(path);
+                        break;
+                default:
+                        break;
+                }
         }
 
     private void CreateTable(string path, string sql) {

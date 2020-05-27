@@ -58,6 +58,7 @@ public class Products : System.Web.Services.WebService {
         public int productorder;
         public Price price;
         public int qty;
+        public List<Review.NewReview> reviews;
     }
 
     public class Price {
@@ -151,6 +152,7 @@ public class Products : System.Web.Services.WebService {
             x.gallery = null;
             x.price = new Price();
             x.qty = 1;
+            x.reviews = new List<Review.NewReview>();
             return JsonConvert.SerializeObject(x, Formatting.None);    
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -378,6 +380,8 @@ public class Products : System.Web.Services.WebService {
             }
             connection.Close();
         }
+        Review R = new Review();
+        x.reviews = R.GetData(x.sku);
         return x;
     }
 
@@ -397,6 +401,7 @@ public class Products : System.Web.Services.WebService {
             }
             connection.Close();
         }
+
         return xx;
     }
 

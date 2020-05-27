@@ -40,6 +40,7 @@ namespace Igprog {
             public string productGroups = "productGroups";
             public string brands = "brands";
             public string products = "products";
+            public string review = "review";
             public string tran = "tran";
         }
 
