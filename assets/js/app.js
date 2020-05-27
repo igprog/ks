@@ -348,7 +348,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         options: {
             floor: 0,
             ceil: 100,
-            step: 100,
+            step: 1,
             minRange: 10
         }
     };
@@ -362,7 +362,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         subgroup: $stateParams.subgroup,
         search: null,
         responseTime: 0,
-        priceRange: { min:0, max:0 }
+        priceRange: { min: 0, max: 0 },
+        filters: null,
+        sortTypes: null,
+        sortBy: 'nameAZ'
+
     }
     $scope.d = data;
 
@@ -379,9 +383,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var search = param.search !== undefined ? param.search : null;
 
         $scope.d.loading = true;
-        f.post('Products', 'Load', { lang: 'hr', order: true, productGroup: pg_code, brand: brand_code, search: search }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search }).then((d) => {
             $scope.d.records = d.data;
             $scope.d.priceRange = d.priceRange;
+            $scope.d.filters = d.filters;
+            $scope.d.sortTypes = d.sortTypes;
 
             $scope.slider.minValue = $scope.d.priceRange.min;
             $scope.slider.maxValue = $scope.d.priceRange.max;
@@ -403,6 +409,43 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
     loadBestSelling('hr', $stateParams.pg_code, 3);
+
+    $scope.filter = (filters, slider, sortBy) => {
+        var param = $stateParams;
+        var pg_code = param.pg_code !== undefined ? param.pg_code : null;
+        var brand_code = param.brand_code !== undefined ? param.brand_code : null;
+        var search = param.search !== undefined ? param.search : null;
+        //$scope.d.filters.price.min = slider.minValue;
+        //$scope.d.filters.price.max = slider.maxValue;
+        filters.price.min = slider.minValue;
+        filters.price.max = slider.maxValue;
+        //$stateParams.filters = filters;
+
+        $scope.d.loading = true;
+        f.post('Products', 'Filter', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, filters: filters, sortBy: sortBy }).then((d) => {
+            $scope.d.records = d.data;
+            $scope.d.loading = false;
+        });
+    }
+
+    // Staviti u functions
+    $scope.sticker = (x) => {
+        var a = {
+            style: null,
+            title: null
+        }
+        if (x.outlet) {
+            a.style = 'type-2';
+            a.title = 'akcija';
+        } else if (x.isnew) {
+            a.style = 'type-1';
+            a.title = 'novo';
+        } else {
+            a.style = null;
+            a.title = null;
+        }
+        return a;
+    }
 
 }])
 
@@ -826,10 +869,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     return {
         restrict: 'E',
         scope: {
-            btntitle: '=',
             loadingtitle: '=',
-            value: '=',
-            pdf: '=',
+            val: '=',
             size: '='
         },
         templateUrl: '../assets/partials/directive/loading.html'

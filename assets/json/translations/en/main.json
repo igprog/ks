@@ -42,6 +42,20 @@
   "remove": "Remove",
   "project": "Project",
   "floor plans": "Floor Plans",
-  "cross sections": "Cross Sections"
+  "cross sections": "Cross Sections",
+
+  "filters": "Filters",
+  "new": "New",
+  "outlet": "Outlet",
+  "bestselling": "Bestselling",
+  "category": "Category",
+  "search results for": "Search results for",
+  "sort by": "Sort by",
+  "name (A - Z)": "Name (A - Z)",
+  "name (Z - A)": "Name (Z - A)",
+  "price (Low - Heigh)": "Price (Low - Heigh)",
+  "price (Heigh - Low)": "Price (Heigh - Low)",
+  "rating (Highest)": "Rating (Highest)",
+  "rating (Lowest)": "Rating (Lowest)"
 
 }

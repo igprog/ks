@@ -73,11 +73,42 @@ public class Products : System.Web.Services.WebService {
         public List<NewProduct> data;
         public PriceRange priceRange;
         public double responseTime;
+        public Filters filters;
+        public SortTypes sortTypes;
     }
 
     public class PriceRange {
         public double min;
         public double max;
+    }
+
+    public class Filters {
+        public PriceRange price;
+        public FilterItem isnew;
+        public FilterItem outlet;
+        public FilterItem bestselling;
+    }
+
+    public class FilterItem {
+        public string code;
+        public string title;
+        public bool val;
+        public int tot;
+    }
+
+    public class SortTypes {
+        public SortItem nameAZ;
+        public SortItem nameZA;
+        public SortItem priceLH;
+        public SortItem priceHL;
+        public SortItem ratingH;
+        public SortItem ratingL;
+    }
+
+    public class SortItem {
+        public string code;
+        public string title;
+        public bool val;
     }
     #endregion Class
 
@@ -113,9 +144,18 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Load(string lang, bool order, string productGroup, string brand, string search) {
+    public string Load(string lang, string productGroup, string brand, string search) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, order, productGroup, brand, search), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search), Formatting.None);
+        } catch (Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string Filter(string lang, string productGroup, string brand, string search, Filters filters, string sortBy) {
+        try {
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, filters, sortBy), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -250,7 +290,7 @@ public class Products : System.Web.Services.WebService {
     #endregion WebMethod
 
     #region Methods
-    public ProductsData LoadData(string lang, bool order, string productGroup, string brand, string search) {
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
@@ -260,14 +300,72 @@ public class Products : System.Web.Services.WebService {
                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-                   , order == true ? "ORDER BY p.productorder" : "");
+                   , "ORDER BY p.title DESC");
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
         xxx.priceRange = new PriceRange();
         xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
         xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
+        xxx.filters = LoadFilters(xxx); // InitFilters();
+        //xxx.filters.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
+        //xxx.filters.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
+        //xxx.filters.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
+        xxx.sortTypes = InitSortTypes();
         return xxx;
+    }
+
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search, Filters filters, string sortBy) {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        DB.CreateDataBase(G.db.products);
+        //string where = string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && (filters.price.max == 0 && filters.price.max == 0) ? "" : "WHERE";
+        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}"
+           , mainSql
+           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && (filters.price.max == 0 && filters.price.max == 0) ? "" : "WHERE"
+           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
+           , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
+           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+           , filters.price.min <= 0 && filters.price.max <= 0 ? "" : string.Format(@"{0} CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) <= {2}", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? "" : "AND"), filters.price.min, filters.price.max)
+           , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.min <= 0 && filters.price.max <= 0 ? "" : "AND"))
+           , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.min <= 0 && filters.price.max <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
+           , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.min <= 0 && filters.price.max <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
+           , string.Format("ORDER BY {0}", SortBy(sortBy))
+           );
+
+        ProductsData xxx = new ProductsData();
+        xxx.data = DataCollection(sql, lang, true);
+        xxx.priceRange = new PriceRange();
+        xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
+        xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
+        xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
+        xxx.filters = LoadFilters(xxx); // InitFilters();
+                                        //xxx.filters.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
+                                        //xxx.filters.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
+                                        //xxx.filters.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
+        xxx.sortTypes = InitSortTypes();
+        return xxx;
+    }
+
+    public Filters LoadFilters(ProductsData xxx) {
+        Filters x = new Filters();
+        x.price = new PriceRange();
+        x.isnew = new FilterItem();
+        x.isnew.code = "isnew";
+        x.isnew.title = "new";
+        x.isnew.val = false;
+        x.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
+        x.outlet = new FilterItem();
+        x.outlet.code = "outlet";
+        x.outlet.title = "outlet";
+        x.outlet.val = false;
+        x.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
+        x.bestselling = new FilterItem();
+        x.bestselling.code = "bestselling";
+        x.bestselling.title = "bestselling";
+        x.bestselling.val = false;
+        x.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
+        return x;
     }
 
     public NewProduct GetProduct(string id, string lang) {
@@ -374,6 +472,64 @@ public class Products : System.Web.Services.WebService {
             xx = ss.Select(a => string.Format("{0}?v={1}", Path.GetFileName(a), DateTime.Now.Ticks)).ToArray();
         }
         return xx;
+    }
+
+    public SortTypes InitSortTypes() {
+        SortTypes x = new SortTypes();
+        x.nameAZ = new SortItem();
+        x.nameAZ.code = "nameAZ";
+        x.nameAZ.title = "name (A - Z)";
+        x.nameAZ.val = false;
+        x.nameZA = new SortItem();
+        x.nameZA.code = "nameZA";
+        x.nameZA.title = "name (Z - A)";
+        x.nameZA.val = false;
+        x.priceLH = new SortItem();
+        x.priceLH.code = "priceLH";
+        x.priceLH.title = "price (Low - Heigh)";
+        x.priceLH.val = false;
+        x.priceHL = new SortItem();
+        x.priceHL.code = "priceHL";
+        x.priceHL.title = "price (Heigh - Low)";
+        x.priceHL.val = false;
+        x.ratingH = new SortItem();
+        x.ratingH.code = "ratingH";
+        x.ratingH.title = "rating (Highest)";
+        x.ratingH.val = false;
+        x.ratingL = new SortItem();
+        x.ratingL.code = "ratingL";
+        x.ratingL.title = "rating (Lowest)";
+        x.ratingL.val = false;
+        return x;
+    }
+
+    public string SortBy (string code) {
+        //TODO: rating
+        string x = null;
+        switch (code) {
+            case "nameAZ":
+                x = "p.title ASC";
+                break;
+            case "nameZA":
+                x = "p.title DESC";
+                break;
+            case "priceLH":
+                x = "(CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal))) ASC";
+                break;
+            case "priceHL":
+                x = "(CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal))) DESC";
+                break;
+            case "ratingH":
+                x = "p.title ASC";
+                break;
+            case "ratingL":
+                x = "p.title DESC";
+                break;
+            default:
+                x = "p.title ASC";
+                break;
+        }
+        return x;
     }
     #endregion Methods
 

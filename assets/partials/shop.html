@@ -12,14 +12,20 @@
                 <!-- BEGIN SIDEBAR -->
                 <div class="sidebar col-md-3 col-sm-5">
                     <div class="sidebar-filter margin-bottom-25">
-                        <h2>Kategorija</h2>
+                        <h2>{{'category' | translate}}</h2>
                         <div class="pt-2">
                             <pg-directive pg="d.productGroups" record="null"></pg-directive>
                         </div>
-                        <h3>Availability</h3>
+                        <!--<h3>Availability</h3>
                         <div class="checkbox-list">
                             <label><input type="checkbox"> Not Available (3)</label>
                             <label><input type="checkbox"> In Stock (26)</label>
+                        </div>-->
+                        <h3>{{'filters' | translate}}</h3>
+                        <div class="checkbox-list" ng-cloak>
+                            <label><input ng-model="d.filters.isnew.val" type="checkbox" ng-click="filter(d.filters, slider, d.sortBy)"> {{d.filters.isnew.title | translate}} ({{d.filters.isnew.tot}})</label>
+                            <label><input ng-model="d.filters.outlet.val" type="checkbox" ng-click="filter(d.filters, slider, d.sortBy)"> {{d.filters.outlet.title | translate}} ({{d.filters.outlet.tot}})</label>
+                            <label><input ng-model="d.filters.bestselling.val" type="checkbox" ng-click="filter(d.filters, slider, d.sortBy)"> {{d.filters.bestselling.title | translate}} ({{d.filters.bestselling.tot}})</label>
                         </div>
                         <h3>Cijena</h3>
                         <rzslider rz-slider-model="slider.minValue"
@@ -27,7 +33,7 @@
                                   rz-slider-options="slider.options"></rzslider>
                         <div class="pt-3 text-center">
                             <label>{{slider.minValue}} kn - {{slider.maxValue}} kn</label>
-                            <button type="button" class="btn btn-primary btn-main ml-2">Filter</button>
+                            <button type="button" class="btn btn-primary btn-main ml-2" ng-click="filter(d.filters, slider, d.sortBy)">{{'filter' | translate}}</button>
                         </div>
 
                         <!--<p>
@@ -52,7 +58,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <!--<h1>Search result for <em>shoes</em></h1>-->
-                                <h1 ng-if="d.search">Rezultati pretrage za <em>{{d.search}}</em></h1>
+                                <h1 ng-if="d.search">{{'search results for' | translate}} <em>{{d.search}}</em></h1>
                             </div>
                             <div class="col-md-6">
                                 <!--<form action="#">
@@ -91,8 +97,11 @@
                                 </select>
                             </div>
                             <div class="pull-right">
-                                <label class="control-label">Sort&nbsp;By:</label>
-                                <select class="form-control input-sm">
+                                <label class="control-label">{{'sort by' | translate}}:</label>
+                                <select ng-model="d.sortBy" class="form-control input-sm" ng-change="filter(d.filters, slider, d.sortBy)">
+                                    <option value="{{x.code}}" ng-selected="x.code===d.sortBy?true:false" ng-repeat="x in d.sortTypes">{{x.title | translate}}</option>
+                                </select>
+                                <!--<select class="form-control input-sm">
                                     <option value="#?sort=p.sort_order&amp;order=ASC" selected="selected">Default</option>
                                     <option value="#?sort=pd.name&amp;order=ASC">Name (A - Z)</option>
                                     <option value="#?sort=pd.name&amp;order=DESC">Name (Z - A)</option>
@@ -102,46 +111,55 @@
                                     <option value="#?sort=rating&amp;order=ASC">Rating (Lowest)</option>
                                     <option value="#?sort=p.model&amp;order=ASC">Model (A - Z)</option>
                                     <option value="#?sort=p.model&amp;order=DESC">Model (Z - A)</option>
-                                </select>
+                                </select>-->
                             </div>
                         </div>
                     </div>
-                    <!-- BEGIN PRODUCT LIST -->
-                    <div class="row product-list">
-                        <!-- PRODUCT ITEM START -->
-                        <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="x in d.records track by $index">
-                            <div class="product-item">
-                                <div class="pi-img-wrapper">
-                                    <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="Berry Lace Dress">
-                                    <div>
-                                        <a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">Zoom</a>
-                                        <!--<a href="" class="btn btn-default fancybox-fast-view">View</a>-->
-                                        <a href="" class="btn btn-default" ng-click="get(x)">View</a>
+
+                    <loading-directive val="d.loading" size="5" loadingtitle="'loading'"></loading-directive>
+                    <div ng-if="!d.loading">
+                        <!-- BEGIN PRODUCT LIST -->
+                        <div class="row product-list">
+                            <!-- PRODUCT ITEM START -->
+                            <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="x in d.records track by $index">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
+                                        <div>
+                                            <a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">Zoom</a>
+                                            <!--<a href="" class="btn btn-default fancybox-fast-view">View</a>-->
+                                            <a href="" class="btn btn-default" ng-click="get(x)">View</a>
+                                        </div>
                                     </div>
+                                    <div class="product-image-label {{sticker(x).style}}">
+                                        <span>{{sticker(x).title}}</span>
+                                    </div>
+                                    <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
+                                    <div class="pi-price">{{x.price.net_discount | number}} kn</div>
+                                    <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
                                 </div>
-                                <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                <div class="pi-price">{{x.price.net_discount | number}} kn</div>
-                                <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
                             </div>
                         </div>
-                    </div>
-                    <!-- END PRODUCT LIST -->
-                    <!-- BEGIN PAGINATOR -->
-                    <div class="row">
-                        <div class="col-md-4 col-sm-4 items-info">Items 1 to 9 of 10 total</div>
-                        <div class="col-md-8 col-sm-8">
-                            <ul class="pagination pull-right">
-                                <li><a href="javascript:;">&laquo;</a></li>
-                                <li><a href="javascript:;">1</a></li>
-                                <li><span>2</span></li>
-                                <li><a href="javascript:;">3</a></li>
-                                <li><a href="javascript:;">4</a></li>
-                                <li><a href="javascript:;">5</a></li>
-                                <li><a href="javascript:;">&raquo;</a></li>
-                            </ul>
+                        <!-- END PRODUCT LIST -->
+                        <!-- BEGIN PAGINATOR -->
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 items-info">Items 1 to 9 of 10 total</div>
+                            <div class="col-md-8 col-sm-8">
+                                <ul class="pagination pull-right">
+                                    <li><a href="javascript:;">&laquo;</a></li>
+                                    <li><a href="javascript:;">1</a></li>
+                                    <li><span>2</span></li>
+                                    <li><a href="javascript:;">3</a></li>
+                                    <li><a href="javascript:;">4</a></li>
+                                    <li><a href="javascript:;">5</a></li>
+                                    <li><a href="javascript:;">&raquo;</a></li>
+                                </ul>
+                            </div>
                         </div>
+                        <!-- END PAGINATOR -->
                     </div>
-                    <!-- END PAGINATOR -->
+
+
                 </div>
                 <!-- END CONTENT -->
             </div>

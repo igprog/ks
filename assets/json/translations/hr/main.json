@@ -41,6 +41,20 @@
   "remove": "Briši",
   "project": "Projekt",
   "floor plans": "tlocrti",
-  "cross sections": "presjeci"
+  "cross sections": "presjeci",
+
+  "filters": "Filteri",
+  "new": "Novo",
+  "outlet": "Akcija",
+  "bestselling": "Najprodavanije",
+  "category": "Kategorija",
+  "search results for": "Rezultati pretrage za",
+  "sort by": "Sortiraj po",
+  "name (A - Z)": "Nazivu (A - Ž)",
+  "name (Z - A)": "Nazivu (Ž- A)",
+  "price (Low - Heigh)": "Cijeni (Niža - Viša)",
+  "price (Heigh - Low)": "Cijeni (Viša - Niža)",
+  "rating (Highest)": "Popularnosti (Najviša)",
+  "rating (Lowest)": "Popularnosti (Najniža)"
 
 }
