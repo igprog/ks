@@ -138,6 +138,10 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.page = 1;
     }
 
+    if ($sessionStorage.filters !== undefined) {
+        $sessionStorage.filters = null;
+    }
+
     var data = {
         loading: false,
         productGroups: null,
@@ -343,8 +347,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     //$scope.search = { price_min: '', price_max: '', amount_min: 1000, amount_max: 5000 };
 
     $scope.slider = {
-        minValue: 10,
-        maxValue: 90,
+        minValue: 0,
+        maxValue: 0,
         options: {
             floor: 0,
             ceil: 100,
@@ -360,15 +364,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         pg_code: $stateParams.pg_code,
         productgroup: $stateParams.productgroup,
         subgroup: $stateParams.subgroup,
-        search: null,
+        search: $stateParams.search,
         responseTime: 0,
-        priceRange: { min: 0, max: 0 },
-        filters: null,
-        sortTypes: null,
-        sortBy: 'nameAZ'
-
+        filters: $sessionStorage.filters !== undefined ? $sessionStorage.filters : null
     }
+    debugger;
     $scope.d = data;
+    //$scope.d.search = $scope.search_;
 
     var loadProductGroups = () => {
         f.post('ProductGroups', 'Load', {}).then((d) => {
@@ -378,6 +380,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     loadProductGroups();
 
     var load = (param) => {
+        if ($sessionStorage.filters !== undefined) { $sessionStorage.filters = null; };
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
         var search = param.search !== undefined ? param.search : null;
@@ -385,13 +388,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.d.loading = true;
         f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search }).then((d) => {
             $scope.d.records = d.data;
-            $scope.d.priceRange = d.priceRange;
+            //$scope.d.priceRange = d.priceRange;
             $scope.d.filters = d.filters;
-            $scope.d.sortTypes = d.sortTypes;
+            //$scope.d.sortTypes = d.sortTypes;
 
-            $scope.slider.minValue = $scope.d.priceRange.min;
-            $scope.slider.maxValue = $scope.d.priceRange.max;
-            $scope.slider.options.ceil = $scope.d.priceRange.max;
+            $scope.slider.minValue = $scope.d.filters.price.min;
+            $scope.slider.maxValue = $scope.d.filters.price.max;
+            $scope.slider.options.ceil = $scope.d.filters.price.max;
 
             $scope.d.responseTime = d.responseTime;
             if (search !== null) {
@@ -400,7 +403,40 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.loading = false;
         });
     }
-    load($stateParams);
+
+    $scope.filter = (filters, slider) => {
+        var param = $stateParams;
+        var pg_code = param.pg_code !== undefined ? param.pg_code : null;
+        var brand_code = param.brand_code !== undefined ? param.brand_code : null;
+        var search = param.search !== undefined ? param.search : null;
+        //$scope.d.filters.price.min = slider.minValue;
+        //$scope.d.filters.price.max = slider.maxValue;
+        debugger;
+        
+        filters.price.minVal = slider.minValue;
+        filters.price.maxVal = slider.maxValue;
+        //$stateParams.filters = filters;
+        $sessionStorage.filters = filters;
+        $scope.d.loading = true;
+        f.post('Products', 'Filter', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, filters: filters}).then((d) => {
+            $scope.d.records = d.data;
+            $scope.d.loading = false;
+        });
+    }
+
+
+    if ($sessionStorage.filters !== undefined) {
+        if ($sessionStorage.filters !== null) {
+            $scope.slider.minValue = $sessionStorage.filters.price.min;
+            $scope.slider.maxValue = $sessionStorage.filters.price.max;
+            $scope.slider.options.ceil = $sessionStorage.filters.price.max;
+        }
+    }
+    if ($scope.d.filters) {
+        $scope.filter($scope.d.filters, $scope.slider);
+    } else {
+        load($stateParams);
+    }
 
     var loadBestSelling = (lang, pg, limit) => {
         var pg_code = pg !== undefined ? pg : null;
@@ -410,23 +446,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadBestSelling('hr', $stateParams.pg_code, 3);
 
-    $scope.filter = (filters, slider, sortBy) => {
-        var param = $stateParams;
-        var pg_code = param.pg_code !== undefined ? param.pg_code : null;
-        var brand_code = param.brand_code !== undefined ? param.brand_code : null;
-        var search = param.search !== undefined ? param.search : null;
-        //$scope.d.filters.price.min = slider.minValue;
-        //$scope.d.filters.price.max = slider.maxValue;
-        filters.price.min = slider.minValue;
-        filters.price.max = slider.maxValue;
-        //$stateParams.filters = filters;
-
-        $scope.d.loading = true;
-        f.post('Products', 'Filter', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, filters: filters, sortBy: sortBy }).then((d) => {
-            $scope.d.records = d.data;
-            $scope.d.loading = false;
-        });
-    }
 
     // Staviti u functions
     $scope.sticker = (x) => {

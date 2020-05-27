@@ -23,17 +23,21 @@
                         </div>-->
                         <h3>{{'filters' | translate}}</h3>
                         <div class="checkbox-list" ng-cloak>
-                            <label><input ng-model="d.filters.isnew.val" type="checkbox" ng-click="filter(d.filters, slider, d.sortBy)"> {{d.filters.isnew.title | translate}} ({{d.filters.isnew.tot}})</label>
-                            <label><input ng-model="d.filters.outlet.val" type="checkbox" ng-click="filter(d.filters, slider, d.sortBy)"> {{d.filters.outlet.title | translate}} ({{d.filters.outlet.tot}})</label>
-                            <label><input ng-model="d.filters.bestselling.val" type="checkbox" ng-click="filter(d.filters, slider, d.sortBy)"> {{d.filters.bestselling.title | translate}} ({{d.filters.bestselling.tot}})</label>
+                            <label><input ng-model="d.filters.isnew.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.isnew.title | translate}} ({{d.filters.isnew.tot}})</label>
+                            <label><input ng-model="d.filters.outlet.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.outlet.title | translate}} ({{d.filters.outlet.tot}})</label>
+                            <label><input ng-model="d.filters.bestselling.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.bestselling.title | translate}} ({{d.filters.bestselling.tot}})</label>
                         </div>
                         <h3>Cijena</h3>
                         <rzslider rz-slider-model="slider.minValue"
                                   rz-slider-high="slider.maxValue"
                                   rz-slider-options="slider.options"></rzslider>
+                        <!--<rzslider rz-slider-model="d.filters.price.minVal"
+                                  rz-slider-high="d.filters.price.max"
+                                  rz-slider-options="slider.options"></rzslider>-->
                         <div class="pt-3 text-center">
                             <label>{{slider.minValue}} kn - {{slider.maxValue}} kn</label>
-                            <button type="button" class="btn btn-primary btn-main ml-2" ng-click="filter(d.filters, slider, d.sortBy)">{{'filter' | translate}}</button>
+                            <!--<label>{{d.filters.price.minVal}} kn - {{d.filters.price.maxValu}} kn</label>-->
+                            <button type="button" class="btn btn-primary btn-main ml-2" ng-click="filter(d.filters, slider)">{{'filter' | translate}}</button>
                         </div>
 
                         <!--<p>
@@ -42,7 +46,7 @@
                         </p>-->
                         <div id="slider-range"></div>
                     </div>
-                    <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix">
+                    <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix hidden-xs">
                         <h2>Najprodavanije</h2>
                         <div class="item" ng-repeat="x in d.bestselling track by $index">
                             <a href=""><img src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}"></a>
@@ -87,19 +91,22 @@
                         </div>
                         <div class="col-md-10 col-sm-10">
                             <div class="pull-right">
-                                <label class="control-label">Show:</label>
-                                <select class="form-control input-sm">
+                                <label class="control-label">{{'show' | translate}}:</label>
+                                <select ng-model="d.filters.show.val" class="form-control input-sm" ng-change="filter(d.filters, slider)">
+                                    <option value="{{x}}" ng-repeat="x in d.filters.show.values" >{{x}}</option>
+                                </select>
+                                <!--<select class="form-control input-sm">
                                     <option value="#?limit=24" selected="selected">24</option>
                                     <option value="#?limit=25">25</option>
                                     <option value="#?limit=50">50</option>
                                     <option value="#?limit=75">75</option>
                                     <option value="#?limit=100">100</option>
-                                </select>
+                                </select>-->
                             </div>
                             <div class="pull-right">
                                 <label class="control-label">{{'sort by' | translate}}:</label>
-                                <select ng-model="d.sortBy" class="form-control input-sm" ng-change="filter(d.filters, slider, d.sortBy)">
-                                    <option value="{{x.code}}" ng-selected="x.code===d.sortBy?true:false" ng-repeat="x in d.sortTypes">{{x.title | translate}}</option>
+                                <select ng-model="d.filters.sortBy.val" class="form-control input-sm" ng-change="filter(d.filters, slider)">
+                                    <option value="{{x.code}}" ng-selected="x.code===d.filters.sortBy.val?true:false" ng-repeat="x in d.filters.sortBy.sortTypes">{{x.title | translate}}</option>
                                 </select>
                                 <!--<select class="form-control input-sm">
                                     <option value="#?sort=p.sort_order&amp;order=ASC" selected="selected">Default</option>

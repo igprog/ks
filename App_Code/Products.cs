@@ -71,15 +71,17 @@ public class Products : System.Web.Services.WebService {
 
     public class ProductsData {
         public List<NewProduct> data;
-        public PriceRange priceRange;
+        //public PriceRange priceRange;
         public double responseTime;
         public Filters filters;
-        public SortTypes sortTypes;
+        //public SortTypes sortTypes;
     }
 
     public class PriceRange {
         public double min;
         public double max;
+        public double minVal;
+        public double maxVal;
     }
 
     public class Filters {
@@ -87,6 +89,8 @@ public class Products : System.Web.Services.WebService {
         public FilterItem isnew;
         public FilterItem outlet;
         public FilterItem bestselling;
+        public SortBy sortBy;
+        public Show show;
     }
 
     public class FilterItem {
@@ -94,6 +98,11 @@ public class Products : System.Web.Services.WebService {
         public string title;
         public bool val;
         public int tot;
+    }
+
+    public class SortBy {
+        public SortTypes sortTypes;
+        public string val;
     }
 
     public class SortTypes {
@@ -109,6 +118,11 @@ public class Products : System.Web.Services.WebService {
         public string code;
         public string title;
         public bool val;
+    }
+
+    public class Show {
+        public int[] values;
+        public int val;
     }
     #endregion Class
 
@@ -153,9 +167,9 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Filter(string lang, string productGroup, string brand, string search, Filters filters, string sortBy) {
+    public string Filter(string lang, string productGroup, string brand, string search, Filters filters) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, filters, sortBy), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, filters), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -300,72 +314,51 @@ public class Products : System.Web.Services.WebService {
                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-                   , "ORDER BY p.title DESC");
+                   , "ORDER BY p.title DESC LIMIT 16");
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
-        xxx.priceRange = new PriceRange();
-        xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
-        xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
+        //xxx.priceRange = new PriceRange();
+        //xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
+        //xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
         xxx.filters = LoadFilters(xxx); // InitFilters();
         //xxx.filters.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
         //xxx.filters.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
         //xxx.filters.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
-        xxx.sortTypes = InitSortTypes();
+        //xxx.sortTypes = InitSortTypes();
         return xxx;
     }
 
-    public ProductsData LoadData(string lang, string productGroup, string brand, string search, Filters filters, string sortBy) {
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search, Filters filters) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
         //string where = string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && (filters.price.max == 0 && filters.price.max == 0) ? "" : "WHERE";
         string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}"
            , mainSql
-           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && (filters.price.max == 0 && filters.price.max == 0) ? "" : "WHERE"
+           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
            , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
            , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
            , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-           , filters.price.min <= 0 && filters.price.max <= 0 ? "" : string.Format(@"{0} CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) <= {2}", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? "" : "AND"), filters.price.min, filters.price.max)
-           , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.min <= 0 && filters.price.max <= 0 ? "" : "AND"))
-           , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.min <= 0 && filters.price.max <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
-           , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.min <= 0 && filters.price.max <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
-           , string.Format("ORDER BY {0}", SortBy(sortBy))
+           , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : string.Format(@"{0} CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) <= {2}", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? "" : "AND"), filters.price.minVal, filters.price.maxVal)
+           , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : "AND"))
+           , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
+           , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
+           , string.Format("ORDER BY {0} LIMIT {1}", SortBySql(filters.sortBy.val), filters.show.val)
            );
 
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
-        xxx.priceRange = new PriceRange();
-        xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
-        xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
+        //xxx.priceRange = new PriceRange();
+        //xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
+        //xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
-        xxx.filters = LoadFilters(xxx); // InitFilters();
+        //xxx.filters = LoadFilters(xxx); // InitFilters();
                                         //xxx.filters.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
                                         //xxx.filters.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
                                         //xxx.filters.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
-        xxx.sortTypes = InitSortTypes();
+        //xxx.sortTypes = InitSortTypes();
         return xxx;
-    }
-
-    public Filters LoadFilters(ProductsData xxx) {
-        Filters x = new Filters();
-        x.price = new PriceRange();
-        x.isnew = new FilterItem();
-        x.isnew.code = "isnew";
-        x.isnew.title = "new";
-        x.isnew.val = false;
-        x.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
-        x.outlet = new FilterItem();
-        x.outlet.code = "outlet";
-        x.outlet.title = "outlet";
-        x.outlet.val = false;
-        x.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
-        x.bestselling = new FilterItem();
-        x.bestselling.code = "bestselling";
-        x.bestselling.title = "bestselling";
-        x.bestselling.val = false;
-        x.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
-        return x;
     }
 
     public NewProduct GetProduct(string id, string lang) {
@@ -474,7 +467,35 @@ public class Products : System.Web.Services.WebService {
         return xx;
     }
 
-    public SortTypes InitSortTypes() {
+    public Filters LoadFilters(ProductsData xxx) {
+        Filters x = new Filters();
+        x.price = new PriceRange();
+        x.price.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
+        x.price.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
+        x.isnew = new FilterItem();
+        x.isnew.code = "isnew";
+        x.isnew.title = "new";
+        x.isnew.val = false;
+        x.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
+        x.outlet = new FilterItem();
+        x.outlet.code = "outlet";
+        x.outlet.title = "outlet";
+        x.outlet.val = false;
+        x.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
+        x.bestselling = new FilterItem();
+        x.bestselling.code = "bestselling";
+        x.bestselling.title = "bestselling";
+        x.bestselling.val = false;
+        x.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
+        x.sortBy = InitSortBy();
+        x.show = new Show();
+        x.show.values = new int[] { 16, 32, 64 };
+        x.show.val = 16;
+        return x;
+    }
+
+    public SortBy InitSortBy() {
+        SortBy s = new SortBy();
         SortTypes x = new SortTypes();
         x.nameAZ = new SortItem();
         x.nameAZ.code = "nameAZ";
@@ -500,10 +521,12 @@ public class Products : System.Web.Services.WebService {
         x.ratingL.code = "ratingL";
         x.ratingL.title = "rating (Lowest)";
         x.ratingL.val = false;
-        return x;
+        s.sortTypes = x;
+        s.val = "nameAZ";
+        return s;
     }
 
-    public string SortBy (string code) {
+    public string SortBySql (string code) {
         //TODO: rating
         string x = null;
         switch (code) {
