@@ -23,7 +23,7 @@ using Igprog;
 public class Review : System.Web.Services.WebService {
     Global G = new Global();
     DataBase DB = new DataBase();
-    string mainSql = "SELECT r.id, r.sku, r.name, r.email, r.desc, r.rating, r.reviewdate, r.isactive FROM review r";
+    string mainSql = "SELECT r.id, r.sku, r.name, r.email, r.desc, r.rating, r.reviewdate, r.isactive, r.lang FROM review r";
     public Review() {
     }
 
@@ -34,9 +34,16 @@ public class Review : System.Web.Services.WebService {
         public string name;
         public string email;
         public string desc;
-        public string rating;
+        public double rating;
         public string reviewdate;
         public bool isactive;
+        public string lang;
+    }
+
+    public class ReviewData {
+        public List<NewReview> data;
+        public double rating;
+        public int count;
     }
     #endregion Class
 
@@ -50,9 +57,10 @@ public class Review : System.Web.Services.WebService {
             x.name = null;
             x.email = null;
             x.desc = null;
-            x.rating = null;
+            x.rating = 0;
             x.reviewdate = null;
             x.isactive = true;
+            x.lang = null;
             return JsonConvert.SerializeObject(x, Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -63,6 +71,16 @@ public class Review : System.Web.Services.WebService {
     public string Load() {
         try {
             return JsonConvert.SerializeObject(LoadData(mainSql), Formatting.None);
+        } catch (Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string LoadLastReviews(string lang, int limit) {
+        try {
+            string sql = string.Format("{0} {1}", mainSql, string.Format("WHERE CAST(r.rating AS DECIMAL)>=4 AND r.lang = '{0}' AND r.isactive = 'True' ORDER BY rowid DESC LIMIT {1}", lang, limit));
+            return JsonConvert.SerializeObject(LoadData(sql), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -84,11 +102,11 @@ public class Review : System.Web.Services.WebService {
             string sql = null;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO review VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                    , x.id, x.sku, x.name, x.email, x.desc, x.rating, x.reviewdate, x.isactive);
+                sql = string.Format(@"INSERT INTO review VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')"
+                                    , x.id, x.sku, x.name, x.email, x.desc, x.rating, x.reviewdate, x.isactive, x.lang);
             } else {
-                sql = string.Format(@"UPDATE products SET sku = '{1}', name = '{2}', email = '{3}', desc = '{4}', rating = '{5}', reviewdate = '{6}', isactive = '{7}' WHERE id = '{0}'"
-                                    , x.id, x.sku, x.name, x.email, x.desc, x.rating, x.reviewdate, x.isactive);
+                sql = string.Format(@"UPDATE review SET sku = '{1}', name = '{2}', email = '{3}', desc = '{4}', rating = '{5}', reviewdate = '{6}', isactive = '{7}', lang = '{8}' WHERE id = '{0}'"
+                                    , x.id, x.sku, x.name, x.email, x.desc, x.rating, x.reviewdate, x.isactive, x.lang);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -115,7 +133,7 @@ public class Review : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            return JsonConvert.SerializeObject("item deleted successfully", Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(mainSql), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -123,15 +141,21 @@ public class Review : System.Web.Services.WebService {
     #endregion WebMethods
 
     #region Methods
-    public List<NewReview> GetData(string sku) {
+    public ReviewData GetData(string sku) {
         string sql = string.Format("{0} WHERE r.sku = '{1}' AND r.isactive = 'True'", mainSql, sku);
         return LoadData(sql);
     }
 
-    public List<NewReview> LoadData(string sql) {
+    public ReviewData LoadData(string sql) {
         DB.CreateDataBase(G.db.review);
+        ReviewData xxx = new ReviewData();
         List<NewReview> xx = DataCollection(sql);
-        return xx;
+        xxx.data = xx;
+        if (xx.Count > 0) {
+            xxx.rating = Math.Round(xx.Average(a => a.rating), 1);
+            xxx.count = xx.Count(a => a.id != null);
+        }
+        return xxx;
     }
 
     public List<NewReview> DataCollection(string sql) {
@@ -159,9 +183,10 @@ public class Review : System.Web.Services.WebService {
         x.name = G.ReadS(reader, 2);
         x.email = G.ReadS(reader, 3);
         x.desc = G.ReadS(reader, 4);
-        x.rating = G.ReadS(reader, 5);
+        x.rating = G.ReadD(reader, 5);
         x.reviewdate = G.ReadS(reader, 6);
         x.isactive = G.ReadB(reader, 7);
+        x.lang = G.ReadS(reader, 8);
         return x;
     }
     #endregion Methods

@@ -56,6 +56,12 @@
   "price (Heigh - Low)": "Cijeni (Viša - Niža)",
   "rating (Highest)": "Popularnosti (Najviša)",
   "rating (Lowest)": "Popularnosti (Najniža)",
-  "show": "Prikaži"
+  "show": "Prikaži",
+  "review": "recenzija",
+  "reviews": "recenzije",
+  "write a review": "Napišite recenziju",
+  "please rate us": "Molimo da nas ocijenite",
+  "rating": "Ocjena",
+  "last reviews": "Zadnje recenzije"
 
 }

@@ -49,6 +49,9 @@
                     <a class="nav-link" href="index.html" title="naslovna"><i class="fa fa-home"></i> Naslovna</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('info')">Informacije</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="grupe proizvoda" ng-click="toggleTpl('productGroups')">Grupe Proizvoda</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
@@ -64,7 +67,7 @@
                     <a class="nav-link" href="" title="proizvodi" ng-click="toggleTpl('products')">Proizvodi</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
-                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('info')">Informacije</a>
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('reviews')">Recenzije</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item">
                     <a class="nav-link" href="" title="odjava" ng-click="f.logout()"><i class="fa fa-sign-out-alt"></i> Odjava</a>
@@ -114,6 +117,12 @@
                     <a class="d-flex w-100 justify-content-start align-items-center text-dark">
                         <span class="fa fa-edit fa-fw mr-3"></span>
                         <span class="menu-collapsed">Proizvodi</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('reviews')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-star fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Recenzije</span>
                     </a>
                 </li>
             </ul>
@@ -600,7 +609,7 @@
                                 </div>
                                 <div class="text-right">
                                     <button ng-disabled="x.id==null" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
-                                    <button ng-click="f.save(x)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
+                                    <button ng-click="f.save(x, $index)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
                                 </div>
                             </form>
                         </div>
@@ -646,6 +655,43 @@
             </div>
             <div class="m-3">
                 <button ng-click="f.newProduct()" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Novi proizvod</button>
+            </div>
+            <json-directive data="d" desc="'d'"  debug="config.debug"></json-directive>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="reviews">
+        <div ng-if="d.isLogin" ng-controller="reviewsCtrl">
+            <div class="ml-3">
+                <h2>Recenzije</h2>
+                <div>Ukupno recenzija: {{d.records.count}}</div>
+                <div>Prosječna ocjena: {{d.records.rating}}</div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>SKU</th>
+                            <th>Ime</th>
+                            <th>Email</th>
+                            <th>Recenzija</th>
+                            <th>Ocjena</th>
+                            <th>Datum</th>
+                            <th>Aktivan</th>
+                            <th>Lang</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="x in d.records.data">
+                            <td>{{x.sku}}</td>
+                            <td>{{x.name}}</td>
+                            <td>{{x.email}}</td>
+                            <td>{{x.desc}}</td>
+                            <td>{{x.rating}}</td>
+                            <td class="text-nowrap">{{x.reviewdate}}</td>
+                            <td><input ng-model="x.isactive" type="checkbox" ng-change="f.save(x)" /></td>
+                            <td>{{x.lang}}</td>
+                            <td><button class="btn btn-danger" ng-click="f.remove(x)"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <json-directive data="d" desc="'d'"  debug="config.debug"></json-directive>
         </div>

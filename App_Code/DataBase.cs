@@ -37,6 +37,7 @@ public class DataBase {
                 CREATE TABLE IF NOT EXISTS products
                 (id NVARCHAR(50),
                 sku NVARCHAR(50) PRIMARY KEY,
+                style NVARCHAR(50),
                 productgroup VARCHAR(50),
                 title NVARCHAR(50),
                 shortdesc NVARCHAR(50),
@@ -65,7 +66,8 @@ public class DataBase {
                 desc NVARCHAR(200),
                 rating VARCHAR(50),
                 reviewdate VARCHAR(50),
-                isactive VARCHAR(50))";
+                isactive VARCHAR(50),
+                lang VARCHAR(50))";
         CreateTable(path, sql);
     }
 

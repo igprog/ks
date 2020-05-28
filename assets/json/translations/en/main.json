@@ -57,6 +57,12 @@
   "price (Heigh - Low)": "Price (Heigh - Low)",
   "rating (Highest)": "Rating (Highest)",
   "rating (Lowest)": "Rating (Lowest)",
-  "show": "Show"
+  "show": "Show",
+  "review": "review",
+  "reviews": "reviews",
+  "write a review": "Write a review",
+  "please rate us": "Please rate us",
+  "rating": "Rating",
+  "last reviews": "Last reviews"
 
 }

@@ -84,6 +84,36 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             mo = mo + 1 < 10 ? '0' + (mo + 1) : mo + 1;
             var yr = x.getFullYear();
             return yr + '-' + mo + '-' + day;
+        },
+        setDateTime: (x) => {
+            debugger;
+            var day = x.getDate();
+            day = day < 10 ? '0' + day : day;
+            var mo = x.getMonth();
+            mo = mo + 1 < 10 ? '0' + (mo + 1) : mo + 1;
+            var yr = x.getFullYear();
+            var h = x.getHours();
+            h = h < 10 ? '0' + h : h;
+            var m = x.getMinutes();
+            m = m < 10 ? '0' + m : m;
+            return day + '.' + mo + '.' + yr + ' - ' + h + ':' + m;
+        },
+        sticker: (x) => {
+            var a = {
+                style: null,
+                title: null
+            }
+            if (x.outlet) {
+                a.style = 'type-2';
+                a.title = 'akcija';
+            } else if (x.isnew) {
+                a.style = 'type-1';
+                a.title = 'novo';
+            } else {
+                a.style = null;
+                a.title = null;
+            }
+            return a;
         }
     }
 }])
@@ -152,7 +182,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         records: [],
         cart: null,
         search: null,
-        info: null
+        info: null,
+        lastReviews: null,
+        stars: [1, 2, 3, 4, 5]
     }
     $rootScope.d = data;
 
@@ -239,6 +271,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.info = d;
         });
     }
+
+    var loadLastReviews = (lang, limit) => {
+        f.post('Review', 'LoadLastReviews', { lang: lang, limit: limit }).then((d) => {
+            $scope.d.lastReviews = d;
+        });
+    }
+    loadLastReviews('hr', 3);
 
     var loadData = () => {
         loadProductGroups();
@@ -449,21 +488,22 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     // Staviti u functions
     $scope.sticker = (x) => {
-        var a = {
-            style: null,
-            title: null
-        }
-        if (x.outlet) {
-            a.style = 'type-2';
-            a.title = 'akcija';
-        } else if (x.isnew) {
-            a.style = 'type-1';
-            a.title = 'novo';
-        } else {
-            a.style = null;
-            a.title = null;
-        }
-        return a;
+        return f.sticker(x);
+        //var a = {
+        //    style: null,
+        //    title: null
+        //}
+        //if (x.outlet) {
+        //    a.style = 'type-2';
+        //    a.title = 'akcija';
+        //} else if (x.isnew) {
+        //    a.style = 'type-1';
+        //    a.title = 'novo';
+        //} else {
+        //    a.style = null;
+        //    a.title = null;
+        //}
+        //return a;
     }
 
 }])
@@ -525,21 +565,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.sticker = (x) => {
-        var a = {
-            style: null,
-            title: null
-        }
-        if (x.outlet) {
-            a.style = 'type-2';
-            a.title = 'akcija';
-        } else if (x.isnew) {
-            a.style = 'type-1';
-            a.title = 'novo';
-        } else {
-            a.style = null;
-            a.title = null;
-        }
-        return a;
+        return f.sticker(x);
     }
 
     $scope.toggleTpl = (x) => {
@@ -559,9 +585,30 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.saveRating = (x) => {
+        if (x.rating < 1) {
+            alert($translate.instant('please rate us'));
+            return false;
+        }
+        x.reviewdate = f.setDateTime(new Date());
+        x.lang = 'hr';
         f.post('Review', 'Save', { x: x }).then((d) => {
             $scope.d.record.reviews = d;
         });
+    }
+
+    $scope.reviewsTrans = (x) => {
+        lang = 'hr';
+        if (lang === 'en') {
+            return x < 2 ? 'review' : 'reviews';
+        } else {
+            if (x < 2) {
+                return 'review';
+            } else if ((x % 10 == 2) || (x % 10 == 3) || (x % 10 == 4)) {
+                return 'reviews';
+            } else {
+                return 'review';
+            }
+        }
     }
     /**** Review & Rating *****/
    
@@ -847,21 +894,22 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.sticker = (x) => {
-        var a = {
-            style: null,
-            title: null
-        }
-        if (x.outlet) {
-            a.style = 'type-2';
-            a.title = 'akcija';
-        } else if (x.isnew) {
-            a.style = 'type-1';
-            a.title = 'novo';
-        } else {
-            a.style = null;
-            a.title = null;
-        }
-        return a;
+        return f.sticker(x);
+        //var a = {
+        //    style: null,
+        //    title: null
+        //}
+        //if (x.outlet) {
+        //    a.style = 'type-2';
+        //    a.title = 'akcija';
+        //} else if (x.isnew) {
+        //    a.style = 'type-1';
+        //    a.title = 'novo';
+        //} else {
+        //    a.style = null;
+        //    a.title = null;
+        //}
+        //return a;
     }
 
 }])

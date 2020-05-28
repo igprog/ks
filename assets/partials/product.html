@@ -107,13 +107,18 @@
                                 </div>-->
                                 <div class="product-page-cart form-inline">
                                     <!--<span starating></span>-->
+                                    <!--<span class="glyphicon glyphicon-star"></span>
                                     <span class="glyphicon glyphicon-star"></span>
                                     <span class="glyphicon glyphicon-star"></span>
                                     <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star-empty"></span>
-                                    <a href="javascript:;" class="pl-3">7 reviews</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#/review">Write a review</a>
+                                    <span class="glyphicon glyphicon-star-empty"></span>-->
+                                    <i class="fa fa-star text-success" ng-repeat="s in d.stars | limitTo: d.record.reviews.rating"></i>
+                                    <i ng-if="d.record.reviews.rating % 1 != 0" class="fa fa-star-half-o text-success"></i>
+                                    <a href="" class="pl-3" ng-click="toggleTpl('reviewTpl')">{{d.record.reviews.count}} {{reviewsTrans(d.record.reviews.count) | translate}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="" ng-click="toggleTpl('reviewTpl')">{{'write a review' | translate}}</a>
+                                    <!--<a href="javascript:;" class="pl-3">7 reviews</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#/review">Write a review</a>-->
                                 </div>
+                                star
+                                
                                 <ul class="social-icons">
                                     <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
                                     <li><a class="twitter" data-original-title="twitter" href="javascript:;"></a></li>
@@ -123,15 +128,15 @@
                                 </ul>
                             </div>
                             <div class="product-page-content">
-                                <ul id="myTab" class="nav nav-tabs">
+                                <ul id="tab" class="nav nav-tabs">
                                     <!--<li class="active"><a href="/#Description" data-toggle="tab">Opis</a></li>
                                     <li><a href="/#Information" data-toggle="tab">Informacje</a></li>
                                     <li><a href="/#Reviews" data-toggle="tab">Recenzije (2)</a></li>-->
-                                    <li class="active"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">Opis</a></li>
-                                    <li><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">Informacje</a></li>
-                                    <li><a href="" data-toggle="tab" ng-click="toggleTpl('reviewTpl')">Recenzije (2)</a></li>
+                                    <li class="{{d.tpl==='descTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">Opis</a></li>
+                                    <li class="{{d.tpl==='infoTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">Informacje</a></li>
+                                    <li class="{{d.tpl==='reviewTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('reviewTpl')">Recenzije (2)</a></li>
                                 </ul>
-                                <div id="myTabContent" class="tab-content">
+                                <div id="tabContent" class="tab-content">
                                     <ng-include src="d.tpl"></ng-include>
                                 </div>
                             </div>
@@ -234,10 +239,10 @@
 </script>
 <script id="reviewTpl" type="text/ng-template">
     <!--<p>There are no reviews for this product.</p>-->
-    <div class="review-item clearfix" ng-repeat="x in d.record.reviews">
+    <div class="review-item clearfix" ng-repeat="x in d.record.reviews.data">
         <div class="review-item-submitted">
             <strong>{{x.name}}</strong>
-            <em>27/5/2020 - 17:49{{x.reviewdate}}</em>
+            <em><!--27/5/2020 - 17:49-->{{x.reviewdate}}</em>
             <i class="fa fa-star text-success" ng-repeat="s in d.stars | limitTo: x.rating"></i>
             <!--<div class="rateit" data-rateit-value="x.rating" data-rateit-ispreset="true" data-rateit-readonly="true"></div>-->
         </div>
@@ -257,28 +262,28 @@
     </div>-->
     <!-- BEGIN FORM-->
     <form id="review" class="reviews-form" role="form">
-        <h2>Write a review</h2>
+        <h2>{{'write a review' | translate}}</h2>
         <div class="form-group">
-            <label for="name">Name <span class="require">*</span></label>
+            <label for="name">{{'name' | translate}} <span class="require">*</span></label>
             <input ng-model="d.review.name" type="text" class="form-control" id="name">
         </div>
         <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">{{'email' | translate}}</label>
             <input ng-model="d.review.email" type="text" class="form-control" id="email">
         </div>
         <div class="form-group">
-            <label for="review">Review <span class="require">*</span></label>
+            <label for="review" class="text-capitalize">{{'review' | translate}} <span class="require">*</span></label>
             <textarea ng-model="d.review.desc" class="form-control" rows="8" id="review"></textarea>
         </div>
         <div class="form-group form-inline">
-            <label class="pr-3">Rating</label>
+            <label class="pr-3">{{'rating' | translate}}</label>
             <span starating></span>
             <!--<input type="range" value="4" step="0.25" id="backing5">
             <div class="rateit" data-rateit-backingfld="#backing5" data-rateit-resetable="false" data-rateit-ispreset="true" data-rateit-min="0" data-rateit-max="5">
             </div>-->
         </div>
         <div class="padding-top-20">
-            <button type="submit" class="btn btn-primary" ng-click="saveRating(d.review)">Send</button>
+            <button type="submit" class="btn btn-primary" ng-click="saveRating(d.review)">{{'send' | translate}}</button>
         </div>
     </form>
     <!-- END FORM-->

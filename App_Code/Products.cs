@@ -26,7 +26,7 @@ public class Products : System.Web.Services.WebService {
     Tran T = new Tran();
     Features F = new Features();
     ProductGroups PG = new ProductGroups();
-    string mainSql = @"SELECT p.id, p.sku, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.productorder, pg.title, b.title
+    string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.productorder, pg.title, b.title
                         FROM products p   
                         LEFT OUTER JOIN productGroups pg
                         ON p.productGroup = pg.code
@@ -40,6 +40,7 @@ public class Products : System.Web.Services.WebService {
     public class NewProduct {
         public string id;
         public string sku;
+        public string style;
         public ProductGroups.NewProductGroup productGroup;
         public string title;
         public string title_seo;
@@ -58,7 +59,7 @@ public class Products : System.Web.Services.WebService {
         public int productorder;
         public Price price;
         public int qty;
-        public List<Review.NewReview> reviews;
+        public Review.ReviewData reviews;
     }
 
     public class Price {
@@ -133,6 +134,8 @@ public class Products : System.Web.Services.WebService {
         try {
             NewProduct x = new NewProduct();
             x.id = null;
+            x.sku = null;
+            x.style = null;
             x.productGroup = new ProductGroups.NewProductGroup();
             x.title = null;
             x.title_seo = null;
@@ -152,7 +155,7 @@ public class Products : System.Web.Services.WebService {
             x.gallery = null;
             x.price = new Price();
             x.qty = 1;
-            x.reviews = new List<Review.NewReview>();
+            x.reviews = new Review.ReviewData();
             return JsonConvert.SerializeObject(x, Formatting.None);    
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -245,11 +248,11 @@ public class Products : System.Web.Services.WebService {
             }
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', {16})"
-                                    , x.id, x.sku, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.productorder);
+                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}',  '{17}')"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.productorder);
             } else {
-                sql = string.Format(@"UPDATE products SET sku = '{1}', productgroup = '{2}', title = '{3}', shortdesc = '{4}', longdesc = '{5}', brand = '{6}', img = '{7}', price = '{8}', discount = '{9}', stock = '{10}', isnew = '{11}', outlet = '{12}', bestselling = '{13}', isactive = '{14}', features = '{15}', productorder = {16} WHERE id = '{0}'"
-                                    , x.id, x.sku, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.productorder);
+                sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', stock = '{11}', isnew = '{12}', outlet = '{13}', bestselling = '{14}', isactive = '{15}', features = '{16}', productorder = {17} WHERE id = '{0}'"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.productorder);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -258,8 +261,9 @@ public class Products : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            //return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code), Formatting.None);
-            return JsonConvert.SerializeObject("Spremljeno", Formatting.None);
+            return JsonConvert.SerializeObject(x.id, Formatting.None);
+            //return JsonConvert.SerializeObject(LoadData(null, null, null, null), Formatting.None);
+            //return JsonConvert.SerializeObject("Spremljeno", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -276,8 +280,8 @@ public class Products : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            //return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code), Formatting.None);
-            return JsonConvert.SerializeObject("Proizvod izbrisan", Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(null, null, null, null), Formatting.None);
+            //return JsonConvert.SerializeObject("Proizvod izbrisan", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -409,41 +413,42 @@ public class Products : System.Web.Services.WebService {
         NewProduct x = new NewProduct();
         x.id = G.ReadS(reader, 0);
         x.sku = G.ReadS(reader, 1);
+        x.style = G.ReadS(reader, 2);
         //if (loadAllData) {
-            x.productGroup = new ProductGroups.NewProductGroup();
-            x.productGroup.code = G.ReadS(reader, 2);
-            x.productGroup.title = G.ReadS(reader, 17);
+        x.productGroup = new ProductGroups.NewProductGroup();
+            x.productGroup.code = G.ReadS(reader, 3);
+            x.productGroup.title = G.ReadS(reader, 18);
             x.productGroup.title_seo = G.GetSeoTitle(x.productGroup.title);
             x.productGroup.parent = PG.GetParentGroup(x.productGroup.code);
         //}
         List<Tran.NewTran> tran = T.LoadData(x.id, G.recordType.productTitle, lang);
-        x.title = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 3);
+        x.title = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 4);
         x.title_seo = G.GetSeoTitle(x.title);
         if (loadAllData) {
             tran = T.LoadData(x.id, G.recordType.productShortDesc, lang);
-            x.shortdesc = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 4);
+            x.shortdesc = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 5);
             tran = T.LoadData(x.id, G.recordType.productLongDesc, lang);
-            x.longdesc = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 5);
+            x.longdesc = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 6);
             x.brand = new Brands.NewBrands();
-            x.brand.code = G.ReadS(reader, 6);
-            x.brand.title = G.ReadS(reader, 18);
+            x.brand.code = G.ReadS(reader, 7);
+            x.brand.title = G.ReadS(reader, 19);
             x.brand.title_seo = G.GetSeoTitle(x.brand.title);
         }
-        x.img = G.ReadS(reader, 7);
+        x.img = G.ReadS(reader, 8);
         x.price = new Price();
-        x.price.net = G.ReadD(reader, 8);
-        x.discount = G.ReadD(reader, 9);
+        x.price.net = G.ReadD(reader, 9);
+        x.discount = G.ReadD(reader, 10);
         x.price.net_discount = x.price.net - (x.price.net * x.discount);
         x.price.gross = x.price.net_discount + (x.price.net_discount * 0.25);
         x.price.gross_discount = x.price.gross - (x.price.gross * x.discount);
         //if (loadAllData) {
-            x.stock = G.ReadI(reader, 10);
-            x.isnew = G.ReadB(reader, 11);
-            x.outlet = G.ReadB(reader, 12);
-            x.bestselling = G.ReadB(reader, 13);
-            x.isactive = G.ReadB(reader, 14);
-            x.features = F.GetProductFeatures(features, G.ReadS(reader, 15));
-            x.productorder = G.ReadI(reader, 16);
+            x.stock = G.ReadI(reader, 11);
+            x.isnew = G.ReadB(reader, 12);
+            x.outlet = G.ReadB(reader, 13);
+            x.bestselling = G.ReadB(reader, 14);
+            x.isactive = G.ReadB(reader, 15);
+            x.features = F.GetProductFeatures(features, G.ReadS(reader, 16));
+            x.productorder = G.ReadI(reader, 17);
             x.gallery = GetGallery(x.id);
         //}
         x.qty = 1;

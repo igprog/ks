@@ -122,6 +122,105 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
 }])
 
+.controller('infoCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
+    var service = 'Info';
+
+    var save = (x) => {
+        f.post(service, 'Save', { x: x }).then((d) => {
+            $scope.d = d;
+        });
+    }
+
+    var load = () => {
+        f.post(service, 'Load', { lang: null }).then((d) => {
+            $scope.d = d;
+        });
+    }
+    load();
+
+    var openTranPopup = function (x, type) {
+        $mdDialog.show({
+            controller: tranPopupCtrl,
+            templateUrl: './assets/partials/popup/tran.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            d: { data: x, type: type }
+        })
+       .then(function (x) {
+       }, function () {
+       });
+    }
+
+    var tranPopupCtrl = function ($scope, $mdDialog, $http, d, f) {
+        var service = 'Tran';
+        var init = () => {
+            f.post(service, 'Init', {}).then((res) => {
+                $scope.d = {
+                    tran: res,
+                    data: d.data,
+                    langs: [
+                        {
+                            id: null,
+                            lang: 'en',
+                            tran: null
+                        },
+                        {
+                            id: null,
+                            lang: 'ru',
+                            tran: null
+                        }
+                    ]
+                }
+                $scope.d.tran.productId = null;
+                $scope.d.tran.recordType = d.type;
+                angular.forEach($scope.d.langs, function (value, key) {
+                    f.post(service, 'Get', { productId: null, recordType: d.type, lang: value.lang }).then((res) => {
+                        if (res.length > 0) {
+                            $scope.d.langs[key].id = res[0].id;
+                            $scope.d.langs[key].tran = res[0].tran;
+                        }
+                    });
+                });
+            });
+        }
+        init();
+
+        var save = (d, x) => {
+            $scope.d.tran.id = x.id;
+            $scope.d.tran.tran = x.tran;
+            $scope.d.tran.lang = x.lang;
+            //console.log(d.tran);
+
+            f.post(service, 'Save', { x: d.tran }).then((d) => {
+                init();
+            });
+
+            //$mdDialog.hide();
+        }
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+        $scope.confirm = function (d, x) {
+            save(d, x);
+        }
+    };
+
+    $scope.f = {
+        save: (x) => {
+            return save(x)
+        },
+        upload: (x) => {
+            return upload(x);
+        },
+        openTranPopup: (x, type) => {
+            return openTranPopup(x, type)
+        }
+    }
+
+}])
+
 .controller('productGroupsCtrl', ['$scope', '$http', 'f', '$sessionStorage', ($scope, $http, f, $sessionStorage) => {
     var service = 'ProductGroups';
     var adminType = $sessionStorage.adminType !== undefined ? $sessionStorage.adminType : 'admin';
@@ -307,10 +406,15 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
     loadBrands();
 
-    var save = (x) => {
+    var save = (x, idx) => {
+        if (x.sku === null) {
+            alert('Upiši SKU (kataloški broj)');
+            return false;
+        }
+        if (x.style === null) { x.style = x.sku; }
         f.post(service, 'Save', { x: x }).then((d) => {
-            //$scope.d.records = d;
-            alert(d);
+            debugger;
+            $scope.d.records[idx].id = d;
         });
     }
 
@@ -331,6 +435,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
     var loadProductGallery = (x) => {
+        debugger;
         f.post(service, 'LoadProductGallery', { productId: x.id }).then((d) => {
             x.gallery = d;
             if (x.gallery.length === 1) {
@@ -343,6 +448,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         if (confirm('Briši sliku?')) {
             f.post(service, 'DeleteImg', { x: x, img: img }).then((d) => {
                 //$scope.d.records = d;
+                //$scope.d.records[idx] = d;
+                loadProductGallery(x);
             });
         }
     }
@@ -354,10 +461,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
     var remove = (x) => {
-        if (confirm('Briši proizvod?')) {
+        if (confirm('Briši proizvod ' + x.title + ' ?')) {
             f.post(service, 'Delete', { x: x }).then((d) => {
-                //$scope.d.records.push(d);
-                //alert(d);
+                $scope.d.records = d.data;
             });
         }
     }
@@ -422,6 +528,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             d.tran.lang = x.lang;
             console.log(d.tran);
 
+
             f.post(service, 'Save', { x: d.tran }).then((d) => {
                 init();
             });
@@ -447,8 +554,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             debugger;
             return load(productGroup, search);
         },
-        save: (x) => {
-            return save(x)
+        save: (x, idx) => {
+            return save(x, idx)
         },
         upload: (x, idx) => {
             return upload(x, idx);
@@ -474,151 +581,50 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 }])
 
-.controller('infoCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
-    var service = 'Info';
+.controller('reviewsCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
+        var service = 'Review';
+        var data = {
+            loading: false,
+            records: []
+        }
+        $scope.d = data;
 
-    var save = (x) => {
-        f.post(service, 'Save', { x: x }).then((d) => {
-            $scope.d = d;
-        });
-    }
+        var load = () => {
+            $scope.d.loading = true;
+            f.post(service, 'Load', { }).then((d) => {
+                $scope.d.records = d;
+                $scope.d.loading = false;
+            });
+        }
+        load();
 
-    var load = () => {
-        f.post(service, 'Load', { lang: null }).then((d) => {
-            $scope.d = d;
-        });
-    }
-    load();
+        var save = (x) => {
+            debugger;
+            f.post(service, 'Save', { x: x }).then((d) => {
+                //$scope.d.records = d;
+            });
+        }
 
-    var openTranPopup = function (x, type) {
-        $mdDialog.show({
-            controller: tranPopupCtrl,
-            templateUrl: './assets/partials/popup/tran.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: true,
-            d: { data: x, type: type }
-        })
-       .then(function (x) {
-       }, function () {
-       });
-    }
-
-    var tranPopupCtrl = function ($scope, $mdDialog, $http, d, f) {
-        var service = 'Tran';
-        var init = () => {
-            f.post(service, 'Init', {}).then((res) => {
-                $scope.d = {
-                    tran: res,
-                    data: d.data,
-                    langs: [
-                        {
-                            id: null,
-                            lang: 'en',
-                            tran: null
-                        },
-                        {
-                            id: null,
-                            lang: 'ru',
-                            tran: null
-                        }
-                    ]
-                }
-                $scope.d.tran.productId = null;
-                $scope.d.tran.recordType = d.type;
-                angular.forEach($scope.d.langs, function (value, key) {
-                    f.post(service, 'Get', { productId: null, recordType: d.type, lang: value.lang }).then((res) => {
-                        if (res.length > 0) {
-                            $scope.d.langs[key].id = res[0].id;
-                            $scope.d.langs[key].tran = res[0].tran;
-                        }
-                    });
+        var remove = (x) => {
+            if (confirm('Briši recenziju?')) {
+                f.post(service, 'Delete', { x: x }).then((d) => {
+                    //$scope.d.records = d;
                 });
-            });
-        }
-        init();
-
-        var save = (d, x) => {
-            $scope.d.tran.id = x.id;
-            $scope.d.tran.tran = x.tran;
-            $scope.d.tran.lang = x.lang;
-            //console.log(d.tran);
-
-            f.post(service, 'Save', { x: d.tran }).then((d) => {
-                init();
-            });
-
-            //$mdDialog.hide();
+            }
         }
 
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-
-        $scope.confirm = function (d, x) {
-            save(d, x);
+        $scope.f = {
+            load: () => {
+                return load();
+            },
+            save: (x) => {
+                return save(x)
+            },
+            remove: (x) => {
+                return remove(x);
+            }
         }
-    };
-
-    $scope.f = {
-        save: (x) => {
-            return save(x)
-        },
-        upload: (x) => {
-            return upload(x);
-        },
-        openTranPopup: (x, type) => {
-            return openTranPopup(x, type)
-        }
-    }
-
-}])
-
-//.controller('optionsCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
-//    var service = 'Options';
-//    var data = {
-//        loading: false,
-//        records: []
-//    }
-//    $scope.d = data;
-
-//    var add = () => {
-//        $scope.d.records.push({});
-//    }
-
-//    var save = (x) => {
-//        f.post(service, 'Save', { x: x }).then((d) => {
-//            $scope.d.records = d;
-//        });
-//    }
-
-//    var load = (type) => {
-//        $scope.d.loading = true;
-//        f.post(service, 'Load', { type: type }).then((d) => {
-//            $scope.d.records = d;
-//            $scope.d.loading = false;
-//        });
-//    }
-//    load(null);
-
-//    var remove = (x, idx) => {
-//        if (confirm('Briši opciju?')) {
-//            x.splice(idx, 1);
-//        }
-//    }
-
-//    $scope.f = {
-//        add: () => {
-//            return add();
-//        },
-//        save: (x) => {
-//            return save(x)
-//        },
-//        remove: (x, idx) => {
-//            return remove(x, idx)
-//        }
-//    }
-
-//}])
+    }])
 
 .controller('featuresCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
         var service = 'Features';

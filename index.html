@@ -366,8 +366,20 @@
                 <!-- END INFO BLOCK -->
                 <!-- BEGIN TWITTER BLOCK -->
                 <div class="col-md-3 col-sm-6 pre-footer-col">
-                    <h2 class="margin-bottom-0">Latest Tweets</h2>
-                    <a class="twitter-timeline" href="https://twitter.com/twitterapi" data-tweet-limit="2" data-theme="dark" data-link-color="#57C8EB" data-widget-id="455411516829736961" data-chrome="noheader nofooter noscrollbar noborders transparent">Loading tweets by @keenthemes...</a>
+                    <h2>{{'last reviews' | translate}}</h2>
+                    <div class="review-item clearfix" ng-repeat="x in d.lastReviews.data">
+                        <div class="review-item-submitted">
+                            <strong>{{x.name}}</strong>
+                            <em>{{x.reviewdate}}</em>
+                            <i class="fa fa-star text-success" ng-repeat="s in d.stars | limitTo: x.rating"></i>
+                        </div>
+                        <div class="review-item-content">
+                            <p>{{x.desc}}</p>
+                        </div>
+                    </div>
+                    <!--<h2 class="margin-bottom-0">Latest Tweets</h2>
+                    <a class="twitter-timeline" href="https://twitter.com/twitterapi" data-tweet-limit="2" data-theme="dark" data-link-color="#57C8EB" data-widget-id="455411516829736961" data-chrome="noheader nofooter noscrollbar noborders transparent">Loading tweets by @keenthemes...</a>-->
+
                 </div>
                 <!-- END TWITTER BLOCK -->
                 <!-- BEGIN BOTTOM CONTACTS -->
