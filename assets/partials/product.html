@@ -134,7 +134,7 @@
                                     <li><a href="/#Reviews" data-toggle="tab">Recenzije (2)</a></li>-->
                                     <li class="{{d.tpl==='descTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">{{'description' | translate}}</a></li>
                                     <li class="{{d.tpl==='infoTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">{{'specification' | translate}}</a></li>
-                                    <li class="{{d.tpl==='reviewTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('reviewTpl')">{{'reviews' | translate}} ({{d.record.reviews.rating}})</a></li>
+                                    <li class="{{d.tpl==='reviewTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('reviewTpl')">{{'reviews' | translate}} ({{d.record.reviews.count}})</a></li>
                                 </ul>
                                 <div id="tabContent" class="tab-content">
                                     <ng-include src="d.tpl"></ng-include>
@@ -276,7 +276,7 @@
             <textarea ng-model="d.review.desc" class="form-control" rows="8" id="review"></textarea>
         </div>
         <div class="form-group form-inline">
-            <label class="pr-3">{{'rating' | translate}}</label>
+            <label class="pr-3">{{'rating' | translate}} <span class="require">*</span></label>
             <span starating></span>
             <!--<input type="range" value="4" step="0.25" id="backing5">
             <div class="rateit" data-rateit-backingfld="#backing5" data-rateit-resetable="false" data-rateit-ispreset="true" data-rateit-min="0" data-rateit-max="5">

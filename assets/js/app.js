@@ -586,7 +586,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.saveRating = (x) => {
         if (x.rating < 1) {
-            alert($translate.instant('please rate us'));
+            alert($translate.instant('please rate product'));
             return false;
         }
         x.reviewdate = f.setDateTime(new Date());
