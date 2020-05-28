@@ -132,9 +132,9 @@
                                     <!--<li class="active"><a href="/#Description" data-toggle="tab">Opis</a></li>
                                     <li><a href="/#Information" data-toggle="tab">Informacje</a></li>
                                     <li><a href="/#Reviews" data-toggle="tab">Recenzije (2)</a></li>-->
-                                    <li class="{{d.tpl==='descTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">Opis</a></li>
-                                    <li class="{{d.tpl==='infoTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">Informacje</a></li>
-                                    <li class="{{d.tpl==='reviewTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('reviewTpl')">Recenzije (2)</a></li>
+                                    <li class="{{d.tpl==='descTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">{{'description' | translate}}</a></li>
+                                    <li class="{{d.tpl==='infoTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">{{'specification' | translate}}</a></li>
+                                    <li class="{{d.tpl==='reviewTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('reviewTpl')">{{'reviews' | translate}} ({{d.record.reviews.rating}})</a></li>
                                 </ul>
                                 <div id="tabContent" class="tab-content">
                                     <ng-include src="d.tpl"></ng-include>
