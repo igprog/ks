@@ -84,7 +84,7 @@
         <div class="container">
             <div class="row">
                 <!-- BEGIN TOP BAR LEFT PART -->
-                <div class="col-md-6 col-sm-6 additional-shop-info">
+                <div class="col-md-4 additional-shop-info">
                     <ul class="list-unstyled list-inline">
                         <li ng-cloak><a href="tel:{{d.info.phone}}"><i class="fa fa-phone"></i><span>{{d.info.phone}}</span></a></li>
                         <!-- BEGIN CURRENCIES -->
@@ -110,12 +110,16 @@
                 </div>
                 <!-- END TOP BAR LEFT PART -->
                 <!-- BEGIN TOP BAR MENU -->
-                <div class="col-md-6 col-sm-6 additional-nav">
+                <div class="col-md-8 additional-nav">
                     <ul class="list-unstyled list-inline pull-right">
-                        <li><a href="shop-account.html">My Account</a></li>
+                        <li><a href="" ng-click="go('about')">{{'about us' | translate}}</a></li>
+                        <li><a href="">Prodajna mjesta</a></li>
+                        <li><a href="">Korisnička podrška</a></li>
+                        <li><a href="" ng-click="go('contact')">{{'contact' | translate}}</a></li>
+                        <!--<li><a href="shop-account.html">My Account</a></li>
                         <li><a href="shop-wishlist.html">My Wishlist</a></li>
                         <li><a href="shop-checkout.html">Checkout</a></li>
-                        <li><a href="page-login.html">Log In</a></li>
+                        <li><a href="page-login.html">Log In</a></li>-->
                     </ul>
                 </div>
                 <!-- END TOP BAR MENU -->
@@ -126,7 +130,7 @@
     <!-- BEGIN HEADER -->
     <div class="header">
         <div class="container">
-            <a class="site-logo" href="index.html"><img src="assets/img/logo/logo.png" alt="Metronic Shop UI"></a>
+            <a class="site-logo" href="index.html"><img src="assets/img/logo/logo.png" alt="metronic shop ui"></a>
             <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>
             <!-- BEGIN CART -->
             <div class="top-cart-block">
@@ -235,8 +239,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li><a href="" ng-click="go('about')">O nama</a></li>
-                    <li><a href="" ng-click="go('contact')">Kontakt</a></li>
+                    <!--<li><a href="" ng-click="go('about')">O nama</a></li>
+                    <li><a href="" ng-click="go('contact')">Kontakt</a></li>-->
                     <!--<li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
                             Pages
