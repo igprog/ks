@@ -26,7 +26,7 @@ public class Products : System.Web.Services.WebService {
     Tran T = new Tran();
     Features F = new Features();
     ProductGroups PG = new ProductGroups();
-    string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.productorder, pg.title, b.title
+    string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder, pg.title, b.title, pg.discount
                         FROM products p   
                         LEFT OUTER JOIN productGroups pg
                         ON p.productGroup = pg.code
@@ -48,7 +48,8 @@ public class Products : System.Web.Services.WebService {
         public string longdesc;
         public Brands.NewBrands brand;
         public string img;
-        public double discount;
+        //public double discount;
+        public Discount discount;
         public int stock;
         public bool isnew;
         public bool outlet;
@@ -56,10 +57,12 @@ public class Products : System.Web.Services.WebService {
         public bool isactive;
         public string[] gallery;
         public List<Features.NewFeature> features;
+        public string deliverydays;
         public int productorder;
         public Price price;
         public int qty;
         public Review.ReviewData reviews;
+        public Discount pg_discount;
     }
 
     public class Price {
@@ -69,6 +72,11 @@ public class Products : System.Web.Services.WebService {
         public double gross_discount;
         public double net_discount_tot;  // total with quantity
         public double gross_discount_tot;  // total with quantity
+    }
+
+    public class Discount {
+        public double coeff;
+        public double perc;
     }
 
     public class ProductsData {
@@ -144,13 +152,14 @@ public class Products : System.Web.Services.WebService {
             x.brand = new Brands.NewBrands();
             x.img = null;
             x.price = new Price();
-            x.discount = 0;
+            x.discount = new Discount();
             x.stock = 1000;
             x.isnew = false;
             x.outlet = false;
             x.bestselling = false;
             x.isactive = true;
             x.features = F.Get(G.featureType.product);
+            x.deliverydays = null;
             x.productorder = 0;
             x.gallery = null;
             x.price = new Price();
@@ -246,13 +255,14 @@ public class Products : System.Web.Services.WebService {
                 }
                 productFeatures = string.Join(";", pf_);
             }
+            x.discount.coeff = x.discount.perc / 100;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}',  '{17}')"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.productorder);
+                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}',  '{17}', {18})"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder);
             } else {
-                sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', stock = '{11}', isnew = '{12}', outlet = '{13}', bestselling = '{14}', isactive = '{15}', features = '{16}', productorder = {17} WHERE id = '{0}'"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.productorder);
+                sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', stock = '{11}', isnew = '{12}', outlet = '{13}', bestselling = '{14}', isactive = '{15}', features = '{16}', deliverydays = '{17}', productorder = {18} WHERE id = '{0}'"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.net, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -417,7 +427,7 @@ public class Products : System.Web.Services.WebService {
         //if (loadAllData) {
         x.productGroup = new ProductGroups.NewProductGroup();
             x.productGroup.code = G.ReadS(reader, 3);
-            x.productGroup.title = G.ReadS(reader, 18);
+            x.productGroup.title = G.ReadS(reader, 19);
             x.productGroup.title_seo = G.GetSeoTitle(x.productGroup.title);
             x.productGroup.parent = PG.GetParentGroup(x.productGroup.code);
         //}
@@ -431,16 +441,21 @@ public class Products : System.Web.Services.WebService {
             x.longdesc = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 6);
             x.brand = new Brands.NewBrands();
             x.brand.code = G.ReadS(reader, 7);
-            x.brand.title = G.ReadS(reader, 19);
+            x.brand.title = G.ReadS(reader, 20);
             x.brand.title_seo = G.GetSeoTitle(x.brand.title);
         }
         x.img = G.ReadS(reader, 8);
         x.price = new Price();
         x.price.net = G.ReadD(reader, 9);
-        x.discount = G.ReadD(reader, 10);
-        x.price.net_discount = x.price.net - (x.price.net * x.discount);
+        //double productDiscount = G.ReadD(reader, 10);  // Product Discount
+        //double pgDisCount = G.ReadI(reader, 20);  // Product Group Discount
+        x.discount = GetDiscount(G.ReadD(reader, 10), G.ReadD(reader, 21));
+        //x.discount = new Discount();
+        //x.discount.coeff = G.ReadD(reader, 10);
+        //x.discount.perc = Math.Round(x.discount.coeff * 100, 1);
+        x.price.net_discount = x.price.net - (x.price.net * x.discount.coeff);
         x.price.gross = x.price.net_discount + (x.price.net_discount * 0.25);
-        x.price.gross_discount = x.price.gross - (x.price.gross * x.discount);
+        x.price.gross_discount = x.price.gross - (x.price.gross * x.discount.coeff);
         //if (loadAllData) {
             x.stock = G.ReadI(reader, 11);
             x.isnew = G.ReadB(reader, 12);
@@ -448,10 +463,22 @@ public class Products : System.Web.Services.WebService {
             x.bestselling = G.ReadB(reader, 14);
             x.isactive = G.ReadB(reader, 15);
             x.features = F.GetProductFeatures(features, G.ReadS(reader, 16));
-            x.productorder = G.ReadI(reader, 17);
+            x.deliverydays = G.ReadS(reader, 17);
+            x.productorder = G.ReadI(reader, 18);
+            //x.pg_discount = new Discount();
+            //x.pg_discount.coeff = G.ReadI(reader, 20);
+            //x.discount.perc = Math.Round(x.discount.coeff * 100, 1);
             x.gallery = GetGallery(x.id);
         //}
         x.qty = 1;
+        return x;
+    }
+
+    private Discount GetDiscount(double productDiscount, double pgDiscount) {
+        Discount x = new Discount();
+        double discount = productDiscount > 0 ? productDiscount : pgDiscount;
+        x.coeff = discount;
+        x.perc = Math.Round(x.coeff * 100, 1);
         return x;
     }
 

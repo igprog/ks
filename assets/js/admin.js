@@ -407,11 +407,13 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     loadBrands();
 
     var save = (x, idx) => {
+        debugger;
         if (x.sku === null) {
             alert('Upiši SKU (kataloški broj)');
             return false;
         }
         if (x.style === null) { x.style = x.sku; }
+        if (x.discount.perc === null) { x.discount.perc = 0; }
         f.post(service, 'Save', { x: x }).then((d) => {
             debugger;
             $scope.d.records[idx].id = d;

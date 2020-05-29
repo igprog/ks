@@ -517,7 +517,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         bestsellingall: [],
         record: [],
         review: null,
-        stars: [1,2,3,4,5]
+        stars: [1, 2, 3, 4, 5],
+        activeTab: 'description'
     }
     $scope.d = data;
 
@@ -608,6 +609,10 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
                 return 'review';
             }
         }
+    }
+
+    $scope.setActiveTab = (x) => {
+        $scope.d.activeTab = x;
     }
     /**** Review & Rating *****/
    

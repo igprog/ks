@@ -69,10 +69,6 @@
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="info" ng-click="toggleTpl('reviews')">Recenzije</a>
                 </li>
-                <li>
-                    <hr />
-                    <label>Postavke</label>
-                </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="info" ng-click="toggleTpl('countries')">Države</a>
                 </li>
@@ -316,17 +312,23 @@
                         <div class="card-body">
                             <div ng-if="d.records.length>0&&!d.loading">
                                 <form>
-                                    <div class="form-group">
-                                        <label>Naziv:</label>
-                                        <input ng-model="x.title" type="text" class="form-control" maxlength="200" ng-change="f.initCodeName(x)">
+                                    <div class="row">
+                                        <div class="col-sm-8 form-group">
+                                            <label>Naziv:</label>
+                                            <input ng-model="x.title" type="text" class="form-control" maxlength="200" ng-change="f.initCodeName(x)">
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Popust (%):</label>
+                                            <input ng-model="x.discount.perc" type="text" class="form-control" maxlength="30">
+                                        </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6 form-group">
+                                        <div class="col-sm-8 form-group">
                                             <label>Kod:</label>
                                             <input ng-model="x.code" type="text" class="form-control bg-light" maxlength="30">
                                         </div>
-                                        <div class="col-sm-6 form-group">
-                                            <label>Redosljed:</label>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Redoslijed:</label>
                                             <input ng-model="x.order" type="number" class="form-control" maxlength="30">
                                         </div>
                                     </div>
@@ -355,17 +357,23 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <form>
-                                                        <div class="form-group">
-                                                            <label>Naziv:</label>
-                                                            <input ng-model="y.title" type="text" class="form-control" maxlength="200" ng-change="f.initCodeName(y)">
+                                                        <div class="row">
+                                                            <div class="col-sm-8 form-group">
+                                                                <label>Naziv:</label>
+                                                                <input ng-model="y.title" type="text" class="form-control" maxlength="200" ng-change="f.initCodeName(y)">
+                                                            </div>
+                                                            <div class="col-sm-4 form-group">
+                                                                <label>Popust (%):</label>
+                                                                <input ng-model="y.discount.perc" type="text" class="form-control" maxlength="30">
+                                                            </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-sm-6 form-group">
+                                                            <div class="col-sm-8 form-group">
                                                                 <label>Kod:</label>
-                                                                <input ng-model="y.code" type="text" class="form-control bg-light" maxlength="30">
+                                                                <input ng-model="y.code" type="text" class="form-control" maxlength="30">
                                                             </div>
-                                                            <div class="col-sm-6 form-group">
-                                                                <label>Redosljed:</label>
+                                                            <div class="col-sm-4 form-group">
+                                                                <label>Redoslijed:</label>
                                                                 <input ng-model="y.order" type="number" class="form-control" maxlength="30">
                                                             </div>
                                                         </div>
@@ -577,9 +585,15 @@
                                         <option ng-repeat="b in d.brands" value="{{b.code}}">{{b.title}}</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>SKU:</label>
-                                    <input ng-model="x.sku" type="text" class="form-control" maxlength="200">
+                                <div class="row">
+                                    <div class="col-sm-4 form-group">
+                                        <label>SKU:</label>
+                                        <input ng-model="x.sku" type="text" class="form-control" maxlength="200">
+                                    </div>
+                                    <div class="col-sm-4 form-group">
+                                        <label>Model (TODO):</label>
+                                        <input ng-model="x.style" type="text" class="form-control" maxlength="200">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Naziv:</label>
@@ -601,17 +615,23 @@
                                     <input ng-model="x.productorder" type="number" class="form-control" style="width:100px">
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-4 form-group">
+                                    <div class="col-sm-6 form-group">
                                         <label>Cijena:</label>
                                         <input ng-model="x.price.net" type="text" class="form-control" allow-only-numbers>
                                     </div>
-                                    <div class="col-sm-4 form-group">
-                                        <label>Popust (koeficjent):</label>
-                                        <input ng-model="x.discount" type="number" class="form-control" allow-only-numbers>
+                                    <div class="col-sm-6 form-group">
+                                        <label>Popust (%):</label>
+                                        <input ng-model="x.discount.perc" type="number" class="form-control" allow-only-numbers>
                                     </div>
-                                    <div class="col-sm-4 form-group">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 form-group">
                                         <label>Zaliha (komada):</label>
                                         <input ng-model="x.stock" type="text" class="form-control" allow-only-numbers>
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label>Rok isporke (dana):</label>
+                                        <input ng-model="x.deliverydays" type="text" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="form-group">

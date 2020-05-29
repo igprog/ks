@@ -19,6 +19,7 @@ public class DataBase {
                     code VARCHAR(50) PRIMARY KEY,
                     title NVARCHAR(200),
                     parent VARCHAR(50),
+                    discount VARCHAR(50),
                     pg_order INTEGER)";
         CreateTable(path, sql);
     }
@@ -52,6 +53,7 @@ public class DataBase {
                 bestselling VARCHAR(50),
                 isactive VARCHAR(50),
                 features NVARCHAR(200),
+                deliverydays NVARCHAR(50),
                 productorder INTEGER)";
         CreateTable(path, sql);
     }

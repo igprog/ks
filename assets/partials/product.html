@@ -55,7 +55,7 @@
                                 <div class="price-availability-block clearfix">
                                     <div class="price">
                                         <strong>{{d.record.price.gross_discount | number}} <span>kn</span></strong>
-                                        <span ng-if="d.record.discount>0">
+                                        <span ng-if="d.record.discount.coeff>0">
                                             <em><span>{{d.record.price.gross | number}}</span> kn</em>
                                         </span>
                                     </div>
@@ -65,8 +65,9 @@
                                             <em>kn<span>{{d.record.price.gross | number}}</span> kn</em>
                                         </span>
                                     </div>-->
-                                    <div class="availability">
-                                        Availability: <strong>In Stock</strong>
+                                    <div ng-if="d.record.deliverydays" class="availability">
+                                        <!--Availability: <strong>In Stock</strong>-->
+                                        {{'delivery date' | translate}}: <strong>{{d.record.deliverydays}} <span ng-if="d.record.deliverydays==1">{{'day' | translate}}</span><span ng-if="d.record.deliverydays!=1">{{'days' | translate}}</span></strong>
                                     </div>
                                 </div>
                                 <div class="description">
@@ -114,11 +115,9 @@
                                     <span class="glyphicon glyphicon-star-empty"></span>-->
                                     <i class="fa fa-star text-success" ng-repeat="s in d.stars | limitTo: d.record.reviews.rating"></i>
                                     <i ng-if="d.record.reviews.rating % 1 != 0" class="fa fa-star-half-o text-success"></i>
-                                    <a href="" class="pl-3" ng-click="toggleTpl('reviewTpl')">{{d.record.reviews.count}} {{reviewsTrans(d.record.reviews.count) | translate}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="" ng-click="toggleTpl('reviewTpl')">{{'write a review' | translate}}</a>
+                                    <a href="#reviews" class="pl-3" onclick="return false;" data-toggle="tab" ng-click="setActiveTab('reviews')">{{d.record.reviews.count}} {{reviewsTrans(d.record.reviews.count) | translate}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#reviews" onclick="return false;" ng-click="setActiveTab('reviews')" data-toggle="tab">{{'write a review' | translate}}</a>
                                     <!--<a href="javascript:;" class="pl-3">7 reviews</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#/review">Write a review</a>-->
                                 </div>
-                                star
-                                
                                 <ul class="social-icons">
                                     <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
                                     <li><a class="twitter" data-original-title="twitter" href="javascript:;"></a></li>
@@ -128,10 +127,11 @@
                                 </ul>
                             </div>
                             <div class="product-page-content">
+                                {{d.activeTab}}
                                 <ul id="tab" class="nav nav-tabs">
-                                    <li class="active"><a href="#description" onclick="return false;" data-toggle="tab">{{'description' | translate}}</a></li>
-                                    <li><a href="#information" onclick="return false;" data-toggle="tab">{{'specification' | translate}}</a></li>
-                                    <li><a href="#reviews" onclick="return false;" data-toggle="tab">{{'reviews' | translate}} ({{d.record.reviews.count}})</a></li>
+                                    <li class="{{d.activeTab==='description'?'active':''}}"><a href="#description" onclick="return false;" data-toggle="tab">{{'description' | translate}}</a></li>
+                                    <li class="{{d.activeTab==='information'?'active':''}}"><a href="#information" onclick="return false;" data-toggle="tab">{{'specification' | translate}}</a></li>
+                                    <li class="{{d.activeTab==='reviews'?'active':''}}"><a href="#reviews" onclick="return false;" data-toggle="tab">{{'reviews' | translate}} ({{d.record.reviews.count}})</a></li>
                                     <!--<li class="{{d.tpl==='descTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">{{'description' | translate}}</a></li>
                                     <li class="{{d.tpl==='infoTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">{{'specification' | translate}}</a></li>
                                     <li class="{{d.tpl==='reviewTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('reviewTpl')">{{'reviews' | translate}} ({{d.record.reviews.count}})</a></li>-->
