@@ -2,23 +2,24 @@
     <div class="main">
         <div class="container">
             <ul class="breadcrumb">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="" ng-click="go('store')">Shop</a></li>
-                <li class="active">Checkout</li>
+                <li><a href="index.html">{{'home' | translate}}</a></li>
+                <li><a href="" ng-click="go('store')">{{'Shop' | translate}}</a></li>
+                <li class="active">{{'checkout' | translate}}</li>
             </ul>
             <!-- BEGIN SIDEBAR & CONTENT -->
             <div class="row margin-bottom-40">
                 <!-- BEGIN CONTENT -->
                 <div ng-if="!d.order.response.isSuccess" class="col-md-12 col-sm-12">
-                    <h1>Checkout</h1>
+                    <h1>{{'checkout' | translate}}</h1>
                     <!-- BEGIN CHECKOUT PAGE -->
                     <div class="panel-group checkout-page accordion scrollable" id="checkout-page">
+
                         <!-- BEGIN CHECKOUT -->
-                        <div id="checkout" class="panel panel-default">
+                        <!--<div id="checkout" class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#checkout-page" href="/#checkout-content" class="accordion-toggle">
-                                        Korak 1: Opcije
+                                        {{'step' | translate}} 1: {{'options' | translate}}
                                     </a>
                                 </h2>
                             </div>
@@ -68,41 +69,51 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <!-- END CHECKOUT -->
                         <!-- BEGIN PAYMENT ADDRESS -->
                         <div id="payment-address" class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#checkout-page" href="/#payment-address-content" class="accordion-toggle">
-                                        Korak 2: Account &amp; Billing Details
+                                    <a data-toggle="collapse" data-parent="#checkout-page" href="#payment-address-content" onclick="return false;" class="accordion-toggle">
+                                        {{'step' | translate}} 1: {{'billing details' | translate}} 
                                     </a>
                                 </h2>
                             </div>
-                            <div id="payment-address-content" class="panel-collapse collapse">
+                            <div id="payment-address-content" class="panel-collapse collapse in">
+                                <div class="pt-4">
+                                    <span class="p-2">
+                                        <input ng-model="d.order.user.userType" type="radio" id="natural" name="natural" value="natural" ng-change="changeUserType(d.order.user.userType)">
+                                        <label for="natural">{{'natural person' | translate}}</label>
+                                    </span>
+                                    <span class="p-2">
+                                        <input ng-model="d.order.user.userType" type="radio" id="lagal" name="legal" value="legal" ng-change="changeUserType(d.order.user.userType)">
+                                        <label for="lagal">{{'legal person' | translate}}</label>
+                                    </span>
+                                </div>
                                 <div class="panel-body row">
                                     <div class="col-md-6 col-sm-6">
                                         <h3>Osobni podaci</h3>
                                         <div class="form-group">
-                                            <label for="firstname">Ime <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.firstName" type="text" id="firstname" class="form-control">
+                                            <label for="firstname">{{'first name' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.firstName" type="text" id="firstname" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="lastname">Prezime <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.lastName" type="text" id="lastname" class="form-control">
+                                            <label for="lastname">{{'last name' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.lastName" type="text" id="lastname" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="email">E-Mail <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.email" type="text" id="email" class="form-control">
+                                            <label for="email">{{'email' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.email" type="text" id="email" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="telephone">Telefon <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.phone" type="text" id="telephone" class="form-control">
+                                            <label for="telephone">{{'phone' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.phone" type="text" id="telephone" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <!--<div class="form-group">
                                             <label for="fax">Fax</label>
                                             <input type="text" id="fax" class="form-control">
-                                        </div>-->
+                                        </div>
                                         <h3>Your Password</h3>
                                         <div class="form-group">
                                             <label for="password">Password <span class="require">*</span></label>
@@ -111,69 +122,59 @@
                                         <div class="form-group">
                                             <label for="password-confirm">Password Confirm <span class="require">*</span></label>
                                             <input type="text" id="password-confirm" class="form-control">
-                                        </div>
+                                        </div>-->
                                     </div>
                                     <div class="col-md-6 col-sm-6">
-                                        <h3>Your Address</h3>
+                                        <h3>{{'your address' | translate}}</h3>
                                         <div class="form-group">
-                                            <label for="company">Company</label>
-                                            <input type="text" id="company" class="form-control">
+                                            <label for="company">{{'company' | translate}}</label>
+                                            <input ng-model="d.order.user.company" ng-disabled="d.order.user.userType==='natural'" type="text" id="company" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="address1">Address 1</label>
-                                            <input type="text" id="address1" class="form-control">
+                                            <label for="company">{{'pin' | translate}}</label>
+                                            <input ng-model="d.order.user.pin" ng-disabled="d.order.user.userType==='natural'" type="text" id="company" class="form-control" >
                                         </div>
                                         <div class="form-group">
+                                            <label for="address1">{{'address' | translate}}</label>
+                                            <input ng-model="d.order.user.address" type="text" id="address1" class="form-control" ng-change="setDeliveryAddress(d)">
+                                        </div>
+                                        <!--<div class="form-group">
                                             <label for="address2">Address 2</label>
                                             <input type="text" id="address2" class="form-control">
+                                        </div>-->
+                                        <div class="form-group">
+                                            <label for="city">{{'city' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.city" type="text" id="city" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="city">City <span class="require">*</span></label>
-                                            <input type="text" id="city" class="form-control">
+                                            <label for="post-code">{{'postal code' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.postalCode" type="text" id="post-code" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="post-code">Post Code <span class="require">*</span></label>
-                                            <input type="text" id="post-code" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="country">Country <span class="require">*</span></label>
-                                            <select class="form-control input-sm" id="country">
-                                                <option value=""> --- Please Select --- </option>
-                                                <option value="244">Aaland Islands</option>
-                                                <option value="1">Afghanistan</option>
-                                                <option value="2">Albania</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="region-state">Region/State <span class="require">*</span></label>
-                                            <select class="form-control input-sm" id="region-state">
-                                                <option value=""> --- Please Select --- </option>
-                                                <option value="3513">Aberdeen</option>
-                                                <option value="3514">Aberdeenshire</option>
-                                                <option value="3515">Anglesey</option>
-                                            </select>
+                                            <label for="country">{{'country' | translate}} <span class="require">*</span></label>
+                                            <select ng-model="d.order.user.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries" ng-change="setDeliveryAddress(d)"></select>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="col-md-12">
-                                        <div class="checkbox">
+                                        <!--<div class="checkbox">
                                             <label>
                                                 <input type="checkbox"> I wish to subscribe to the OXY newsletter.
                                             </label>
-                                        </div>
+                                        </div>-->
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" checked="checked"> My delivery and billing addresses are the same.
+                                                <input ng-model="d.sameAs" type="checkbox" ng-change="setDeliveryAddress(d)"> {{'my delivery and billing address is the same' | translate}}.
                                             </label>
                                         </div>
                                         <button class="btn btn-primary  pull-right" type="submit" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-address-content" id="button-payment-address">Continue</button>
                                         <div class="checkbox pull-right">
                                             <label>
-                                                <input type="checkbox"> I have read and agree to the <a title="Privacy Policy" href="javascript:;">Privacy Policy</a> &nbsp;&nbsp;&nbsp;
+                                                <input type="checkbox"> {{'i have read and agree to the' | translate}} <a title="Privacy Policy" href="">{{'privacy policy' | translate}}</a> &nbsp;&nbsp;&nbsp;
                                             </label>
                                         </div>
                                     </div>
-                                </div>
+                                    </div>
                             </div>
                         </div>
                         <!-- END PAYMENT ADDRESS -->
@@ -181,8 +182,8 @@
                         <div id="shipping-address" class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#checkout-page" href="/#shipping-address-content" class="accordion-toggle">
-                                        Step 3: Delivery Details
+                                    <a data-toggle="collapse" data-parent="#checkout-page" href="#shipping-address-content" onclick="return false;" class="accordion-toggle">
+                                        {{'step' | translate}} 2: {{'delivery details' | translate}}
                                     </a>
                                 </h2>
                             </div>
@@ -190,57 +191,58 @@
                                 <div class="panel-body row">
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="firstname-dd">First Name <span class="require">*</span></label>
-                                            <input type="text" id="firstname-dd" class="form-control">
+                                            <label for="firstname-dd">{{'first name' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.deliveryAddress.firstName" type="text" id="firstname-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <label for="lastname-dd">Last Name <span class="require">*</span></label>
-                                            <input type="text" id="lastname-dd" class="form-control">
+                                            <label for="lastname-dd">{{'last name' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.deliveryAddress.lastName" type="text" id="lastname-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <label for="email-dd">E-Mail <span class="require">*</span></label>
-                                            <input type="text" id="email-dd" class="form-control">
+                                            <label for="email-dd">{{'email' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.deliveryAddress.email" type="text" id="email-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <label for="telephone-dd">Telephone <span class="require">*</span></label>
-                                            <input type="text" id="telephone-dd" class="form-control">
+                                            <label for="telephone-dd">{{'phone' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.deliveryAddress.phone" type="text" id="telephone-dd" class="form-control">
                                         </div>
-                                        <div class="form-group">
+                                        <!--<div class="form-group">
                                             <label for="fax-dd">Fax</label>
                                             <input type="text" id="fax-dd" class="form-control">
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
-                                            <label for="company-dd">Company</label>
-                                            <input type="text" id="company-dd" class="form-control">
+                                            <label for="company-dd">{{'company' | translate}}</label>
+                                            <input ng-model="d.order.user.deliveryAddress.company" ng-disabled="d.order.user.userType==='natural'" type="text" id="company-dd" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="address1-dd">Address 1</label>
-                                            <input type="text" id="address1-dd" class="form-control">
+                                            <label for="address1-dd">{{'address' | translate}}</label>
+                                            <input ng-model="d.order.user.deliveryAddress.address" type="text" id="address1-dd" class="form-control">
                                         </div>
-                                        <div class="form-group">
+                                        <!--<div class="form-group">
                                             <label for="address2-dd">Address 2</label>
                                             <input type="text" id="address2-dd" class="form-control">
+                                        </div>-->
+                                        <div class="form-group">
+                                            <label for="city-dd">{{'city' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.deliveryAddress.city" type="text" id="city-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <label for="city-dd">City <span class="require">*</span></label>
-                                            <input type="text" id="city-dd" class="form-control">
+                                            <label for="post-code-dd">{{'postal code' | translate}} <span class="require">*</span></label>
+                                            <input ng-model="d.order.user.deliveryAddress.postalCode" type="text" id="post-code-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <label for="post-code-dd">Post Code <span class="require">*</span></label>
-                                            <input type="text" id="post-code-dd" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="country-dd">Country <span class="require">*</span></label>
-                                            <select class="form-control input-sm" id="country-dd">
+                                            <label for="country-dd">{{'country' | translate}} <span class="require">*</span></label>
+                                            <select ng-model="d.order.user.deliveryAddress.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries"></select>
+                                            <!--<select class="form-control input-sm" id="country-dd">
                                                 <option value=""> --- Please Select --- </option>
                                                 <option value="244">Aaland Islands</option>
                                                 <option value="1">Afghanistan</option>
                                                 <option value="2">Albania</option>
-                                            </select>
+                                            </select>-->
                                         </div>
-                                        <div class="form-group">
+                                        <!--<div class="form-group">
                                             <label for="region-state-dd">Region/State <span class="require">*</span></label>
                                             <select class="form-control input-sm" id="region-state-dd">
                                                 <option value=""> --- Please Select --- </option>
@@ -249,10 +251,10 @@
                                                 <option value="3515">Anglesey</option>
                                                 <option value="3516">Angus</option>
                                             </select>
-                                        </div>
+                                        </div>-->
                                     </div>
                                     <div class="col-md-12">
-                                        <button class="btn btn-primary  pull-right" type="submit" id="button-shipping-address" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-method-content">Continue</button>
+                                        <button class="btn btn-primary  pull-right" type="submit" id="button-shipping-address" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-method-content" ng-click="toggle('shippingaddress')">Continue</button>
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +264,7 @@
                         <div id="shipping-method" class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#checkout-page" href="/#shipping-method-content" class="accordion-toggle">
+                                    <a data-toggle="collapse" data-parent="#checkout-page" href="#shipping-method-content" onclick="return false;" class="accordion-toggle">
                                         Step 4: Delivery Method
                                     </a>
                                 </h2>
@@ -291,7 +293,7 @@
                         <div id="payment-method" class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#checkout-page" href="/#payment-method-content" class="accordion-toggle">
+                                    <a data-toggle="collapse" data-parent="#checkout-page" href="#payment-method-content" onclick="return false;" class="accordion-toggle">
                                         Step 5: Payment Method
                                     </a>
                                 </h2>
@@ -324,7 +326,7 @@
                         <div id="confirm" class="panel panel-default">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#checkout-page" href="/#confirm-content" class="accordion-toggle">
+                                    <a data-toggle="collapse" data-parent="#checkout-page" href="#confirm-content" onclick="return false;" class="accordion-toggle">
                                         Step 6: Confirm Order
                                     </a>
                                 </h2>
@@ -420,3 +422,11 @@
     </div>
     <json-directive data="d" desc="'d'" debug="true"></json-directive>
 </div>
+
+<script id="paymentaddress" type="text/ng-template">
+    
+</script>
+
+<script id="shippingaddress" type="text/ng-template">
+
+</script>

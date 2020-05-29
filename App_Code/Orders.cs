@@ -6,7 +6,6 @@ using System.Web.Services;
 using System.Configuration;
 using Newtonsoft.Json;
 using System.Net;
-using System.Data.SQLite;
 using System.IO;
 using Igprog;
 
@@ -20,7 +19,13 @@ public class Orders : System.Web.Services.WebService {
     string dataBase = ConfigurationManager.AppSettings["AppDataBase"];
     //string productDataBase = ConfigurationManager.AppSettings["ProductDataBase"];
     DataBase db = new DataBase();
-    string orderOptionsFile = "orderoptions";
+    Global G = new Global();
+    Users U = new Users();
+    string folder = "~/data/json/";
+    string orderOptions_json = "orderoptions";
+    string countries_json = "countries";
+    //string countries_path = "~/data/countries.json";
+    //string countries_folder = "~/data/";
     //Invoice i = new Invoice();
 
     public Orders() {
@@ -30,6 +35,7 @@ public class Orders : System.Web.Services.WebService {
         public Users.NewUser user;
         public Cart.NewCart cart;
         public string orderDate;
+        public List<CodeTitle> countries;
         public CodeTitle deliveryType;
         public CodeTitle paymentMethod;
         public string note;
@@ -61,16 +67,17 @@ public class Orders : System.Web.Services.WebService {
         public string msg;
     }
 
-
-
     #region WebMethods
     [WebMethod]
     public string Init(Cart.NewCart cart) {
         NewOrder x = new NewOrder();
         x.id = null;
         x.user = new Users.NewUser();
+        x.user.userType = G.userTypes.natural;
+        x.user.deliveryAddress = new Users.Address();
         x.cart = cart;
         x.orderDate = null;
+        x.countries = GetCountriesJson();
         x.deliveryType = new CodeTitle();
         x.paymentMethod = new CodeTitle();
         x.note = null;
@@ -102,39 +109,75 @@ public class Orders : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string GetOrderOptionsJson() {
+    public string GetOrderOptions() {
         return JsonConvert.SerializeObject(GetOrderOptions(), Formatting.None);
     }
 
     [WebMethod]
     public string SaveOrderOptions(OrderOption x) {
-        return WriteJsonFile(orderOptionsFile, JsonConvert.SerializeObject(x, Formatting.None));
+        WriteFile(orderOptions_json, JsonConvert.SerializeObject(x));
+        return JsonConvert.SerializeObject(GetOrderOptionsJson(), Formatting.None);
+        //return WriteJsonFile(orderOptionsFile, JsonConvert.SerializeObject(x, Formatting.None));
     }
 
+    [WebMethod]
+    public string GetCountries() {
+        return JsonConvert.SerializeObject(GetCountriesJson(), Formatting.None);
+    }
+
+    [WebMethod]
+    public string SaveCountries(List<CodeTitle> x) {
+        try {
+            CreateFolder(folder);
+            //if (!Directory.Exists(Server.MapPath(countries_folder))) {
+            //    Directory.CreateDirectory(Server.MapPath(countries_folder));
+            //}
+            WriteFile(countries_json, JsonConvert.SerializeObject(x));
+            return GetCountries();
+        } catch (Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    public List<CodeTitle> GetCountriesJson() {
+        try {
+            string json = null;
+            string path = string.Format("{0}{1}.json", folder, countries_json);
+            if (File.Exists(Server.MapPath(path))) {
+                json = File.ReadAllText(Server.MapPath(path));
+            }
+            return JsonConvert.DeserializeObject<List<CodeTitle>>(json);
+        } catch (Exception e) {
+            return new List<CodeTitle>();
+        }
+    }
    
     #endregion WebMethods
 
     #region Methods
-    public void CreateFolder(string path) {
-        if (!Directory.Exists(Server.MapPath(path))) {
-            Directory.CreateDirectory(Server.MapPath(path));
+    public void CreateFolder(string folder) {
+        if (!Directory.Exists(Server.MapPath(folder))) {
+            Directory.CreateDirectory(Server.MapPath(folder));
         }
     }
 
-    public string WriteJsonFile(string filename, string json) {
-        try {
-            CreateFolder("~/App_Data/json/");
-            string path = string.Format(@"~/App_Data/json/{0}.json", filename);
-            File.WriteAllText(Server.MapPath(path), json);
-            return "OK";
-        } catch (Exception e) {
-            return e.Message;
-        }
+    protected void WriteFile(string path, string json) {
+        File.WriteAllText(Server.MapPath(string.Format("{0}{1}.json", folder, path)), json);
     }
+    //public string WriteJsonFile(string filename, string json) {
+    //    try {
+    //        CreateFolder(folder);
+    //        string path = string.Format(@"{0}{1}.json", folder, filename);
+    //        File.WriteAllText(Server.MapPath(path), json);
+    //        return "OK";
+    //    } catch (Exception e) {
+    //        return e.Message;
+    //    }
+    //}
 
-    public OrderOption GetOrderOptions() {
+    public OrderOption GetOrderOptionsJson() {
         try {
-            string path = string.Format("~/App_Data/json/{0}.json", orderOptionsFile);
+            string path = string.Format("{0}{1}.json", folder, orderOptions_json);
             string json = null;
             if (File.Exists(Server.MapPath(path))) {
                 json = File.ReadAllText(Server.MapPath(path));

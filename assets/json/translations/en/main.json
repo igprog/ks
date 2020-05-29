@@ -65,6 +65,14 @@
   "rating": "Rating",
   "last reviews": "Last reviews",
   "description": "Description",
-  "specification": "Specification"
+  "specification": "Specification",
+  "billing details": "Billing Details",
+  "natural person": "Natural Person",
+  "legal person": "Legal Person",
+  "my delivery and billing address is the same": "My delivery and billing address is the same",
+  "i have read and agree to the": "I have read and agree to the",
+  "privacy policy": "Privacy Policy",
+  "delivery details": "Delivery Details"
+
 
 }

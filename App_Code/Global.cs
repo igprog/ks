@@ -34,13 +34,16 @@ namespace Igprog {
         public RecordType recordType = new RecordType();
         //public OptionType optionType = new OptionType();
         public FeatureType featureType = new FeatureType();
+        public UserTypes userTypes = new UserTypes();
         public AdminType adminType = new AdminType();
+        
 
         public class DB {
             public string productGroups = "productGroups";
             public string brands = "brands";
             public string products = "products";
             public string review = "review";
+            public string orders = "orders";
             public string tran = "tran";
         }
 
@@ -50,6 +53,11 @@ namespace Igprog {
             public string productTitle = "productTitle";
             public string productShortDesc = "productShortDesc";
             public string productLongDesc = "productLongDesc";
+        }
+
+        public class UserTypes {
+            public string legal = "legal";
+            public string natural = "natural";
         }
 
         //public class OptionType {

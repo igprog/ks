@@ -517,7 +517,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         bestsellingall: [],
         record: [],
         review: null,
-        tpl: 'descTpl',
         stars: [1,2,3,4,5]
     }
     $scope.d = data;
@@ -568,9 +567,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         return f.sticker(x);
     }
 
-    $scope.toggleTpl = (x) => {
-        $scope.d.tpl = x;
-    }
+    //$scope.toggleTpl = (x) => {
+    //    $scope.d.tpl = x;
+    //}
 
     /**** Review & Rating *****/
     $scope.getRate = function (rate) {
@@ -681,7 +680,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 .controller('checkoutCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', '$localStorage', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams, $localStorage) {
 
     var data = {
-        order: []
+        order: [],
+        sameAs: true
     }
     $scope.d = data;
 
@@ -710,6 +710,34 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             }
         });
     }
+
+    $scope.changeUserType = (x) => {
+        if (x === 'natural') {
+            $scope.d.order.user.company = null;
+            $scope.d.order.user.deliveryAddress.company = null;
+            $scope.d.order.user.pin = null;
+            $scope.d.order.user.deliveryAddress.pin = null;
+        }
+    }
+
+    $scope.setDeliveryAddress = (x) => {
+        debugger;
+        if (x.sameAs) {
+            $scope.d.order.user.deliveryAddress.firstName = x.order.user.firstName;
+            $scope.d.order.user.deliveryAddress.lastName = x.order.user.lastName;
+            $scope.d.order.user.deliveryAddress.email = x.order.user.email;
+            $scope.d.order.user.deliveryAddress.phone = x.order.user.phone;
+            $scope.d.order.user.deliveryAddress.company = x.order.user.company;
+            $scope.d.order.user.deliveryAddress.address = x.order.user.address;
+            $scope.d.order.user.deliveryAddress.city = x.order.user.city;
+            $scope.d.order.user.deliveryAddress.postalCode = x.order.user.postalCode;
+            $scope.d.order.user.deliveryAddress.country = x.order.user.country;
+        }
+    }
+
+    //$scope.toggle = (x) => {
+    //    $scope.d.tpl = x;
+    //}
 
 }])
 

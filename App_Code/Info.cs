@@ -16,8 +16,8 @@ using Igprog;
 public class Info : System.Web.Services.WebService {
     Global G = new Global();
     Tran T = new Tran();
-    string path = "~/data/info.json";
-    string folder = "~/data/";
+    string path = "~/data/json/info.json";
+    string folder = "~/data/json/";
 
     public Info() {
     }

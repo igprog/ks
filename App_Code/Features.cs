@@ -15,8 +15,8 @@ using Igprog;
 [System.Web.Script.Services.ScriptService]
 public class Features : System.Web.Services.WebService {
     Global G = new Global();
-    string path = "~/data/features.json";
-    string folder = "~/data/";
+    string path = "~/data/json/features.json";
+    string folder = "~/data/json/";
 
     public Features() {
     }

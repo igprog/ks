@@ -717,6 +717,32 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
 }])
 
+.controller('countriesCtrl', ['$scope', '$http', 'f', function ($scope, $http, f) {
+    var service = 'Orders';
+    $scope.d = null;
+    var load = function () {
+        f.post(service, 'GetCountries', {}).then((d) => {
+            $scope.d = d;
+        });
+    }
+    load();
+
+    $scope.add = function (x) {
+        x.push({});
+    }
+
+    $scope.remove = function (x, idx) {
+        x.splice(idx, 1);
+
+    }
+
+    $scope.save = function (x) {
+        f.post(service, 'SaveCountries', { x: x }).then((d) => {
+            $scope.d = d;
+        });
+    }
+
+}])
 
 /********** Directives **********/
 //.directive('reservationDirective', () => {

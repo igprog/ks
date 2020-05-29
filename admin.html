@@ -69,6 +69,16 @@
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="info" ng-click="toggleTpl('reviews')">Recenzije</a>
                 </li>
+                <li>
+                    <hr />
+                    <label>Postavke</label>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('countries')">Države</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('reviews')">Recenzije</a>
+                </li>
                 <li ng-if="d.isLogin" class="nav-item">
                     <a class="nav-link" href="" title="odjava" ng-click="f.logout()"><i class="fa fa-sign-out-alt"></i> Odjava</a>
                 </li>
@@ -123,6 +133,17 @@
                     <a class="d-flex w-100 justify-content-start align-items-center text-dark">
                         <span class="fa fa-star fa-fw mr-3"></span>
                         <span class="menu-collapsed">Recenzije</span>
+                    </a>
+                </li>
+                <li>
+                    <!--<span class="fa fa-cogs fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Postavke</span>-->
+                    <hr />
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('countries')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-globe fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Države</span>
                     </a>
                 </li>
             </ul>
@@ -694,6 +715,38 @@
                 </div>
             </div>
             <json-directive data="d" desc="'d'"  debug="config.debug"></json-directive>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="countries">
+        <div ng-controller="countriesCtrl">
+            <div class="ml-3">
+                <h2>Države</h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <th></th>
+                                    <th>Cod</th>
+                                    <th>Država</th>
+                                </tr>
+                                <tr ng-repeat="x in d">
+                                    <td style="width:30px"><button class="btn btn-default" ng-click="remove(d, $index)"><i class="fa fa-trash-alt text-danger"></i></button></td>
+                                    <td><input ng-model="x.code" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.title" type="text" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-warning" ng-click="add(d)"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <button class="btn btn-primary pull-right" ng-click="save(d)"><i class="fa fa-floppy-o"></i> Spremi</button>
+                    </div>
+                </div>
+            </div>
+            
+            <json-directive data="d" desc="'d'" debug="config.debug"></json-directive>
         </div>
     </script>
 

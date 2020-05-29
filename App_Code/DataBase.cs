@@ -71,6 +71,35 @@ public class DataBase {
         CreateTable(path, sql);
     }
 
+    public void Orders(string path) {
+        string sql = @"CREATE TABLE IF NOT EXISTS orders
+                    (id NVARCHAR(50) PRIMARY KEY,
+                    userId NVARCHAR(50),
+                    items NVARCHAR(200),
+                    netPrice NVARCHAR(50),
+                    grossPrice NVARCHAR(50),
+                    currency NVARCHAR(50),
+                    orderDate NVARCHAR(50),
+                    deliveryFirstName NVARCHAR(50),
+                    deliveryLastName NVARCHAR(50),
+                    deliveryCompanyName NVARCHAR(50),
+                    deliveryAddress NVARCHAR(50),
+                    deliveryPostalCode NVARCHAR(50),
+                    deliveryCity NVARCHAR(50),
+                    deliveryCountry NVARCHAR(50),
+                    deliveryType NVARCHAR(50),
+                    paymentMethod NVARCHAR(50),
+                    note NVARCHAR(200),
+                    number NVARCHAR(50),
+                    status NVARCHAR(50),
+                    countryCode NVARCHAR(50),
+                    sendToPrint NVARCHAR(50),
+                    deliveryPrice NVARCHAR(50),
+                    discount NVARCHAR(50),
+                    total NVARCHAR(50))";
+        CreateTable(path, sql);
+    }
+
     public void Tran(string path) {
         string sql = @"CREATE TABLE IF NOT EXISTS tran
                     (id VARCHAR(50),
@@ -109,26 +138,29 @@ public class DataBase {
         }
 
     private void CreateTables(string table, string path) {
-            switch (table) {
-                case "productGroups":
-                    ProductGroups(path);
-                    break;
-                case "brands":
-                    Brands(path);
-                    break;
-                case "products":
-                    Products(path);
-                    break;
-                case "review":
-                    Review(path);
-                    break;
-                case "tran":
-                        Tran(path);
-                        break;
-                default:
-                        break;
-                }
+        switch (table) {
+            case "productGroups":
+                ProductGroups(path);
+                break;
+            case "brands":
+                Brands(path);
+                break;
+            case "products":
+                Products(path);
+                break;
+            case "orders":
+                Orders(path);
+                break;
+            case "review":
+                Review(path);
+                break;
+            case "tran":
+                Tran(path);
+                break;
+            default:
+                break;
         }
+    }
 
     private void CreateTable(string path, string sql) {
         try {
