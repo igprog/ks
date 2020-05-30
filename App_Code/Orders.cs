@@ -35,31 +35,39 @@ public class Orders : System.Web.Services.WebService {
         public Users.NewUser user;
         public Cart.NewCart cart;
         public string orderDate;
-        public List<CodeTitle> countries;
-        public CodeTitle deliveryType;
-        public CodeTitle paymentMethod;
+        public Global.CodeTitle deliveryMethod;
+        public Global.CodeTitle paymentMethod;
         public string note;
         public string number;
-        public CodeTitle status;
+        public bool confirmTerms;
+        public Global.CodeTitle status;
         public string invoice;
         public string invoiceId;
         public Info.PaymentDetails paymentDetails;
+        public List<Global.CodeTitle> countries;
+        public OrderOptions orderOptions;
         public Response response;
 
     }
 
-    public class OrderOption {
+    public class OrderOptions {
         public double deliveryprice;
-        public List<CodeTitle> deliverytype = new List<CodeTitle>();
-        public List<CodeTitle> paymentmethod = new List<CodeTitle>();
-        public List<CodeTitle> orderstatus = new List<CodeTitle>();
+        public List<Global.CodeTitle> deliverymethod = new List<Global.CodeTitle>();
+        public List<Global.CodeTitle> paymentmethod = new List<Global.CodeTitle>();
+        public List<Global.CodeTitle> orderstatus = new List<Global.CodeTitle>();
         //public List<DiscountCoeff> discountcoeff = new List<DiscountCoeff>();
-        //public List<Bank> bank = new List<Bank>();
+        public List<Bank> bank = new List<Bank>();
     }
 
-    public class CodeTitle {
-        public string code { get; set; }
-        public string title { get; set; }
+    //public class CodeTitle {
+    //    public string code;
+    //    public string title;
+    //}
+
+    public class Bank {
+        public string code;
+        public string title;
+        public string link;
     }
 
     public class Response {
@@ -78,14 +86,16 @@ public class Orders : System.Web.Services.WebService {
         x.cart = cart;
         x.orderDate = null;
         x.countries = GetCountriesJson();
-        x.deliveryType = new CodeTitle();
-        x.paymentMethod = new CodeTitle();
+        x.deliveryMethod = new Global.CodeTitle();
+        x.paymentMethod = new Global.CodeTitle();
         x.note = null;
+        x.confirmTerms = false;
         x.number = null;
-        x.status = new CodeTitle();
+        x.status = new Global.CodeTitle();
         x.invoice = null;
         x.invoiceId = null;
         x.paymentDetails = new Info.PaymentDetails();
+        x.orderOptions = GetOrderOptionsJson();
         x.response = new Response();
         return JsonConvert.SerializeObject(x, Formatting.None);
     }
@@ -110,11 +120,11 @@ public class Orders : System.Web.Services.WebService {
 
     [WebMethod]
     public string GetOrderOptions() {
-        return JsonConvert.SerializeObject(GetOrderOptions(), Formatting.None);
+        return JsonConvert.SerializeObject(GetOrderOptionsJson(), Formatting.None);
     }
 
     [WebMethod]
-    public string SaveOrderOptions(OrderOption x) {
+    public string SaveOrderOptions(OrderOptions x) {
         WriteFile(orderOptions_json, JsonConvert.SerializeObject(x));
         return JsonConvert.SerializeObject(GetOrderOptionsJson(), Formatting.None);
         //return WriteJsonFile(orderOptionsFile, JsonConvert.SerializeObject(x, Formatting.None));
@@ -126,7 +136,7 @@ public class Orders : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string SaveCountries(List<CodeTitle> x) {
+    public string SaveCountries(List<Global.CodeTitle> x) {
         try {
             CreateFolder(folder);
             //if (!Directory.Exists(Server.MapPath(countries_folder))) {
@@ -139,16 +149,16 @@ public class Orders : System.Web.Services.WebService {
         }
     }
 
-    public List<CodeTitle> GetCountriesJson() {
+    public List<Global.CodeTitle> GetCountriesJson() {
         try {
             string json = null;
             string path = string.Format("{0}{1}.json", folder, countries_json);
             if (File.Exists(Server.MapPath(path))) {
                 json = File.ReadAllText(Server.MapPath(path));
             }
-            return JsonConvert.DeserializeObject<List<CodeTitle>>(json);
+            return JsonConvert.DeserializeObject<List<Global.CodeTitle>>(json);
         } catch (Exception e) {
-            return new List<CodeTitle>();
+            return new List<Global.CodeTitle>();
         }
     }
    
@@ -175,16 +185,16 @@ public class Orders : System.Web.Services.WebService {
     //    }
     //}
 
-    public OrderOption GetOrderOptionsJson() {
+    public OrderOptions GetOrderOptionsJson() {
         try {
             string path = string.Format("{0}{1}.json", folder, orderOptions_json);
             string json = null;
             if (File.Exists(Server.MapPath(path))) {
                 json = File.ReadAllText(Server.MapPath(path));
             }
-            return JsonConvert.DeserializeObject<OrderOption>(json);
+            return JsonConvert.DeserializeObject<OrderOptions>(json);
         } catch (Exception e) {
-            return new OrderOption();
+            return new OrderOptions();
         }
     }
     #endregion Methods

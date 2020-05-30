@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="panel-body row">
                                     <div class="col-md-6 col-sm-6">
-                                        <h3>Osobni podaci</h3>
+                                        <h3>{{'your personal details' | translate}}</h3>
                                         <div class="form-group">
                                             <label for="firstname">{{'first name' | translate}} <span class="require">*</span></label>
                                             <input ng-model="d.order.user.firstName" type="text" id="firstname" class="form-control" ng-change="setDeliveryAddress(d)">
@@ -164,15 +164,15 @@
                                         </div>-->
                                         <div class="checkbox">
                                             <label>
-                                                <input ng-model="d.sameAs" type="checkbox" ng-change="setDeliveryAddress(d)"> {{'my delivery and billing address is the same' | translate}}.
+                                                <input ng-model="d.sameAsBillingAddress" type="checkbox" ng-change="setDeliveryAddress(d)"> {{'my delivery and billing address is the same' | translate}}.
                                             </label>
                                         </div>
-                                        <button class="btn btn-primary  pull-right" type="submit" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-address-content" id="button-payment-address">Continue</button>
-                                        <div class="checkbox pull-right">
+                                        <button class="btn btn-primary  pull-right" type="submit" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-address-content" id="button-payment-address">{{'continue' | translate}}</button>
+                                        <!--<div class="checkbox pull-right">
                                             <label>
                                                 <input type="checkbox"> {{'i have read and agree to the' | translate}} <a title="Privacy Policy" href="">{{'privacy policy' | translate}}</a> &nbsp;&nbsp;&nbsp;
                                             </label>
-                                        </div>
+                                        </div>-->
                                     </div>
                                     </div>
                             </div>
@@ -254,7 +254,7 @@
                                         </div>-->
                                     </div>
                                     <div class="col-md-12">
-                                        <button class="btn btn-primary  pull-right" type="submit" id="button-shipping-address" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-method-content" ng-click="toggle('shippingaddress')">Continue</button>
+                                        <button class="btn btn-primary  pull-right" type="submit" id="button-shipping-address" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-method-content" >{{'continue' | translate}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -265,25 +265,32 @@
                             <div class="panel-heading">
                                 <h2 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#checkout-page" href="#shipping-method-content" onclick="return false;" class="accordion-toggle">
-                                        Step 4: Delivery Method
+                                        {{'step' | translate}} 3: {{'delivery method' | translate}}
                                     </a>
                                 </h2>
                             </div>
                             <div id="shipping-method-content" class="panel-collapse collapse">
                                 <div class="panel-body row">
                                     <div class="col-md-12">
-                                        <p>Please select the preferred shipping method to use on this order.</p>
-                                        <h4>Flat Rate</h4>
+                                        <p>{{'please select the preferred shipping method to use on this order' | translate}}.</p>
+                                        <div class="pt-4">
+                                            <span class="p-2" ng-repeat="x in d.order.orderOptions.deliverymethod">
+                                                <input ng-model="d.order.deliveryMethod" type="radio" id="{{x.title}}" name="{{x.title}}" ng-value="x">
+                                                <label for="{{x.title}}">{{x.title | translate}}</label>
+                                            </span>
+                                        </div>
+
+                                        <!--<h4>Flat Rate</h4>
                                         <div class="radio-list">
                                             <label>
                                                 <input type="radio" name="FlatShippingRate" value="FlatShippingRate"> Flat Shipping Rate
                                             </label>
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
-                                            <label for="delivery-comments">Add Comments About Your Order</label>
-                                            <textarea id="delivery-comments" rows="8" class="form-control"></textarea>
+                                            <label for="delivery-comments">{{'add comments about your order' | translate}}</label>
+                                            <textarea ng-model="d.order.note" id="delivery-comments" rows="8" class="form-control"></textarea>
                                         </div>
-                                        <button class="btn btn-primary  pull-right" type="submit" id="button-shipping-method" data-toggle="collapse" data-parent="#checkout-page" data-target="#payment-method-content">Continue</button>
+                                        <button class="btn btn-primary  pull-right" type="submit" id="button-shipping-method" data-toggle="collapse" data-parent="#checkout-page" data-target="#payment-method-content">{{'continue' | translate}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -294,15 +301,19 @@
                             <div class="panel-heading">
                                 <h2 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#checkout-page" href="#payment-method-content" onclick="return false;" class="accordion-toggle">
-                                        Step 5: Payment Method
+                                        {{'step' | translate}} 5: {{'payment method' | translate}}
                                     </a>
                                 </h2>
                             </div>
                             <div id="payment-method-content" class="panel-collapse collapse">
                                 <div class="panel-body row">
                                     <div class="col-md-12">
-                                        <p>Please select the preferred payment method to use on this order.</p>
-                                        <div class="radio-list">
+                                        <p>{{'please select the preferred payment method to use on this order' | translate}}.</p>
+                                        <span class="p-2" ng-repeat="x in d.order.orderOptions.paymentmethod">
+                                            <input ng-model="d.order.paymentMethod" type="radio" id="{{x.title}}" name="{{x.title}}" ng-value="x">
+                                            <label for="{{x.title}}">{{x.title | translate}}</label>
+                                        </span>
+                                        <!--<div class="radio-list">
                                             <label>
                                                 <input type="radio" name="CashOnDelivery" value="CashOnDelivery"> Cash On Delivery
                                             </label>
@@ -310,11 +321,11 @@
                                         <div class="form-group">
                                             <label for="delivery-payment-method">Add Comments About Your Order</label>
                                             <textarea id="delivery-payment-method" rows="8" class="form-control"></textarea>
-                                        </div>
-                                        <button class="btn btn-primary  pull-right" type="submit" id="button-payment-method" data-toggle="collapse" data-parent="#checkout-page" data-target="#confirm-content">Continue</button>
+                                        </div>-->
+                                        <button class="btn btn-primary  pull-right" type="submit" id="button-payment-method" data-toggle="collapse" data-parent="#checkout-page" data-target="#confirm-content">{{'continue' | translate}}</button>
                                         <div class="checkbox pull-right">
                                             <label>
-                                                <input type="checkbox"> I have read and agree to the <a title="Terms & Conditions" href="javascript:;">Terms & Conditions </a> &nbsp;&nbsp;&nbsp;
+                                                <input ng-model="d.order.confirmTerms" type="checkbox"> {{'i have read and agree to the' | translate}} <a title="{{'terms and conditions' | translate}}" href="javascript:;">{{'terms and conditions' | translate}} </a> &nbsp;&nbsp;&nbsp;
                                             </label>
                                         </div>
                                     </div>
@@ -327,7 +338,7 @@
                             <div class="panel-heading">
                                 <h2 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#checkout-page" href="#confirm-content" onclick="return false;" class="accordion-toggle">
-                                        Step 6: Confirm Order
+                                        {{'step' | translate}} 5: {{'confirm order' | translate}}
                                     </a>
                                 </h2>
                             </div>
@@ -337,21 +348,21 @@
                                         <div class="table-wrapper-responsive">
                                             <table>
                                                 <tr>
-                                                    <th class="checkout-image">Slika</th>
-                                                    <th class="checkout-description">Opis</th>
-                                                    <th class="checkout-model">SKU</th>
-                                                    <th class="checkout-quantity">Količina</th>
-                                                    <th class="checkout-price">Cijena</th>
-                                                    <th class="checkout-total">Ukupno</th>
+                                                    <th class="checkout-image">{{'image' | translate}}</th>
+                                                    <th class="checkout-description">{{'description' | translate}}</th>
+                                                    <th class="checkout-model">{{'sku' | translate}}</th>
+                                                    <th class="checkout-quantity">{{'quantity' | translate}}</th>
+                                                    <th class="checkout-price">{{'price' | translate}}</th>
+                                                    <th class="checkout-total">{{'total' | translate}}</th>
                                                 </tr>
                                                 <tr ng-repeat="x in d.order.cart.items track by $index">
                                                     <td class="checkout-image">
                                                         <a href="javascript:;"><img src="../upload/{{x.product.id}}/gallery/{{x.product.gallery[0]}}" alt="{{x.product.title}}"></a>
                                                     </td>
                                                     <td class="checkout-description">
-                                                        <h3><a href="javascript:;">{{x.product.shortdesc}}</a></h3>
+                                                        <h3><a href="" ng-click="get(x.product)">{{x.product.shortdesc}}</a></h3>
                                                         <p><strong>{{x.product.title}}</strong></p>
-                                                        <em>More info is here</em>
+                                                        <em ng-click="get(x.product)">{{'more info is here' | translate}}</em>
                                                     </td>
                                                     <td class="checkout-model">{{x.product.sku}}</td>
                                                     <td class="checkout-quantity">{{x.product.qty}}</td>
@@ -377,11 +388,11 @@
                                         <div class="checkout-total-block">
                                             <ul>
                                                 <li>
-                                                    <em>Ukuno (Neto)</em>
+                                                    <em>{{'total' | translate}} ({{'net' | translate}})</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.sub_tot | number}} <span>kn</span></strong>
                                                 </li>
                                                 <li>
-                                                    <em>Cijena dostave</em>
+                                                    <em>{{'delivery price' | translate}}</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.shipping | number}} <span>kn</span></strong>
                                                 </li>
                                                 <!--<li>
@@ -389,18 +400,18 @@
                                                     <strong class="price"><span>$</span>3.00</strong>
                                                 </li>-->
                                                 <li>
-                                                    <em>PDV (25%)</em>
+                                                    <em>{{'pin' | translate}} (25%)</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.tot_vat | number}} <span>kn</span></strong>
                                                 </li>
                                                 <li class="checkout-total-price">
-                                                    <em>Ukuno</em>
+                                                    <em>{{'total' | translate}}</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.tot | number}} <span>kn</span></strong>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="clearfix"></div>
-                                        <button class="btn btn-primary pull-right" type="submit" id="button-confirm" ng-click="confirm(d.order)">Potvrdi narudžbu</button>
-                                        <button type="button" class="btn btn-default pull-right margin-right-20"  ng-click="go('cart')">Cancel</button>
+                                        <button class="btn btn-primary pull-right" type="submit" id="button-confirm" ng-click="confirm(d.order)">{{'confirm order' | translate}}</button>
+                                        <button type="button" class="btn btn-default pull-right margin-right-20"  ng-click="go('cart')">{{'cancel' | translate}}</button>
                                     </div>
                                 </div>
                             </div>

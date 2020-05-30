@@ -89,7 +89,7 @@ public class DataBase {
                     deliveryPostalCode NVARCHAR(50),
                     deliveryCity NVARCHAR(50),
                     deliveryCountry NVARCHAR(50),
-                    deliveryType NVARCHAR(50),
+                    deliveryMethod NVARCHAR(50),
                     paymentMethod NVARCHAR(50),
                     note NVARCHAR(200),
                     number NVARCHAR(50),

@@ -75,7 +75,29 @@
   "delivery details": "Delivery Details",
   "delivery date": "Delivery date",
   "day": "day",
-  "days":  "days"
-
-
+  "days": "days",
+  "step": "Step",
+  "your personal details": "Your Personal Details",
+  "first name": "First Name",
+  "last name": "Last Name",
+  "company": "Company",
+  "address": "Address",
+  "city": "City",
+  "postal code": "Postal Code",
+  "country": "Country",
+  "continue": "Continue",
+  "delivery method": "Delivery Method",
+  "please select the preferred shipping method to use on this order": "Please select the preferred shipping method to use on this order",
+  "add comments about your order": "Add comments about your order",
+  "payment method": "payment method",
+  "please select the preferred payment method to use on this order": "Please select the preferred payment method to use on this order",
+  "terms and conditions": "Aerms and Conditions",
+  "confirm order": "Confirm Order",
+  "image": "Image",
+  "sku": "SKU",
+  "quantity": "Quantity",
+  "price": "Price",
+  "total": "Total",
+  "net": "Net",
+  "cancel": "Cancel"
 }

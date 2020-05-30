@@ -686,11 +686,12 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var data = {
         order: [],
-        sameAs: true
+        sameAsBillingAddress: true
     }
     $scope.d = data;
 
     var init = (x) => {
+        debugger;
         f.post('Orders', 'Init', { cart: x }).then((d) => {
             debugger;
             $scope.d.order = d;
@@ -727,7 +728,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.setDeliveryAddress = (x) => {
         debugger;
-        if (x.sameAs) {
+        if (x.sameAsBillingAddress) {
             $scope.d.order.user.deliveryAddress.firstName = x.order.user.firstName;
             $scope.d.order.user.deliveryAddress.lastName = x.order.user.lastName;
             $scope.d.order.user.deliveryAddress.email = x.order.user.email;

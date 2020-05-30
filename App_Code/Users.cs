@@ -28,7 +28,7 @@ public class Users : System.Web.Services.WebService {
         public string address;
         public string postalCode;
         public string city;
-        public Orders.CodeTitle country;
+        public Global.CodeTitle country;
         public string pin;
         public string phone;
         public string email;
@@ -45,8 +45,8 @@ public class Users : System.Web.Services.WebService {
         //public string deliveryPostalCode;
         //public string deliveryCity;
         //public Orders.CodeTitle deliveryCountry;
-        public string deliveryType;
-        public string paymentMethod;
+        //public string deliveryMethod;
+        //public string paymentMethod;
         //public List<Country> countries;
         //public Orders.DiscountCoeff discount = new Orders.DiscountCoeff();
 
@@ -61,7 +61,7 @@ public class Users : System.Web.Services.WebService {
         public string address;
         public string postalCode;
         public string city;
-        public Orders.CodeTitle country;
+        public Global.CodeTitle country;
     }
 
     //public class Country {

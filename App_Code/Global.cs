@@ -73,6 +73,11 @@ namespace Igprog {
             public string supervisor = "supervisor";
         }
 
+        public class CodeTitle {
+            public string code;
+            public string title;
+        }
+
         public string ReadS(SQLiteDataReader reader, int i) {
             return reader.GetValue(i) == DBNull.Value ? null : reader.GetString(i);
         }

@@ -367,11 +367,11 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     $scope.d = data;
 
     var load = (productGroup, search) => {
+        var pg_code = null;
         if (productGroup === null) {
-            var pg_code = null;
             $scope.d.currProductGroup = null;
         } else {
-            var pg_code = productGroup.code;
+            pg_code = productGroup.code;
             $scope.d.currProductGroup = productGroup;
         }
         $scope.d.currProductGroup = productGroup;
@@ -740,6 +740,33 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
     $scope.save = function (x) {
         f.post(service, 'SaveCountries', { x: x }).then((d) => {
+            $scope.d = d;
+        });
+    }
+
+}])
+
+.controller('orderOptionsCtrl', ['$scope', '$http', 'f', function ($scope, $http, f) {
+    var service = 'Orders';
+    $scope.d = null;
+    var load = function () {
+        f.post(service, 'GetOrderOptions', {}).then((d) => {
+            $scope.d = d;
+        });
+    }
+    load();
+
+    $scope.add = function (x) {
+        x.push({});
+    }
+
+    $scope.remove = function (x, idx) {
+        x.splice(idx, 1);
+
+    }
+
+    $scope.save = function (x) {
+        f.post(service, 'SaveOrderOptions', { x: x }).then((d) => {
             $scope.d = d;
         });
     }
