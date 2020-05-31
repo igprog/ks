@@ -73,32 +73,49 @@ public class DataBase {
         CreateTable(path, sql);
     }
 
-    public void Orders(string path) {
-        string sql = @"CREATE TABLE IF NOT EXISTS orders
-                    (id NVARCHAR(50) PRIMARY KEY,
-                    userId NVARCHAR(50),
-                    items NVARCHAR(200),
-                    netPrice NVARCHAR(50),
-                    grossPrice NVARCHAR(50),
-                    currency NVARCHAR(50),
-                    orderDate NVARCHAR(50),
+    public void Users(string path) {
+        string sql = @"CREATE TABLE IF NOT EXISTS users
+                    (id NVARCHER (50),
+                    firstName NVARCHAR (50),
+                    lastName NVARCHAR (50),
+                    company NVARCHAR (50),
+                    address NVARCHAR (50),
+                    postalCode NVARCHAR (50),
+                    city NVARCHAR (50),
+                    country NVARCHAR (50),
+                    pin NVARCHAR (50),
+                    phone VARCHAR (50),
+                    email VARCHAR (50),
                     deliveryFirstName NVARCHAR(50),
                     deliveryLastName NVARCHAR(50),
-                    deliveryCompanyName NVARCHAR(50),
+                    deliveryEmail VARCHAR(50),
+                    deliveryPhone VARCHAR(50),
+                    deliveryCompany NVARCHAR(50),
                     deliveryAddress NVARCHAR(50),
                     deliveryPostalCode NVARCHAR(50),
                     deliveryCity NVARCHAR(50),
                     deliveryCountry NVARCHAR(50),
+                    userName VARCHAR (50),
+                    password VARCHAR (100))";
+        CreateTable(path, sql);
+    }
+
+    public void Orders(string path) {
+        string sql = @"CREATE TABLE IF NOT EXISTS orders
+                    (id NVARCHAR(50) PRIMARY KEY,
+                    userId NVARCHER (50),
+                    items NVARCHAR(200),
+                    netPrice NVARCHAR(50),
+                    grossPrice NVARCHAR(50),
+                    deliveryPrice NVARCHAR(50),
+                    discount NVARCHAR(50),
+                    currency NVARCHAR(50),
+                    orderDate NVARCHAR(50),
                     deliveryMethod NVARCHAR(50),
                     paymentMethod NVARCHAR(50),
                     note NVARCHAR(200),
-                    number NVARCHAR(50),
-                    status NVARCHAR(50),
-                    countryCode NVARCHAR(50),
-                    sendToPrint NVARCHAR(50),
-                    deliveryPrice NVARCHAR(50),
-                    discount NVARCHAR(50),
-                    total NVARCHAR(50))";
+                    orderNumber NVARCHAR(50),
+                    status NVARCHAR(50))";
         CreateTable(path, sql);
     }
 
@@ -149,6 +166,9 @@ public class DataBase {
                 break;
             case "products":
                 Products(path);
+                break;
+            case "users":
+                Users(path);
                 break;
             case "orders":
                 Orders(path);

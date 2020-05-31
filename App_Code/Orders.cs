@@ -17,16 +17,13 @@ using Igprog;
 [System.Web.Script.Services.ScriptService]
 public class Orders : System.Web.Services.WebService {
     string dataBase = ConfigurationManager.AppSettings["AppDataBase"];
-    //string productDataBase = ConfigurationManager.AppSettings["ProductDataBase"];
     DataBase db = new DataBase();
     Global G = new Global();
     Users U = new Users();
     string folder = "~/data/json/";
     string orderOptions_json = "orderoptions";
     string countries_json = "countries";
-    //string countries_path = "~/data/countries.json";
-    //string countries_folder = "~/data/";
-    //Invoice i = new Invoice();
+    string mainSql = "SELECT r.id, r.sku, r.name, r.email, r.desc, r.rating, r.reviewdate, r.isactive, r.lang FROM review r";
 
     public Orders() {
     }
@@ -101,10 +98,48 @@ public class Orders : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Confirm(NewOrder x) {
-        //TOOD
-        // Save to orders.tbl
+    public string InitTest(Cart.NewCart cart) {
+        NewOrder x = new NewOrder();
+        x.id = null;
+        x.user = new Users.NewUser();
+        x.user.firstName = "Igor";
+        x.user.lastName = "Gašparović";
+        x.user.company = "IG PROG";
+        x.user.address = "Ludvetov breg 5";
+        x.user.postalCode = "51000";
+        x.user.city = "Rijeka";
+        x.user.country = new Global.CodeTitle();
+        x.user.country.code = "HR";
+        x.user.country.title = "Croatia";
+        x.user.pin = "123456789";
+        x.user.phone = "098330966";
+        x.user.email = "igprog@yahoo.com";
+        x.user.userType = G.userTypes.natural;
+        x.user.deliveryAddress = new Users.Address();
+        x.cart = cart;
+        x.orderDate = null;
+        x.countries = GetCountriesJson();
+        x.deliveryMethod = new Global.CodeTitle();
+        x.paymentMethod = new Global.CodeTitle();
+        x.note = null;
+        x.confirmTerms = false;
+        x.number = null;
+        x.status = new Global.CodeTitle();
+        x.invoice = null;
+        x.invoiceId = null;
+        x.paymentDetails = new Info.PaymentDetails();
+        x.orderOptions = GetOrderOptionsJson();
+        x.response = new Response();
+        return JsonConvert.SerializeObject(x, Formatting.None);
+    }
 
+    [WebMethod]
+    public string Confirm(NewOrder x) {
+        //TOOD:
+        // Save to Users.tbl
+        U.Save(x.user);
+
+        //Save to Orders.tbl
 
         // Sent mail to customer and me
 

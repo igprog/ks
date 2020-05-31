@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Services;
 using System.IO;
 using Newtonsoft.Json;
+using System.Data.SQLite;
 using Igprog;
 
 /// <summary>
@@ -14,8 +15,8 @@ using Igprog;
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 [System.Web.Script.Services.ScriptService]
 public class Users : System.Web.Services.WebService {
-    //string countries_path = "~/data/countries.json";
-    //string countries_folder = "~/data/";
+    Global G = new Global();
+    DataBase DB = new DataBase();
     public Users() {
     }
 
@@ -23,7 +24,7 @@ public class Users : System.Web.Services.WebService {
         public string id;
         public string firstName;
         public string lastName;
-        public string userType; // fizicka / pravna osoba
+        public string userType; //***** fizicka / pravna osoba *****
         public string company;
         public string address;
         public string postalCode;
@@ -36,20 +37,7 @@ public class Users : System.Web.Services.WebService {
         public string userName;
         public string password;
         public string passwordConfirm;
-        public string ipAddress;
         public Address deliveryAddress;
-        //public string deliveryFirstName;
-        //public string deliveryLastName;
-        //public string deliveryCompanyName;
-        //public string deliveryAddress;
-        //public string deliveryPostalCode;
-        //public string deliveryCity;
-        //public Orders.CodeTitle deliveryCountry;
-        //public string deliveryMethod;
-        //public string paymentMethod;
-        //public List<Country> countries;
-        //public Orders.DiscountCoeff discount = new Orders.DiscountCoeff();
-
     }
 
     public class Address {
@@ -64,61 +52,33 @@ public class Users : System.Web.Services.WebService {
         public Global.CodeTitle country;
     }
 
-    //public class Country {
-    //    public string code;
-    //    public string name;
-    //}
-
-    #region WebMethods
-    //[WebMethod]
-    //public string GetCountries() {
-    //    return JsonConvert.SerializeObject(GetCountriesJson(), Formatting.None);
-    //}
-
-    //[WebMethod]
-    //public string SaveCountries(List<Country> x) {
-    //    try {
-    //        if (!Directory.Exists(Server.MapPath(countries_folder))) {
-    //            Directory.CreateDirectory(Server.MapPath(countries_folder));
-    //        }
-    //        WriteFile(countries_path, x);
-    //        return GetCountries();
-    //    } catch (Exception e) {
-    //        return JsonConvert.SerializeObject(e.Message, Formatting.None);
-    //    }
-    //}
-
-    //public List<Country> GetCountriesJson() {
-    //    try {
-    //        string json = null;
-    //        if (File.Exists(Server.MapPath(countries_path))) {
-    //            json = File.ReadAllText(Server.MapPath(countries_path));
-    //        }
-    //        return JsonConvert.DeserializeObject<List<Country>>(json);
-    //    } catch (Exception e) {
-    //        return new List<Country>();
-    //    }
-    //}
-
-    //protected void WriteFile(string path, List<Country> value) {
-    //    File.WriteAllText(Server.MapPath(path), JsonConvert.SerializeObject(value));
-    //}
-    //public string WriteJsonFile(string filename, string json) {
-    //    try {
-    //        CreateFolder("~/App_Data/json/");
-    //        string path = string.Format(@"~/App_Data/json/{0}.json", filename);
-    //        File.WriteAllText(Server.MapPath(path), json);
-    //        return "OK";
-    //    } catch (Exception e) {
-    //        return e.Message;
-    //    }
-    //}
-
-    //public void CreateFolder(string path) {
-    //    if (!Directory.Exists(Server.MapPath(path))) {
-    //        Directory.CreateDirectory(Server.MapPath(path));
-    //    }
-    //}
-    #endregion WebMethods
+    public void Save(NewUser x) {
+        try {
+            DB.CreateDataBase(G.db.users);
+            string sql = null;
+            if (string.IsNullOrEmpty(x.id)) {
+                x.id = Guid.NewGuid().ToString();
+                sql = string.Format(@"INSERT INTO users VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}')"
+                                    , x.id, x.firstName, x.lastName, x.company, x.address, x.postalCode, x.city, x.country, x.pin, x.phone, x.email, x.userName, x.password
+                                    , x.deliveryAddress.firstName, x.deliveryAddress.lastName, x.deliveryAddress.phone, x.deliveryAddress.company, x.deliveryAddress.address, x.deliveryAddress.postalCode, x.deliveryAddress.city, x.deliveryAddress.country);
+            } else {
+                sql = string.Format(@"UPDATE users SET firstName = '{1}', lastName = '{2}', company = '{3}', address = '{4}', postalCode = '{5}', city = '{6}', pin = '{7}', phone = '{8}', email = '{9}', deliveryFirstName = '{10}', deliveryLastName = '{11}'
+                                    , deliveryEmail = '{12}', deliveryPhone = '{13}', deliveryCompany = '{14}', deliveryAddress = '{15}', deliveryPostalCode = '{16}', deliveryCity = '{17}', deliveryCountry = '{18}', userName = '{19}', password = '{20}' WHERE id = '{0}'"
+                                    , x.id, x.firstName, x.lastName, x.company, x.address, x.postalCode, x.city, x.country, x.pin, x.phone, x.email, x.userName, x.password
+                                    , x.deliveryAddress.firstName, x.deliveryAddress.lastName, x.deliveryAddress.phone, x.deliveryAddress.company, x.deliveryAddress.address, x.deliveryAddress.postalCode, x.deliveryAddress.city, x.deliveryAddress.country);
+            }
+            using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+                connection.Open();
+                using (var command = new SQLiteCommand(sql, connection)) {
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+            //return JsonConvert.SerializeObject("Review saved successfully", Formatting.None);
+            //return JsonConvert.SerializeObject(GetData(x.sku), Formatting.None);
+        } catch (Exception e) {
+            //return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
 
 }

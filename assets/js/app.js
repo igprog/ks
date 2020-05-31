@@ -692,7 +692,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var init = (x) => {
         debugger;
-        f.post('Orders', 'Init', { cart: x }).then((d) => {
+        var method = $rootScope.config.debug ? 'InitTest' : 'Init';
+        f.post('Orders', method, { cart: x }).then((d) => {
             debugger;
             $scope.d.order = d;
         });

@@ -43,6 +43,7 @@ namespace Igprog {
             public string brands = "brands";
             public string products = "products";
             public string review = "review";
+            public string users = "users";
             public string orders = "orders";
             public string tran = "tran";
         }
