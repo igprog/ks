@@ -34,13 +34,20 @@ public class Cart : System.Web.Services.WebService {
         public Products.NewProduct product;
         public int qty;
         public double price_net_tot;
+        public double discount;
     }
 
     public class CartPrice {
-        public double sub_tot;
-        public double tot_vat;
-        public double shipping;
-        public double tot; // total net + vat + shipping
+        public double netPrice;
+        public double vatPrice;
+        public double grossPrice;
+        public double deliveryPrice;
+        public double discount;
+        public double totalPrice; // total net + vat + shipping
+        //public double sub_tot;
+        //public double tot_vat;
+        //public double shipping;
+        //public double tot; // total net + vat + shipping
     }
     #endregion Class
 
@@ -79,16 +86,22 @@ public class Cart : System.Web.Services.WebService {
 
     public CartItem c_CalcItemPrice(CartItem x) {
         x.price_net_tot = x.product.price.net_discount * x.product.qty;
+        x.discount = Math.Round(x.product.price.gross_discount_tot / x.product.discount.coeff);
         return x;
     }
 
     public NewCart c_CalcTotPrice (NewCart x) {
         if (x.items != null) {
             x.cartPrice = new CartPrice();
-            x.cartPrice.sub_tot = x.items.Sum(a => a.price_net_tot);
-            x.cartPrice.tot_vat = x.cartPrice.sub_tot * 0.25;
-            x.cartPrice.shipping = 100;  // TODO
-            x.cartPrice.tot = x.items.Sum(a => a.price_net_tot) + x.cartPrice.tot_vat + x.cartPrice.shipping;
+            x.cartPrice.netPrice = x.items.Sum(a => a.price_net_tot);
+            x.cartPrice.vatPrice = x.cartPrice.netPrice * 0.25;  // TODO VAT
+            x.cartPrice.grossPrice = x.cartPrice.netPrice + x.cartPrice.vatPrice;
+            x.cartPrice.deliveryPrice = 100;  // TODO
+            x.cartPrice.totalPrice = x.cartPrice.grossPrice + x.cartPrice.deliveryPrice;
+            //x.cartPrice.sub_tot = x.items.Sum(a => a.price_net_tot);
+            //x.cartPrice.tot_vat = x.cartPrice.sub_tot * 0.25;
+            //x.cartPrice.shipping = 100;  // TODO
+            //x.cartPrice.tot = x.items.Sum(a => a.price_net_tot) + x.cartPrice.tot_vat + x.cartPrice.shipping;
         }
         return x;
     }

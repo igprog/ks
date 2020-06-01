@@ -70,6 +70,9 @@
                     <a class="nav-link" href="" title="info" ng-click="toggleTpl('reviews')">Recenzije</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('orders')">Narudžbe</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="info" ng-click="toggleTpl('countries')">Države</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
@@ -129,6 +132,12 @@
                     <a class="d-flex w-100 justify-content-start align-items-center text-dark">
                         <span class="fa fa-star fa-fw mr-3"></span>
                         <span class="menu-collapsed">Recenzije</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('orders')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-comment-dollar fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Narudžbe</span>
                     </a>
                 </li>
                 <li>
@@ -741,6 +750,33 @@
                 </div>
             </div>
             <json-directive data="d" desc="'d'"  debug="config.debug"></json-directive>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="orders">
+        <div ng-controller="ordersCtrl">
+            <div class="ml-3">
+                <h2>Narudžbe</h2>
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <tr>
+                            <!--<th></th>-->
+                            <th>Id</th>
+                            <th>Proizvodi</th>
+                        </tr>
+                        <tr ng-repeat="x in d.records">
+                            <!--<td style="width:30px"><button class="btn btn-default" ng-click="remove(d.records, $index)"><i class="fa fa-trash-alt text-danger"></i></button></td>-->
+                            <td>{{x.id}}</td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="y in x.cart.items">SKU: {{y.product.sku}} ({{y.product.qty}} kom.)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <json-directive data="d" desc="'d'" debug="config.debug"></json-directive>
         </div>
     </script>
 

@@ -96,19 +96,19 @@
                                         <h3>{{'your personal details' | translate}}</h3>
                                         <div class="form-group">
                                             <label for="firstname">{{'first name' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.firstName" type="text" id="firstname" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.firstName" type="text" id="firstname" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
                                             <label for="lastname">{{'last name' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.lastName" type="text" id="lastname" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.lastName" type="text" id="lastname" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
                                             <label for="email">{{'email' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.email" type="text" id="email" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.email" type="text" id="email" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
                                             <label for="telephone">{{'phone' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.phone" type="text" id="telephone" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.phone" type="text" id="telephone" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <!--<div class="form-group">
                                             <label for="fax">Fax</label>
@@ -128,7 +128,7 @@
                                         <h3>{{'your address' | translate}}</h3>
                                         <div class="form-group">
                                             <label for="company">{{'company' | translate}}</label>
-                                            <input ng-model="d.order.user.company" ng-disabled="d.order.user.userType==='natural'" type="text" id="company" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.company" ng-disabled="d.order.user.userType==='natural'" type="text" id="company" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
                                             <label for="company">{{'pin' | translate}}</label>
@@ -136,7 +136,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="address1">{{'address' | translate}}</label>
-                                            <input ng-model="d.order.user.address" type="text" id="address1" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.address" type="text" id="address1" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <!--<div class="form-group">
                                             <label for="address2">Address 2</label>
@@ -144,15 +144,15 @@
                                         </div>-->
                                         <div class="form-group">
                                             <label for="city">{{'city' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.city" type="text" id="city" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.city" type="text" id="city" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
                                             <label for="post-code">{{'postal code' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.postalCode" type="text" id="post-code" class="form-control" ng-change="setDeliveryAddress(d)">
+                                            <input ng-model="d.order.user.billingDetails.postalCode" type="text" id="post-code" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
                                             <label for="country">{{'country' | translate}} <span class="require">*</span></label>
-                                            <select ng-model="d.order.user.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries" ng-change="setDeliveryAddress(d)"></select>
+                                            <select ng-model="d.order.user.billingDetails.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries" ng-change="setDeliveryAddress(d)"></select>
                                         </div>
                                     </div>
                                     <hr>
@@ -192,19 +192,19 @@
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="firstname-dd">{{'first name' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.deliveryAddress.firstName" type="text" id="firstname-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.firstName" type="text" id="firstname-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="lastname-dd">{{'last name' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.deliveryAddress.lastName" type="text" id="lastname-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.lastName" type="text" id="lastname-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="email-dd">{{'email' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.deliveryAddress.email" type="text" id="email-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.email" type="text" id="email-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="telephone-dd">{{'phone' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.deliveryAddress.phone" type="text" id="telephone-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.phone" type="text" id="telephone-dd" class="form-control">
                                         </div>
                                         <!--<div class="form-group">
                                             <label for="fax-dd">Fax</label>
@@ -212,13 +212,13 @@
                                         </div>-->
                                         <div class="form-group">
                                             <label for="company-dd">{{'company' | translate}}</label>
-                                            <input ng-model="d.order.user.deliveryAddress.company" ng-disabled="d.order.user.userType==='natural'" type="text" id="company-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.company" ng-disabled="d.order.user.userType==='natural'" type="text" id="company-dd" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="address1-dd">{{'address' | translate}}</label>
-                                            <input ng-model="d.order.user.deliveryAddress.address" type="text" id="address1-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.address" type="text" id="address1-dd" class="form-control">
                                         </div>
                                         <!--<div class="form-group">
                                             <label for="address2-dd">Address 2</label>
@@ -226,15 +226,15 @@
                                         </div>-->
                                         <div class="form-group">
                                             <label for="city-dd">{{'city' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.deliveryAddress.city" type="text" id="city-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.city" type="text" id="city-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="post-code-dd">{{'postal code' | translate}} <span class="require">*</span></label>
-                                            <input ng-model="d.order.user.deliveryAddress.postalCode" type="text" id="post-code-dd" class="form-control">
+                                            <input ng-model="d.order.user.deliveryDetails.postalCode" type="text" id="post-code-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="country-dd">{{'country' | translate}} <span class="require">*</span></label>
-                                            <select ng-model="d.order.user.deliveryAddress.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries"></select>
+                                            <select ng-model="d.order.user.deliveryDetails.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries"></select>
                                             <!--<select class="form-control input-sm" id="country-dd">
                                                 <option value=""> --- Please Select --- </option>
                                                 <option value="244">Aaland Islands</option>
@@ -389,16 +389,30 @@
                                             <ul>
                                                 <li>
                                                     <em>{{'total' | translate}} ({{'net' | translate}})</em>
+                                                    <strong class="price">{{d.order.cart.cartPrice.netPrice | number}} <span>kn</span></strong>
+                                                </li>
+                                                <li>
+                                                    <em>{{'delivery price' | translate}}</em>
+                                                    <strong class="price">{{d.order.cart.cartPrice.deliveryPrice | number}} <span>kn</span></strong>
+                                                </li>
+                                                <li>
+                                                    <em>{{'vat' | translate}} (25%)</em>
+                                                    <strong class="price">{{d.order.cart.cartPrice.vatPrice | number}} <span>kn</span></strong>
+                                                </li>
+                                                <li class="shopping-total-price">
+                                                    <em>{{'total' | translate}}</em>
+                                                    <strong class="price">{{d.order.cart.cartPrice.totalPrice | number}} <span>kn</span></strong>
+                                                </li>
+                                            </ul>
+                                            <!--<ul>
+                                                <li>
+                                                    <em>{{'total' | translate}} ({{'net' | translate}})</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.sub_tot | number}} <span>kn</span></strong>
                                                 </li>
                                                 <li>
                                                     <em>{{'delivery price' | translate}}</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.shipping | number}} <span>kn</span></strong>
                                                 </li>
-                                                <!--<li>
-                                                    <em>Eco Tax (-2.00)</em>
-                                                    <strong class="price"><span>$</span>3.00</strong>
-                                                </li>-->
                                                 <li>
                                                     <em>{{'pin' | translate}} (25%)</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.tot_vat | number}} <span>kn</span></strong>
@@ -407,7 +421,7 @@
                                                     <em>{{'total' | translate}}</em>
                                                     <strong class="price">{{d.order.cart.cartPrice.tot | number}} <span>kn</span></strong>
                                                 </li>
-                                            </ul>
+                                            </ul>-->
                                         </div>
                                         <div class="clearfix"></div>
                                         <button class="btn btn-primary pull-right" type="submit" id="button-confirm" ng-click="confirm(d.order)">{{'confirm order' | translate}}</button>

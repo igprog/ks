@@ -721,24 +721,15 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $scope.changeUserType = (x) => {
         if (x === 'natural') {
             $scope.d.order.user.company = null;
-            $scope.d.order.user.deliveryAddress.company = null;
+            $scope.d.order.user.deliveryDetails.company = null;
             $scope.d.order.user.pin = null;
-            $scope.d.order.user.deliveryAddress.pin = null;
+            $scope.d.order.user.deliveryDetails.pin = null;
         }
     }
 
     $scope.setDeliveryAddress = (x) => {
-        debugger;
         if (x.sameAsBillingAddress) {
-            $scope.d.order.user.deliveryAddress.firstName = x.order.user.firstName;
-            $scope.d.order.user.deliveryAddress.lastName = x.order.user.lastName;
-            $scope.d.order.user.deliveryAddress.email = x.order.user.email;
-            $scope.d.order.user.deliveryAddress.phone = x.order.user.phone;
-            $scope.d.order.user.deliveryAddress.company = x.order.user.company;
-            $scope.d.order.user.deliveryAddress.address = x.order.user.address;
-            $scope.d.order.user.deliveryAddress.city = x.order.user.city;
-            $scope.d.order.user.deliveryAddress.postalCode = x.order.user.postalCode;
-            $scope.d.order.user.deliveryAddress.country = x.order.user.country;
+            $scope.d.order.user.deliveryDetails = angular.copy(x.order.user.billingDetails);
         }
     }
 

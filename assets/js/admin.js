@@ -626,6 +626,51 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 return remove(x);
             }
         }
+}])
+
+.controller('ordersCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
+        var service = 'Orders';
+        var data = {
+            loading: false,
+            records: []
+        }
+        $scope.d = data;
+
+        var load = () => {
+            $scope.d.loading = true;
+            f.post(service, 'Load', { }).then((d) => {
+                $scope.d.records = d;
+                $scope.d.loading = false;
+            });
+        }
+        load();
+
+        var save = (x) => {
+            debugger;
+            f.post(service, 'Save', { x: x }).then((d) => {
+                //$scope.d.records = d;
+            });
+        }
+
+        var remove = (x) => {
+            if (confirm('Briši narudžbu?')) {
+                f.post(service, 'Delete', { x: x }).then((d) => {
+                    //$scope.d.records = d;
+                });
+            }
+        }
+
+        $scope.f = {
+            load: () => {
+                return load();
+            },
+            save: (x) => {
+                return save(x)
+            },
+            remove: (x) => {
+                return remove(x);
+            }
+        }
     }])
 
 .controller('featuresCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {

@@ -56,20 +56,20 @@
                             <div class="shopping-total">
                                 <ul>
                                     <li>
-                                        <em>Ukupno (Neto)</em>
-                                        <strong class="price">{{d.cart.cartPrice.sub_tot | number}} <span>kn</span></strong>
+                                        <em>{{'total' | translate}} ({{'net' | translate}})</em>
+                                        <strong class="price">{{d.cart.cartPrice.netPrice | number}} <span>kn</span></strong>
                                     </li>
                                     <li>
-                                        <em>Cijena dostave</em>
-                                        <strong class="price">{{d.cart.cartPrice.shipping | number}} <span>kn</span></strong>
+                                        <em>{{'delivery price' | translate}}</em>
+                                        <strong class="price">{{d.cart.cartPrice.deliveryPrice | number}} <span>kn</span></strong>
                                     </li>
                                     <li>
-                                        <em>PDV (25%)</em>
-                                        <strong class="price">{{d.cart.cartPrice.tot_vat | number}} <span>kn</span></strong>
+                                        <em>{{'vat' | translate}} (25%)</em>
+                                        <strong class="price">{{d.cart.cartPrice.vatPrice | number}} <span>kn</span></strong>
                                     </li>
                                     <li class="shopping-total-price">
-                                        <em>Ukupno</em>
-                                        <strong class="price">{{d.cart.cartPrice.tot | number}} <span>kn</span></strong>
+                                        <em>{{'total' | translate}}</em>
+                                        <strong class="price">{{d.cart.cartPrice.totalPrice | number}} <span>kn</span></strong>
                                     </li>
                                 </ul>
                             </div>
