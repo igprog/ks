@@ -17,6 +17,7 @@
     <script src="../assets/js/vendor/angular-animate.min.js"></script>
     <script src="../assets/js/vendor/angular-aria.min.js"></script>
     <script src="../assets/js/vendor/angular-material.min.js"></script>
+    <!--<script src="../assets/js/vendor/angular-ui-router.min.js"></script>-->
     <!--<script src="assets/js/vendor/aui-min.js"></script>
     <script src="assets/js/vendor/moment.js"></script>
     <script src="assets/js/vendor/ui-scheduler-event-recorder.js"></script>-->
@@ -84,6 +85,9 @@
             </ul>
         </div>
     </nav>
+
+    <!--<ui-view autoscroll="true"></ui-view>-->
+
 
     <div ng-if="!d.isLogin">
         <ng-include src="tpl"></ng-include>
@@ -758,22 +762,76 @@
             <div class="ml-3">
                 <h2>Narudžbe</h2>
                 <div class="table-responsive">
-                    <table class="table table-condensed">
+                    <!--<table class="table table-condensed">
                         <tr>
-                            <!--<th></th>-->
+                            <th></th>
                             <th>Id</th>
                             <th>Proizvodi</th>
+                            <th>Cijena Ukupno</th>
                         </tr>
                         <tr ng-repeat="x in d.records">
-                            <!--<td style="width:30px"><button class="btn btn-default" ng-click="remove(d.records, $index)"><i class="fa fa-trash-alt text-danger"></i></button></td>-->
+                            <td><button ng-click="get(x.id, $index)" class="btn btn-primary"><i class="fa fa-info"></i></button></td>
                             <td>{{x.id}}</td>
                             <td>
                                 <ul>
                                     <li ng-repeat="y in x.cart.items">SKU: {{y.product.sku}} ({{y.product.qty}} kom.)</li>
                                 </ul>
                             </td>
+                            <td>{{x.cart.cartPrice.totalPrice | number}}</td>
                         </tr>
-                    </table>
+                    </table>-->
+
+                    <div ng-if="d.records.length>0&&!d.loading" ng-repeat="x in d.records track by $index" class="card shadow m-3">
+                        <div class="card-header" data-toggle="collapse" data-target="#o_{{$index}}" ng-click="f.getUser(x.user.id, $index)">
+                            <div class="mt-2">
+                                <span class="ml-2"><strong>{{x.id}}</strong></span>
+                            </div>
+                            <span class="float-right">
+                                Detalji <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <div id="o_{{$index}}" class="card-body collapse">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Proizvodi:</label>
+                                    <ul>
+                                        <li ng-repeat="y in x.cart.items">SKU: {{y.product.sku}} ({{y.product.qty}} kom.)</li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Podaci o naručitelju:</label>
+                                    <ul>
+                                        <li>{{x.user.billingDetails.firstName}} {{x.user.billingDetails.lastName}}</li>
+                                        <li>{{x.user.billingDetails.company}}</li>
+                                        <li>{{x.user.billingDetails.address}}</li>
+                                        <li>{{x.user.billingDetails.postalCode}} {{x.user.billingDetails.city}} - {{x.user.billingDetails.country.code}}</li>
+                                    </ul>
+                                    <hr />
+                                    <ul>
+                                        <li>OIB: {{x.user.pin}}</li>
+                                        <li>Telefon: {{x.user.billingDetails.phone}}</li>
+                                        <li>Email: {{x.user.billingDetails.email}}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Adresa za dostavu:</label>
+                                    <ul>
+                                        <li>{{x.user.deliveryDetails.firstName}} {{x.user.deliveryDetails.lastName}}</li>
+                                        <li>{{x.user.deliveryDetails.company}}</li>
+                                        <li>{{x.user.deliveryDetails.address}}</li>
+                                        <li>{{x.user.deliveryDetails.postalCode}} {{x.user.deliveryDetails.city}} - {{x.user.deliveryDetails.country.code}}</li>
+                                    </ul>
+                                    <hr />
+                                    <ul>
+                                        <li>Telefon: {{x.user.deliveryDetails.phone}}</li>
+                                        <li>Email: {{x.user.deliveryDetails.email}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <json-directive data="x" debug="config.debug"></json-directive>
+                        </div>
+                    </div>
                 </div>
             </div>
             <json-directive data="d" desc="'d'" debug="config.debug"></json-directive>
@@ -888,7 +946,7 @@
         </div>
     </script>
 
-    <script src="assets/js/admin.js"></script>
+    <script src="./assets/js/admin.js"></script>
 
 </body>
 </html>

@@ -88,13 +88,13 @@ public class DataBase {
                     email VARCHAR (50),
                     deliveryFirstName NVARCHAR(50),
                     deliveryLastName NVARCHAR(50),
-                    deliveryEmail VARCHAR(50),
-                    deliveryPhone VARCHAR(50),
                     deliveryCompany NVARCHAR(50),
                     deliveryAddress NVARCHAR(50),
                     deliveryPostalCode NVARCHAR(50),
                     deliveryCity NVARCHAR(50),
                     deliveryCountry NVARCHAR(50),
+                    deliveryEmail VARCHAR(50),
+                    deliveryPhone VARCHAR(50),
                     userName VARCHAR (50),
                     password VARCHAR (100))";
         CreateTable(path, sql);

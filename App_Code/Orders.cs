@@ -246,6 +246,7 @@ public class Orders : System.Web.Services.WebService {
         x.cart.cartPrice.grossPrice = G.ReadD(reader, 4);
         x.cart.cartPrice.deliveryPrice = G.ReadD(reader, 5);
         x.cart.cartPrice.discount = G.ReadD(reader, 6);
+        x.cart.cartPrice.totalPrice = x.cart.cartPrice.grossPrice - x.cart.cartPrice.discount + x.cart.cartPrice.deliveryPrice;
         x.currency = G.ReadS(reader, 7);
         x.orderDate = G.ReadS(reader, 8);
         x.deliveryMethod = new Global.CodeTitle();

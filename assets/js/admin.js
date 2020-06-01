@@ -26,7 +26,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     return {
         post: (service, method, data) => {
             return $http({
-                url: './' + service + '.asmx/' + method,
+                url: '../' + service + '.asmx/' + method,
                 method: 'POST',
                 data: data
             })
@@ -94,6 +94,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
     /********* Login **********/
     var login = (x) => {
+        debugger;
         f.post(service, 'Login', { username: x.userName, password: x.password }).then((d) => {
             debugger;
             $scope.d.isLogin = d.isLogin;
@@ -645,6 +646,13 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
         load();
 
+        var getUser = (id, idx) => {
+            debugger;
+            f.post('Users', 'Get', { id: id }).then((d) => {
+                $scope.d.records[idx].user = d;
+            });
+        }
+
         var save = (x) => {
             debugger;
             f.post(service, 'Save', { x: x }).then((d) => {
@@ -663,6 +671,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         $scope.f = {
             load: () => {
                 return load();
+            },
+            getUser: (id, idx) => {
+                return getUser(id, idx);
             },
             save: (x) => {
                 return save(x)
