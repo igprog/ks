@@ -136,18 +136,17 @@
             <div class="top-cart-block">
                 <div class="top-cart-info">
                     <a href="javascript:void(0);" class="top-cart-info-count">{{d.cart.items.length}} items</a>
-                    <a href="javascript:void(0);" class="top-cart-info-value">{{d.cart.cartPrice.sub_tot | number}} kn</a>
+                    <a href="javascript:void(0);" class="top-cart-info-value">{{d.cart.cartPrice.grossWithDiscount | number}} kn</a>
                 </div>
                 <i class="fa fa-shopping-cart"></i>
-
                 <div class="top-cart-content-wrapper">
                     <div class="top-cart-content">
-                        <ul class="scroller" style="height: 250px;">
+                        <ul class="scroller" style="height:250px">
                             <li ng-repeat="x in d.cart.items track by $index">
                                 <a href=""><img src="../upload/{{x.product.id}}/gallery/{{x.product.img}}" alt="Rolex Classic Watch" width="37" height="34"></a>
                                 <span class="cart-content-count">x {{x.product.qty}}</span>
                                 <strong><a href="shop-item.html">{{x.product.title}}</a></strong>
-                                <em>{{x.price_net_tot | number}} kn</em>
+                                <em>{{x.price.grossWithDiscount | number}} kn</em>
                                 <a href="" class="del-goods" ng-click="removeCartItem(x, $index)">&nbsp;</a>
                             </li>
                         </ul>
@@ -207,7 +206,7 @@
                                                     <a href="shop-item.html"><img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}"></a>
                                                 </div>
                                                 <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                                <div class="pi-price">{{x.price.net_discount | number}} kn</div>
+                                                <div class="pi-price">{{x.price.grossWithDiscount | number}} kn</div>
                                                 <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
                                             </div>
                                         </div>
@@ -230,7 +229,7 @@
                                                     <a href="shop-item.html"><img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}"></a>
                                                 </div>
                                                 <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                                <div class="pi-price">{{x.price.net_discount | number}} kn</div>
+                                                <div class="pi-price">{{x.price.grossWithDiscount | number}} kn</div>
                                                 <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
                                             </div>
                                         </div>

@@ -568,3 +568,12 @@ legend.fieldset-border {
         padding: 0 1% 0 1%;
     }
 }
+
+/****** Cart *****/
+.top-cart-content strong {
+    width: 135px !important;
+}
+.top-cart-content em {
+    width: 85px !important;
+}
+/****** Cart *****/

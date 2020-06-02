@@ -709,6 +709,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.confirm = (x) => {
+        x.orderDate = f.setDateTime(new Date());
         f.post('Orders', 'Confirm', { x: x }).then((d) => {
             $scope.d.order = d;
             // clear cart

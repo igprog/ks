@@ -366,62 +366,30 @@
                                                     </td>
                                                     <td class="checkout-model">{{x.product.sku}}</td>
                                                     <td class="checkout-quantity">{{x.product.qty}}</td>
-                                                    <td class="checkout-price"><strong>{{x.product.price.net_discount | number}} <span>kn</span></strong></td>
-                                                    <td class="checkout-total"><strong>{{x.price_net_tot | number}} <span>kn</span></strong></td>
+                                                    <td class="checkout-price"><strong>{{x.product.price.grossWithDiscount | number}} <span>kn</span></strong></td>
+                                                    <td class="checkout-total"><strong>{{x.price.grossWithDiscount | number}} <span>kn</span></strong></td>
                                                 </tr>
-                                                <!--<tr>
-                                                    <td class="checkout-image">
-                                                        <a href="javascript:;"><img src="assets/pages/img/products/model4.jpg" alt="Berry Lace Dress"></a>
-                                                    </td>
-                                                    <td class="checkout-description">
-                                                        <h3><a href="javascript:;">Cool green dress with red bell</a></h3>
-                                                        <p><strong>Item 1</strong> - Color: Green; Size: S</p>
-                                                        <em>More info is here</em>
-                                                    </td>
-                                                    <td class="checkout-model">RES.193</td>
-                                                    <td class="checkout-quantity">1</td>
-                                                    <td class="checkout-price"><strong><span>$</span>47.00</strong></td>
-                                                    <td class="checkout-total"><strong><span>$</span>47.00</strong></td>
-                                                </tr>-->
                                             </table>
                                         </div>
                                         <div class="checkout-total-block">
                                             <ul>
-                                                <li>
+                                                <!--<li>
                                                     <em>{{'total' | translate}} ({{'net' | translate}})</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.netPrice | number}} <span>kn</span></strong>
-                                                </li>
+                                                    <strong class="price">{{d.order.cart.cartPrice.net | number}} <span>kn</span></strong>
+                                                </li>-->
                                                 <li>
                                                     <em>{{'delivery price' | translate}}</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.deliveryPrice | number}} <span>kn</span></strong>
+                                                    <strong class="price">{{d.order.cart.cartPrice.delivery | number}} <span>kn</span></strong>
                                                 </li>
                                                 <li>
                                                     <em>{{'vat' | translate}} (25%)</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.vatPrice | number}} <span>kn</span></strong>
+                                                    <strong class="price">{{d.order.cart.cartPrice.vat | number}} <span>kn</span></strong>
                                                 </li>
                                                 <li class="shopping-total-price">
                                                     <em>{{'total' | translate}}</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.totalPrice | number}} <span>kn</span></strong>
+                                                    <strong class="price">{{d.order.cart.cartPrice.total | number}} <span>kn</span></strong>
                                                 </li>
                                             </ul>
-                                            <!--<ul>
-                                                <li>
-                                                    <em>{{'total' | translate}} ({{'net' | translate}})</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.sub_tot | number}} <span>kn</span></strong>
-                                                </li>
-                                                <li>
-                                                    <em>{{'delivery price' | translate}}</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.shipping | number}} <span>kn</span></strong>
-                                                </li>
-                                                <li>
-                                                    <em>{{'pin' | translate}} (25%)</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.tot_vat | number}} <span>kn</span></strong>
-                                                </li>
-                                                <li class="checkout-total-price">
-                                                    <em>{{'total' | translate}}</em>
-                                                    <strong class="price">{{d.order.cart.cartPrice.tot | number}} <span>kn</span></strong>
-                                                </li>
-                                            </ul>-->
                                         </div>
                                         <div class="clearfix"></div>
                                         <button class="btn btn-primary pull-right" type="submit" id="button-confirm" ng-click="confirm(d.order)">{{'confirm order' | translate}}</button>

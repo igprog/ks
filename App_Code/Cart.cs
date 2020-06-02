@@ -33,17 +33,21 @@ public class Cart : System.Web.Services.WebService {
     public class CartItem {
         public Products.NewProduct product;
         public int qty;
-        public double price_net_tot;
-        public double discount;
+        //public double price_net_tot;
+        //public double grossWithDiscountTot;
+        //public double discount;
+        public CartPrice price;
     }
 
     public class CartPrice {
-        public double netPrice;
-        public double vatPrice;
-        public double grossPrice;
-        public double deliveryPrice;
+        public double net;
+        public double vat;
+        public double gross;
+        public double delivery;
         public double discount;
-        public double totalPrice; // total net + vat + shipping
+        public double netWithDiscount;
+        public double grossWithDiscount;
+        public double total; // total net + vat + shipping
         //public double sub_tot;
         //public double tot_vat;
         //public double shipping;
@@ -85,19 +89,29 @@ public class Cart : System.Web.Services.WebService {
     }
 
     public CartItem c_CalcItemPrice(CartItem x) {
-        x.price_net_tot = x.product.price.net_discount * x.product.qty;
-        x.discount = Math.Round(x.product.price.gross_discount_tot / x.product.discount.coeff);
+        x.price = new CartPrice();
+        //x.grossWithDiscountTot = x.product.price.grossWithDiscount * x.product.qty;
+        x.price.net = x.product.price.net * x.product.qty;
+        x.price.gross = x.product.price.gross * x.product.qty;
+        x.price.discount = x.product.price.discount * x.product.qty;
+        x.price.grossWithDiscount = x.product.price.grossWithDiscount * x.product.qty;
+        //x.discount = Math.Round(x.product.price.grossWithDiscountTot / x.product.discount.coeff);
+        //x.price.discount = Math.Round(x.price.grossWithDiscount * x.product.discount.coeff);
         return x;
     }
 
     public NewCart c_CalcTotPrice (NewCart x) {
         if (x.items != null) {
             x.cartPrice = new CartPrice();
-            x.cartPrice.netPrice = x.items.Sum(a => a.price_net_tot);
-            x.cartPrice.vatPrice = x.cartPrice.netPrice * 0.25;  // TODO VAT
-            x.cartPrice.grossPrice = x.cartPrice.netPrice + x.cartPrice.vatPrice;
-            x.cartPrice.deliveryPrice = 100;  // TODO
-            x.cartPrice.totalPrice = x.cartPrice.grossPrice + x.cartPrice.deliveryPrice;
+            x.cartPrice.net = x.items.Sum(a => a.price.net);
+            //x.cartPrice.vat = x.cartPrice.net * 0.25;  // TODO VAT
+            x.cartPrice.gross = x.items.Sum(a => a.price.gross);
+            x.cartPrice.discount = x.items.Sum(a => a.price.discount);
+            x.cartPrice.delivery = 100;  // TODO
+            //x.cartPrice.netWithDiscount = x.cartPrice.net - x.cartPrice.discount;
+            x.cartPrice.grossWithDiscount = x.cartPrice.gross - x.cartPrice.discount;
+            x.cartPrice.vat = x.cartPrice.grossWithDiscount - (x.cartPrice.grossWithDiscount / 1.25);
+            x.cartPrice.total = x.cartPrice.grossWithDiscount + x.cartPrice.delivery;
             //x.cartPrice.sub_tot = x.items.Sum(a => a.price_net_tot);
             //x.cartPrice.tot_vat = x.cartPrice.sub_tot * 0.25;
             //x.cartPrice.shipping = 100;  // TODO

@@ -42,10 +42,10 @@
                                             </div>
                                         </td>
                                         <td class="goods-page-price">
-                                            <strong>{{x.product.price.net_discount | number}} <span>kn</span></strong>
+                                            <strong>{{x.product.price.grossWithDiscount | number}} <span>kn</span></strong>
                                         </td>
                                         <td class="goods-page-total">
-                                            <strong>{{x.price_net_tot | number}} <span>kn</span></strong>
+                                            <strong>{{x.price.grossWithDiscount | number}} <span>kn</span></strong>
                                         </td>
                                         <td class="del-goods-col">
                                             <a class="del-goods" href="" ng-click="removeItem(x, $index)">&nbsp;</a>
@@ -57,19 +57,19 @@
                                 <ul>
                                     <li>
                                         <em>{{'total' | translate}} ({{'net' | translate}})</em>
-                                        <strong class="price">{{d.cart.cartPrice.netPrice | number}} <span>kn</span></strong>
+                                        <strong class="price">{{d.cart.cartPrice.net | number}} <span>kn</span></strong>
                                     </li>
                                     <li>
                                         <em>{{'delivery price' | translate}}</em>
-                                        <strong class="price">{{d.cart.cartPrice.deliveryPrice | number}} <span>kn</span></strong>
+                                        <strong class="price">{{d.cart.cartPrice.delivery | number}} <span>kn</span></strong>
                                     </li>
                                     <li>
                                         <em>{{'vat' | translate}} (25%)</em>
-                                        <strong class="price">{{d.cart.cartPrice.vatPrice | number}} <span>kn</span></strong>
+                                        <strong class="price">{{d.cart.cartPrice.vat | number}} <span>kn</span></strong>
                                     </li>
                                     <li class="shopping-total-price">
                                         <em>{{'total' | translate}}</em>
-                                        <strong class="price">{{d.cart.cartPrice.totalPrice | number}} <span>kn</span></strong>
+                                        <strong class="price">{{d.cart.cartPrice.total | number}} <span>kn</span></strong>
                                     </li>
                                 </ul>
                             </div>

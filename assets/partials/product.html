@@ -30,7 +30,7 @@
                         <div class="item" ng-repeat="x in d.bestselling">
                             <a href=""><img src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}"></a>
                             <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                            <div class="price">{{x.price.gross_discount | number}} kn</div>
+                            <div class="price">{{x.price.grossWithDiscount | number}} kn</div>
                         </div>
                     </div>
                 </div>
@@ -54,13 +54,13 @@
                                 <h1>{{d.record.title}}</h1>
                                 <div class="price-availability-block clearfix">
                                     <div class="price">
-                                        <strong>{{d.record.price.gross_discount | number}} <span>kn</span></strong>
+                                        <strong>{{d.record.price.grossWithDiscount | number}} <span>kn</span></strong>
                                         <span ng-if="d.record.discount.coeff>0">
                                             <em><span>{{d.record.price.gross | number}}</span> kn</em>
                                         </span>
                                     </div>
                                     <!--<div class="price">
-                                        <strong>MPC: {{d.record.price.gross_discount | number}} <span>kn</span></strong>
+                                        <strong>MPC: {{d.record.price.grossWithDiscount | number}} <span>kn</span></strong>
                                         <span ng-if="d.record.discount>0">
                                             <em>kn<span>{{d.record.price.gross | number}}</span> kn</em>
                                         </span>

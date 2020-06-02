@@ -635,7 +635,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6 form-group">
-                                        <label>Cijena:</label>
+                                        <label>Cijena (Netto):</label>
                                         <input ng-model="x.price.net" type="text" class="form-control" allow-only-numbers>
                                     </div>
                                     <div class="col-sm-6 form-group">
@@ -785,20 +785,64 @@
                         <div class="card-header" data-toggle="collapse" data-target="#o_{{$index}}" ng-click="f.getUser(x.user.id, $index)">
                             <div class="mt-2">
                                 <span class="ml-2"><strong>{{x.id}}</strong></span>
+                                <div>
+                                    Datum narudžbe: {{x.orderDate}}
+                                </div>
                             </div>
                             <span class="float-right">
                                 Detalji <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
                             </span>
                         </div>
                         <div id="o_{{$index}}" class="card-body collapse">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label>Proizvodi:</label>
-                                    <ul>
-                                        <li ng-repeat="y in x.cart.items">SKU: {{y.product.sku}} ({{y.product.qty}} kom.)</li>
-                                    </ul>
+                            <div>
+                                <label>Proizvodi:</label>
+                                <div class="table-responsive">
+                                    <table class="table table-condensed">
+                                        <tr>
+                                            <th></th>
+                                            <th>Opis</th>
+                                            <th>SKU</th>
+                                            <th>Količina</th>
+                                            <th>Cijena (bruto)</th>
+                                            <th>Ukupno (bruto)</th>
+                                        </tr>
+                                        <tr ng-repeat="y in x.cart.items track by $index">
+                                            <td>
+                                                <a href=""><img src="../upload/{{y.product.id}}/gallery/{{y.product.gallery[0]}}" alt="{{y.product.title}}"></a>
+                                            </td>
+                                            <td>
+                                                <h3><a href="">{{y.product.shortdesc}}</a></h3>
+                                                <p><strong>{{y.product.title}}</strong></p>
+                                                <!--<em ng-click="get(x.product)">{{'more info is here' | translate}}</em>-->
+                                            </td>
+                                            <td>{{y.product.sku}}</td>
+                                            <td>{{y.product.qty}}</td>
+                                            <td><strong>{{y.product.price.gross | number}} <span>kn</span></strong></td>
+                                            <td><strong>{{y.price.grossWithDiscount | number}} <span>kn</span></strong></td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div class="col-sm-4">
+                                <div>
+                                    <!--<div>
+                                        <em>Ukupno (netto):</em>
+                                        <strong>{{x.cart.cartPrice.net | number}} <span>kn</span></strong>
+                                    </div>-->
+                                    <div>
+                                        <em>Cijena dostave:</em>
+                                        <strong>{{x.cart.cartPrice.delivery | number}} <span>kn</span></strong>
+                                    </div>
+                                    <div>
+                                        <em>PDV (25%):</em>
+                                        <strong>{{x.cart.cartPrice.vat | number}} <span>kn</span></strong>
+                                    </div>
+                                    <div>
+                                        <em>Ukupno:</em>
+                                        <strong>{{x.cart.cartPrice.total | number}} <span>kn</span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-md-4">
                                     <label>Podaci o naručitelju:</label>
                                     <ul>
                                         <li>{{x.user.billingDetails.firstName}} {{x.user.billingDetails.lastName}}</li>
@@ -813,7 +857,7 @@
                                         <li>Email: {{x.user.billingDetails.email}}</li>
                                     </ul>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-md-4">
                                     <label>Adresa za dostavu:</label>
                                     <ul>
                                         <li>{{x.user.deliveryDetails.firstName}} {{x.user.deliveryDetails.lastName}}</li>
@@ -828,7 +872,13 @@
                                     </ul>
                                 </div>
                             </div>
-                            
+                            <div>
+                                <hr />
+                                <div>Metoda dostave: <strong>{{x.deliveryMethod.title}}</strong></div>
+                                <div>Metoda plaćanja: <strong>{{x.paymentMethod.title}}</strong></div>
+                                <div>Napomena: {{x.note}}</div>
+                                <div class="mt-3">Status narudžbe: <strong>{{x.status.title}}</strong></div>
+                            </div>
                             <json-directive data="x" debug="config.debug"></json-directive>
                         </div>
                     </div>

@@ -209,6 +209,35 @@ public class Orders : System.Web.Services.WebService {
         }
     }
 
+    public string Save(NewOrder x) {
+        try {
+            DB.CreateDataBase(G.db.orders);
+            string items = SetItems(x.cart);
+            string sql = null;
+            if (string.IsNullOrEmpty(x.id)) {
+                x.id = Guid.NewGuid().ToString();
+                sql = string.Format(@"INSERT INTO orders VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}')"
+                                    , x.id, x.user.id, items, x.cart.cartPrice.net, x.cart.cartPrice.gross, x.cart.cartPrice.delivery, x.cart.cartPrice.discount, x.currency, x.orderDate, x.deliveryMethod.code, x.paymentMethod.code, x.note, x.orderNumber, x.status.code);
+            } else {
+                sql = string.Format(@"UPDATE orders SET userId = '{1}', items = '{2}', netPrice = '{3}', grossPrice = '{4}', deliveryPrice = '{5}', discount = '{6}' currency = '{7}', orderDate = '{8}', deliveryMethod = '{9}', paymentMethod = '{10}', note = '{11}', orderNumber = '{12}', status = '{13}' WHERE id = '{0}'"
+                                    , x.id, x.user.id, items, x.cart.cartPrice.net, x.cart.cartPrice.gross, x.cart.cartPrice.discount, x.currency, x.orderDate, x.deliveryMethod.code, x.paymentMethod.code, x.note, x.orderNumber, x.status.code);
+            }
+            using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+                connection.Open();
+                using (var command = new SQLiteCommand(sql, connection)) {
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+            return "OK";
+        } catch (Exception e) {
+            return e.Message;
+        }
+    }
+
+    #endregion WebMethods
+
+    #region Methods
     public List<NewOrder> LoadData(string sql) {
         DB.CreateDataBase(G.db.orders);
         List<NewOrder> xx = DataCollection(sql);
@@ -242,11 +271,14 @@ public class Orders : System.Web.Services.WebService {
         x.cart = new Cart.NewCart();
         x.cart.items = GetItems(G.ReadS(reader, 2));  // TODO
         x.cart.cartPrice = new Cart.CartPrice();
-        x.cart.cartPrice.netPrice = G.ReadD(reader, 3);
-        x.cart.cartPrice.grossPrice = G.ReadD(reader, 4);
-        x.cart.cartPrice.deliveryPrice = G.ReadD(reader, 5);
+        x.cart.cartPrice.net = G.ReadD(reader, 3);
+        //x.cart.cartPrice.vat = x.cart.cartPrice.net * 0.25;
+        x.cart.cartPrice.gross = G.ReadD(reader, 4);
+        x.cart.cartPrice.delivery = G.ReadD(reader, 5);
         x.cart.cartPrice.discount = G.ReadD(reader, 6);
-        x.cart.cartPrice.totalPrice = x.cart.cartPrice.grossPrice - x.cart.cartPrice.discount + x.cart.cartPrice.deliveryPrice;
+        x.cart.cartPrice.grossWithDiscount = x.cart.cartPrice.gross - x.cart.cartPrice.discount;
+        x.cart.cartPrice.vat = x.cart.cartPrice.grossWithDiscount - (x.cart.cartPrice.grossWithDiscount / 1.25);
+        x.cart.cartPrice.total = x.cart.cartPrice.grossWithDiscount + x.cart.cartPrice.delivery;
         x.currency = G.ReadS(reader, 7);
         x.orderDate = G.ReadS(reader, 8);
         x.deliveryMethod = new Global.CodeTitle();
@@ -258,32 +290,6 @@ public class Orders : System.Web.Services.WebService {
         x.status = new Global.CodeTitle();
         x.status.code = G.ReadS(reader, 13);
         return x;
-    }
-
-    public string Save(NewOrder x) {
-        try {
-            DB.CreateDataBase(G.db.orders);
-            string items = SetItems(x.cart);
-            string sql = null;
-            if (string.IsNullOrEmpty(x.id)) {
-                x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO orders VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}')"
-                                    , x.id, x.user.id, items, x.cart.cartPrice.netPrice, x.cart.cartPrice.grossPrice, x.cart.cartPrice.deliveryPrice, x.cart.cartPrice.discount, x.currency, x.orderDate, x.deliveryMethod.code, x.paymentMethod.code, x.note, x.orderNumber, x.status.code);
-            } else {
-                sql = string.Format(@"UPDATE orders SET userId = '{1}', items = '{2}', netPrice = '{3}', grossPrice = '{4}', deliveryPrice = '{5}', discount = '{6}' currency = '{7}', orderDate = '{8}', deliveryMethod = '{9}', paymentMethod = '{10}', note = '{11}', orderNumber = '{12}', status = '{13}' WHERE id = '{0}'"
-                                    , x.id, x.user.id, items, x.cart.cartPrice.netPrice, x.cart.cartPrice.grossPrice, x.cart.cartPrice.discount, x.currency, x.orderDate, x.deliveryMethod.code, x.paymentMethod.code, x.note, x.orderNumber, x.status.code);
-            }
-            using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
-                connection.Open();
-                using (var command = new SQLiteCommand(sql, connection)) {
-                    command.ExecuteNonQuery();
-                }
-                connection.Close();
-            }
-            return "OK";
-        } catch (Exception e) {
-            return e.Message;
-        }
     }
 
     public List<Global.CodeTitle> GetCountriesJson() {
@@ -302,7 +308,7 @@ public class Orders : System.Web.Services.WebService {
     private string SetItems(Cart.NewCart cart) {
         List<string> x = new List<string>();
         foreach (var i in cart.items) {
-            x.Add(i.product.sku + ":" + i.product.qty + ";");
+            x.Add(i.product.sku + ":" + i.product.qty + ":" + i.product.price.gross + ":" + i.product.price.discount + ";");
         }
         return string.Join(";", x);
     }
@@ -317,6 +323,17 @@ public class Orders : System.Web.Services.WebService {
                 x.product = new Products.NewProduct();
                 x.product.sku = str_[0];
                 x.product.qty = Convert.ToInt32(str_[1]);
+                x.product.price = new Products.Price();
+                x.price = new Cart.CartPrice();
+                if (str_.Length > 2) {
+                    x.product.price.gross = Convert.ToDouble(str_[2]);
+                    //x.price.grossWithDiscount = x.product.price.grossWithDiscount * x.product.qty;
+                    if (str_.Length > 3) {
+                        x.product.price.discount = Convert.ToDouble(str_[3]);
+                        x.price.grossWithDiscount = (x.product.price.gross - x.product.price.discount) * x.product.qty;
+                    }
+                }
+
                 //if (str_.Length > 2) {
                 //    x.color = str_[2];
                 //    x.size = str_[3];
@@ -338,10 +355,6 @@ public class Orders : System.Web.Services.WebService {
         }
         return xx;
     }
-
-    #endregion WebMethods
-
-    #region Methods
     public void CreateFolder(string folder) {
         if (!Directory.Exists(Server.MapPath(folder))) {
             Directory.CreateDirectory(Server.MapPath(folder));

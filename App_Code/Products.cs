@@ -68,10 +68,17 @@ public class Products : System.Web.Services.WebService {
     public class Price {
         public double net;
         public double gross;
-        public double net_discount;
-        public double gross_discount;
-        public double net_discount_tot;  // total with quantity
-        public double gross_discount_tot;  // total with quantity
+        public double discount;
+        public double netWithDiscount;
+        public double grossWithDiscount;
+        //public double netWithDiscountTot;  // total with quantity
+        //public double grossWithDiscountTot;  // total with quantity
+        //public double net;
+        //public double gross;
+        //public double net_discount;
+        //public double gross_discount;
+        //public double net_discount_tot;  // total with quantity
+        //public double gross_discount_tot;  // total with quantity
     }
 
     public class Discount {
@@ -453,11 +460,13 @@ public class Products : System.Web.Services.WebService {
         //x.discount = new Discount();
         //x.discount.coeff = G.ReadD(reader, 10);
         //x.discount.perc = Math.Round(x.discount.coeff * 100, 1);
-        x.price.net_discount = x.price.net - (x.price.net * x.discount.coeff);
-        x.price.gross = x.price.net_discount + (x.price.net_discount * 0.25);
-        x.price.gross_discount = x.price.gross - (x.price.gross * x.discount.coeff);
+        //x.price.discount = x.price.net * x.discount.coeff;
+        //x.price.netWithDiscount = x.price.net - x.price.discount;
+        x.price.gross = x.price.net * 1.25;
+        x.price.discount = x.price.gross * x.discount.coeff;  // TODO: Dali se popust racuna na neto ili na bruto ???
+        x.price.grossWithDiscount = x.price.gross - x.price.discount;
         //if (loadAllData) {
-            x.stock = G.ReadI(reader, 11);
+        x.stock = G.ReadI(reader, 11);
             x.isnew = G.ReadB(reader, 12);
             x.outlet = G.ReadB(reader, 13);
             x.bestselling = G.ReadB(reader, 14);
@@ -507,8 +516,8 @@ public class Products : System.Web.Services.WebService {
     public Filters LoadFilters(ProductsData xxx) {
         Filters x = new Filters();
         x.price = new PriceRange();
-        x.price.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
-        x.price.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
+        x.price.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.grossWithDiscount) : 0;
+        x.price.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.grossWithDiscount) : 0;
         x.isnew = new FilterItem();
         x.isnew.code = "isnew";
         x.isnew.title = "new";
