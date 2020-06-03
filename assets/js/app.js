@@ -24,6 +24,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         .state('brand', {
             url: '/brand/:brand', params: { brand_code: null }, templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
         })
+        .state('type', {
+            url: '/type/:type', templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
+        })
         //.state('product', {
         //    url: '/:title_seo', params: { id: null }, templateUrl: './assets/partials/product.html', controller: 'productCtrl'
         //})
@@ -140,6 +143,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $scope.brand = (brand_code, brand_seo) => {
         debugger;
         $state.go('brand', { brand_code: brand_code, brand: brand_seo });
+    }
+
+    $scope.goType = (type) => {
+        debugger;
+        $state.go('type', { type: type });
     }
 
     $scope.home = () => {
@@ -423,9 +431,10 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
         var search = param.search !== undefined ? param.search : null;
+        var type = param.type !== undefined ? param.type : null;
 
         $scope.d.loading = true;
-        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type }).then((d) => {
             $scope.d.records = d.data;
             //$scope.d.priceRange = d.priceRange;
             $scope.d.filters = d.filters;
@@ -448,6 +457,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
         var search = param.search !== undefined ? param.search : null;
+        var type = param.type !== undefined ? param.type : null;
         //$scope.d.filters.price.min = slider.minValue;
         //$scope.d.filters.price.max = slider.maxValue;
         debugger;
@@ -457,7 +467,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         //$stateParams.filters = filters;
         $sessionStorage.filters = filters;
         $scope.d.loading = true;
-        f.post('Products', 'Filter', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, filters: filters}).then((d) => {
+        f.post('Products', 'Filter', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, filters: filters}).then((d) => {
             $scope.d.records = d.data;
             $scope.d.loading = false;
         });

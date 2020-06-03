@@ -53,7 +53,7 @@ public class Orders : System.Web.Services.WebService {
         public double deliveryprice;
         public List<Global.CodeTitle> deliverymethod = new List<Global.CodeTitle>();
         public List<Global.CodeTitle> paymentmethod = new List<Global.CodeTitle>();
-        public List<Global.CodeTitle> orderstatus = new List<Global.CodeTitle>();
+        public List<Global.CodeTitle> status = new List<Global.CodeTitle>();
         //public List<DiscountCoeff> discountcoeff = new List<DiscountCoeff>();
         public List<Bank> bank = new List<Bank>();
     }
@@ -167,13 +167,23 @@ public class Orders : System.Web.Services.WebService {
         }
         //TOOD:
         // Sent mail to customer and me
+        if (1 == 0) {  // Test
+            Mail m = new Mail();
+            string subject = "Narudžba";
+            string body = string.Format("{0} Items: {1}", x.orderDate, SetItems(x.cart));
+            Mail.Response sendMail = m.SendMail(x.user.billingDetails.email, subject, body, null);
+            // Send response
+            Info.NewInfo info = new Info().GetInfo("hr");
+            x.paymentDetails = info.paymentDetails;
 
-        // Send response
-        Info.NewInfo info = new Info().GetInfo("hr");
-        x.paymentDetails = info.paymentDetails;
-
-        x.response.isSuccess = true;
-        x.response.msg = "narudžba uspješno poslana";
+            x.response.isSuccess = sendMail.isSent;
+            x.response.msg = x.response.isSuccess ? "narudžba uspješno poslana" : sendMail.msg;
+        } else {
+            //Test
+            x.response.isSuccess = true;
+            x.response.msg = x.response.isSuccess ? "narudžba uspješno poslana" : "error";
+        }
+        
 
         return JsonConvert.SerializeObject(x, Formatting.None);
     }
@@ -183,12 +193,12 @@ public class Orders : System.Web.Services.WebService {
         return JsonConvert.SerializeObject(GetOrderOptionsJson(), Formatting.None);
     }
 
-    //[WebMethod]
-    //public string SaveOrderOptions(OrderOptions x) {
-    //    WriteFile(orderOptions_json, JsonConvert.SerializeObject(x));
-    //    return JsonConvert.SerializeObject(GetOrderOptionsJson(), Formatting.None);
-    //    //return WriteJsonFile(orderOptionsFile, JsonConvert.SerializeObject(x, Formatting.None));
-    //}
+    [WebMethod]
+    public string SaveOrderOptions(OrderOptions x) {
+        WriteFile(orderOptions_json, JsonConvert.SerializeObject(x));
+        return JsonConvert.SerializeObject(GetOrderOptionsJson(), Formatting.None);
+        //return WriteJsonFile(orderOptionsFile, JsonConvert.SerializeObject(x, Formatting.None));
+    }
 
     [WebMethod]
     public string GetCountries() {
@@ -235,6 +245,16 @@ public class Orders : System.Web.Services.WebService {
         }
     }
 
+    [WebMethod]
+    public string Get(string x) {
+        try {
+
+            return JsonConvert.SerializeObject(LoadData(mainSql), Formatting.None);
+        } catch (Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
     #endregion WebMethods
 
     #region Methods
@@ -263,6 +283,7 @@ public class Orders : System.Web.Services.WebService {
     }
 
     public NewOrder ReadDataRow(SQLiteDataReader reader) {
+        OrderOptions o = GetOrderOptionsJson();
         NewOrder x = new NewOrder();
         x.id = G.ReadS(reader, 0);
         x.user = new Users.NewUser();
@@ -283,13 +304,24 @@ public class Orders : System.Web.Services.WebService {
         x.orderDate = G.ReadS(reader, 8);
         x.deliveryMethod = new Global.CodeTitle();
         x.deliveryMethod.code = G.ReadS(reader, 9);
+        x.deliveryMethod.title = GetOptionTitle(o.deliverymethod, x.deliveryMethod.code); // o.deliverymethod.Where(a => a.code == x.deliveryMethod.code).FirstOrDefault().title;
         x.paymentMethod = new Global.CodeTitle();
         x.paymentMethod.code = G.ReadS(reader, 10);
+        x.paymentMethod.title = GetOptionTitle(o.paymentmethod, x.paymentMethod.code); // o.paymentmethod.Where(a => a.code == x.paymentMethod.code).FirstOrDefault().title;
         x.note = G.ReadS(reader, 11);
         x.orderNumber = G.ReadS(reader, 12);
         x.status = new Global.CodeTitle();
         x.status.code = G.ReadS(reader, 13);
+        x.status.title = GetOptionTitle(o.status, x.status.code); // o.status.Where(a => a.code == x.status.code).FirstOrDefault().title;
         return x;
+    }
+
+    public string GetOptionTitle(List<Global.CodeTitle> o, string code) {
+        try {
+            return o.Find(a => a.code == code).title;
+        } catch(Exception e) {
+            return null;
+        }
     }
 
     public List<Global.CodeTitle> GetCountriesJson() {

@@ -975,13 +975,13 @@
                                         <th>Kod</th>
                                         <th>Opcija</th>
                                     </tr>
-                                    <tr ng-repeat="x in d.orderstatus">
-                                        <td style="width:30px"><button class="btn btn-default" ng-click="remove(d.orderstatus, $index)"><i class="fa fa-trash-alt text-danger"></i></button></td>
+                                    <tr ng-repeat="x in d.status">
+                                        <td style="width:30px"><button class="btn btn-default" ng-click="remove(d.status, $index)"><i class="fa fa-trash-alt text-danger"></i></button></td>
                                         <td><input ng-model="x.code" type="text" class="form-control" /></td>
                                         <td><input ng-model="x.title" type="text" class="form-control" /></td>
                                     </tr>
                                     <tr>
-                                        <td><button class="btn btn-warning" ng-click="add(d.orderstatus)"><i class="fa fa-plus"></i></button></td>
+                                        <td><button class="btn btn-warning" ng-click="add(d.status)"><i class="fa fa-plus"></i></button></td>
                                     </tr>
                                 </table>
                             </div>

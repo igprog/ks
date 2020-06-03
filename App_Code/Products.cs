@@ -179,18 +179,18 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Load(string lang, string productGroup, string brand, string search) {
+    public string Load(string lang, string productGroup, string brand, string search, string type) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
     }
 
     [WebMethod]
-    public string Filter(string lang, string productGroup, string brand, string search, Filters filters) {
+    public string Filter(string lang, string productGroup, string brand, string search, string type, Filters filters) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, filters), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, filters), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -297,7 +297,7 @@ public class Products : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            return JsonConvert.SerializeObject(LoadData(null, null, null, null), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(null, null, null, null, null), Formatting.None);
             //return JsonConvert.SerializeObject("Proizvod izbrisan", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -327,16 +327,17 @@ public class Products : System.Web.Services.WebService {
     #endregion WebMethod
 
     #region Methods
-    public ProductsData LoadData(string lang, string productGroup, string brand, string search) {
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
-        string sql = string.Format(@"{0} {1} {2} {3} {4} {5}"
+        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6}"
                    , mainSql
-                   , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? "" : "WHERE"
+                   , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+                   , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
                    , "ORDER BY p.title DESC LIMIT 16");
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
@@ -352,21 +353,29 @@ public class Products : System.Web.Services.WebService {
         return xxx;
     }
 
-    public ProductsData LoadData(string lang, string productGroup, string brand, string search, Filters filters) {
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type, Filters filters) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
         //string where = string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && (filters.price.max == 0 && filters.price.max == 0) ? "" : "WHERE";
-        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}"
+        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10}"
            , mainSql
-           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
+           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
            , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
            , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
            , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-           , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : string.Format(@"{0} CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) <= {2}", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? "" : "AND"), filters.price.minVal, filters.price.maxVal)
-           , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : "AND"))
-           , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
-           , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
+           , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
+           , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" 
+                    : string.Format(@"{0} 
+                                CASE WHEN p.discount = 0 AND pg.discount > 0 THEN
+                                    CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(pg.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(pg.discount as decimal)) <= {2}
+                                ELSE
+                                    CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) <= {2}
+                                END"
+           , (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "AND"), filters.price.minVal, filters.price.maxVal)
+           , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : "AND"))
+           , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
+           , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
            , string.Format("ORDER BY {0} LIMIT {1}", SortBySql(filters.sortBy.val), filters.show.val)
            );
 

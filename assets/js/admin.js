@@ -377,7 +377,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
         $scope.d.currProductGroup = productGroup;
         $scope.d.loading = true;
-        f.post(service, 'Load', { lang: 'hr', productGroup: pg_code, brand: null, search: search }).then((d) => {
+        f.post(service, 'Load', { lang: 'hr', productGroup: pg_code, brand: null, search: search, type: null }).then((d) => {
             $scope.d.records = d.data;
             $scope.d.responseTime = d.responseTime;
             $scope.d.loading = false;
@@ -430,7 +430,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             data: content,
         }).then(function (response) {
             loadProductGallery(x);
-
         },
         function (response) {
             alert(response.data.d);
