@@ -20,6 +20,9 @@ public class DataBase {
                     title NVARCHAR(200),
                     parent VARCHAR(50),
                     discount VARCHAR(50),
+                    discount_from VARCHAR(50),
+                    discount_from VARCHAR(50),
+                    img VARCHAR(50),
                     pg_order INTEGER)";
         CreateTable(path, sql);
     }
@@ -54,7 +57,18 @@ public class DataBase {
                 isactive VARCHAR(50),
                 features NVARCHAR(200),
                 deliverydays NVARCHAR(50),
-                productorder INTEGER)";
+                productorder INTEGER,
+                freeshipping VARCHAR(50),
+                bestbuy VARCHAR(50),
+                wifi VARCHAR(50),
+                relatedproducts VARCHAR(200),
+                width VARCHAR(50),
+                height VARCHAR(50),
+                depth VARCHAR(50),
+                power VARCHAR(50),
+                color VARCHAR(50),
+                energyclass VARCHAR(50),
+                datasheet VARCHAR(50))";
         CreateTable(path, sql);
     }
 

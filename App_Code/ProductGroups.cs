@@ -17,7 +17,7 @@ using Igprog;
 public class ProductGroups : System.Web.Services.WebService {
     Global G = new Global();
     DataBase DB = new DataBase();
-    string mainSql = "SELECT id, code, title, parent, discount, pg_order FROM productGroups WHERE";
+    string mainSql = "SELECT id, code, title, parent, discount, discount_from, discount_to, img, pg_order FROM productGroups WHERE";
     public ProductGroups () {
     }
 
@@ -28,6 +28,7 @@ public class ProductGroups : System.Web.Services.WebService {
         public string title_seo;
         public string parent;
         public Products.Discount discount;
+        public string img;
         public int order;
         public List<NewProductGroup> subGroups;
     }
@@ -41,6 +42,7 @@ public class ProductGroups : System.Web.Services.WebService {
             x.title = null;
             x.title_seo = null;
             x.parent = null;
+            x.img = null;
             x.order = 0;
             x.discount = new Products.Discount();
             x.subGroups = new List<NewProductGroup>();
@@ -85,9 +87,9 @@ public class ProductGroups : System.Web.Services.WebService {
             bool isUpdateDiscount = false;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO productGroups VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')", x.id, x.code, x.title, x.parent, x.discount.coeff, x.order);
+                sql = string.Format(@"INSERT INTO productGroups VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8})", x.id, x.code, x.title, x.parent, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
             } else {
-                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', parent = '{3}', discount = '{4}', pg_order = {5} WHERE id = '{0}'", x.id, x.code, x.title, x.parent, x.discount.coeff, x.order);
+                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', parent = '{3}', discount = '{4}', discount_from = '{5}', discount_to = '{6}', img = '{7}', pg_order = {8} WHERE id = '{0}'", x.id, x.code, x.title, x.parent, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
                 if (x.code == x.parent) {
                     isUpdateDiscount = true;  //***** Update children groups discount (same sa parent group) *****
                 }
@@ -109,7 +111,7 @@ public class ProductGroups : System.Web.Services.WebService {
                     connection.Close();
                 }
             }
-            return JsonConvert.SerializeObject("Spremljeno", Formatting.None);
+            return JsonConvert.SerializeObject(x, Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -169,7 +171,10 @@ public class ProductGroups : System.Web.Services.WebService {
         x.discount = new Products.Discount();
         x.discount.coeff = G.ReadD(reader, 4);
         x.discount.perc = Math.Round(x.discount.coeff * 100, 1);
-        x.order = G.ReadI(reader, 5);
+        x.discount.from = G.ReadS(reader, 5);
+        x.discount.to = G.ReadS(reader, 6);
+        x.img = G.ReadS(reader, 7);
+        x.order = G.ReadI(reader, 8);
         x.subGroups = GetSubGroups(x.code);
         return x;
     }

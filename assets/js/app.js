@@ -100,24 +100,33 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             var m = x.getMinutes();
             m = m < 10 ? '0' + m : m;
             return day + '.' + mo + '.' + yr + ' - ' + h + ':' + m;
-        },
-        sticker: (x) => {
-            var a = {
-                style: null,
-                title: null
-            }
-            if (x.outlet) {
-                a.style = 'type-2';
-                a.title = 'akcija';
-            } else if (x.isnew) {
-                a.style = 'type-1';
-                a.title = 'novo';
-            } else {
-                a.style = null;
-                a.title = null;
-            }
-            return a;
         }
+        //sticker: (x) => {
+        //    var a = {
+        //        style: null,
+        //        title: null
+        //    }
+        //    if (x.outlet) {
+        //        a.style = 'type-2';
+        //        a.title = 'outlet';
+        //    } else if (x.isnew) {
+        //        a.style = 'type-1';
+        //        a.title = 'new';
+        //    } else if (x.freeshipping) {
+        //        a.style = 'type-4';
+        //        a.title = 'free shipping';
+        //    } else if (x.bestbuy) {
+        //        a.style = 'type-5';
+        //        a.title = 'best buy';
+        //    } else if (x.wifi) {
+        //        a.style = 'type-6';
+        //        a.title = 'wi-fi';
+        //    } else {
+        //        a.style = null;
+        //        a.title = null;
+        //    }
+        //    return a;
+        //}
     }
 }])
 
@@ -192,7 +201,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         search: null,
         info: null,
         lastReviews: null,
-        stars: [1, 2, 3, 4, 5]
+        stars: [1, 2, 3, 4, 5],
+        imgFolder: 'productgroups'
     }
     $rootScope.d = data;
 
@@ -413,7 +423,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         subgroup: $stateParams.subgroup,
         search: $stateParams.search,
         responseTime: 0,
-        filters: $sessionStorage.filters !== undefined ? $sessionStorage.filters : null
+        filters: $sessionStorage.filters !== undefined ? $sessionStorage.filters : null,
+        isShowFilters: false  //***** only form mobile *****
     }
     debugger;
     $scope.d = data;
@@ -495,25 +506,12 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadBestSelling('hr', $stateParams.pg_code, 3);
 
+    //$scope.sticker = (x) => {
+    //    return f.sticker(x);
+    //}
 
-    // Staviti u functions
-    $scope.sticker = (x) => {
-        return f.sticker(x);
-        //var a = {
-        //    style: null,
-        //    title: null
-        //}
-        //if (x.outlet) {
-        //    a.style = 'type-2';
-        //    a.title = 'akcija';
-        //} else if (x.isnew) {
-        //    a.style = 'type-1';
-        //    a.title = 'novo';
-        //} else {
-        //    a.style = null;
-        //    a.title = null;
-        //}
-        //return a;
+    $scope.showFilters = () => {
+        $scope.d.isShowFilters = !$scope.d.isShowFilters;
     }
 
 }])
@@ -574,9 +572,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.mainImgIdx = idx;
     }
 
-    $scope.sticker = (x) => {
-        return f.sticker(x);
-    }
+    //$scope.sticker = (x) => {
+    //    return f.sticker(x);
+    //}
 
     //$scope.toggleTpl = (x) => {
     //    $scope.d.tpl = x;
@@ -930,24 +928,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
-    $scope.sticker = (x) => {
-        return f.sticker(x);
-        //var a = {
-        //    style: null,
-        //    title: null
-        //}
-        //if (x.outlet) {
-        //    a.style = 'type-2';
-        //    a.title = 'akcija';
-        //} else if (x.isnew) {
-        //    a.style = 'type-1';
-        //    a.title = 'novo';
-        //} else {
-        //    a.style = null;
-        //    a.title = null;
-        //}
-        //return a;
-    }
+    //$scope.sticker = (x) => {
+    //    return f.sticker(x);
+    //}
 
 }])
 

@@ -229,7 +229,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         var data = {
             loading: false,
             records: [],
-            adminType: adminType
+            adminType: adminType,
+            imgFolder: 'productgroups'
         }
         $scope.d = data;
 
@@ -248,10 +249,13 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
         load();
 
-        var save = (x) => {
+        var save = (x, idx) => {
             f.post(service, 'Save', { x: x }).then((d) => {
-                //$scope.d.records = d;
-                alert(d);
+                debugger;
+                //$scope.d.records[idx] = d;
+                x = d;
+                load();
+                //alert(d);
             });
         }
 
@@ -263,13 +267,40 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             }
         }
 
+        //var loadImg = (x) => {
+        //    f.post(service, 'LoadImg', { x: x }).then((d) => {
+        //        //$scope.d.records = d;
+        //    });
+        //}
+
+        var upload = (x, idx) => {
+            //delete previous image from folder
+            debugger;
+            var content = new FormData(document.getElementById('formUpload_' + x.id));
+            $http({
+                url: '../UploadHandler.ashx',
+                method: 'POST',
+                headers: { 'Content-Type': undefined },
+                data: content,
+            }).then(function (response) {
+                debugger;
+                //$scope.d.records[idx].img = response.data;
+                x.img = response.data;
+                save(x, idx)
+                //TODO save productImg to bd
+            },
+            function (response) {
+                alert(response.data.d);
+            });
+        }
+
         $scope.f = {
             init: () => {
                 return init();
             },
-            save: (x) => {
+            save: (x, idx) => {
                 x.parent = x.code;  // only for main product group
-                return save(x);
+                return save(x, idx);
             },
             saveSubGroup: (x) => {
                 return save(x);
@@ -289,7 +320,10 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             },
             initCodeName: (x) => {
                 x = f.initCodeName(x);
-            }
+            },
+            upload: (x, idx) => {
+                return upload(x, idx)
+            },
         }
 }])
 
@@ -472,6 +506,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
     var setMainImg = (x, img) => {
         f.post(service, 'SetMainImg', { x: x, img: img }).then((d) => {
+            x = d;
             //$scope.d.records = d;
         });
     }

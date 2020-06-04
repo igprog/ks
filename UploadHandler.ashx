@@ -21,15 +21,24 @@ public class UploadHandler : IHttpHandler {
                 HttpPostedFile file = files[i];
                 //string fname = context.Server.MapPath(string.Format("~/upload/{0}/gallery/{1}", imgId, file.FileName));
 
-                if (string.IsNullOrEmpty(imgId) && imgFolder == "temp") {
+                //if (string.IsNullOrEmpty(imgId) && imgFolder == "temp") {
+                //    imgId = file.FileName;
+                //}
+                if (string.IsNullOrEmpty(imgId) && !string.IsNullOrEmpty(imgFolder)) {
                     imgId = file.FileName;
                 }
+
 
                 string fname = null;
                 if (string.IsNullOrEmpty(imgFolder)) {
                     fname = context.Server.MapPath(string.Format("~/upload/{0}/gallery/{1}", imgId, file.FileName));
                 } else {
+                    //FileInfo fi = new FileInfo(file.FileName);
+                    //string ext = fi.Extension;
+                    //    string img = string.Format("{0}.{1}", imgId, ext);
+
                     fname = context.Server.MapPath(string.Format("~/upload/{0}/{1}", imgFolder, imgId));
+                    //fname = context.Server.MapPath(string.Format("~/upload/{0}/{1}", imgFolder, img));
                 }
 
                 if (!string.IsNullOrEmpty(file.FileName)) {
@@ -41,7 +50,7 @@ public class UploadHandler : IHttpHandler {
                         folderPath = context.Server.MapPath(string.Format("~/upload/{0}", imgFolder));
                         versionPath = context.Server.MapPath(string.Format("~/upload/{0}/version.txt", imgFolder));
 
-                            //TODO:
+                        //TODO:
                         //if (Directory.Exists(folderPath) && imgFolder == "temp") {
                         //    foreach (string f in Directory.GetFiles(folderPath)) {
                         //        File.Delete(f);

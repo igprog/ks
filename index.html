@@ -162,17 +162,15 @@
             <!-- BEGIN NAVIGATION -->
             <div class="header-navigation">
                 <ul>
-                    <li class="dropdown">
+                    <!--<li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
                             Proizvođači
                         </a>
-                        <!-- BEGIN DROPDOWN MENU -->
                         <ul class="dropdown-menu">
                             <li ng-repeat="x in d.brands track by $index"><a href="" ng-click="brand(x.code, x.title_seo)">{{x.title}}</a></li>
                         </ul>
-                        <!-- END DROPDOWN MENU -->
-                    </li>
-                    <li class="dropdown dropdown-megamenu">
+                    </li>-->
+                    <!--<li class="dropdown dropdown-megamenu">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
                             Proizvodi
                         </a>
@@ -190,24 +188,22 @@
                                 </div>
                             </li>
                         </ul>
-                    </li>
+                    </li>-->
                     <!--<li><a href="shop-item.html">Kids</a></li>-->
-                    <li class="dropdown dropdown100 nav-catalogue">
+                    <li class="dropdown dropdown100 nav-catalogue" ng-repeat="x in d.productGroups track by $index">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
-                            Akcije
+                            {{x.title}}
                         </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <div class="header-navigation-content">
                                     <div class="row">
-                                        <div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="x in d.outlet">
+                                        <div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="y in x.subGroups track by $index">
                                             <div class="product-item">
                                                 <div class="pi-img-wrapper">
-                                                    <a href="shop-item.html"><img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}"></a>
+                                                    <a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)"><img src="../upload/{{d.imgFolder}}/{{y.img}}" class="img-responsive" alt="{{y.img}}"></a>
                                                 </div>
-                                                <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                                <div class="pi-price">{{x.price.grossWithDiscount | number}} kn</div>
-                                                <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
+                                                <h3><a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -218,7 +214,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="dropdown dropdown100 nav-catalogue">
+                    <!--<li class="dropdown dropdown100 nav-catalogue">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="">
                             Novo
                         </a>
@@ -242,33 +238,6 @@
                                     </div>
                                 </div>
                             </li>
-                        </ul>
-                    </li>
-                    <!--<li><a href="" ng-click="go('about')">O nama</a></li>
-                    <li><a href="" ng-click="go('contact')">Kontakt</a></li>-->
-                    <!--<li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
-                            Pages
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="active"><a href="shop-index.html">Home Default</a></li>
-                            <li><a href="shop-index-header-fix.html">Home Header Fixed</a></li>
-                            <li><a href="shop-index-light-footer.html">Home Light Footer</a></li>
-                            <li><a href="shop-product-list.html">Product List</a></li>
-                            <li><a href="shop-search-result.html">Search Result</a></li>
-                            <li><a href="shop-item.html">Product Page</a></li>
-                            <li><a href="shop-shopping-cart-null.html">Shopping Cart (Null Cart)</a></li>
-                            <li><a href="shop-shopping-cart.html">Shopping Cart</a></li>
-                            <li><a href="shop-checkout.html">Checkout</a></li>
-                            <li><a href="shop-about.html">About</a></li>
-                            <li><a href="shop-contacts.html">Contacts</a></li>
-                            <li><a href="shop-account.html">My account</a></li>
-                            <li><a href="shop-wishlist.html">My Wish List</a></li>
-                            <li><a href="shop-goods-compare.html">Product Comparison</a></li>
-                            <li><a href="shop-standart-forms.html">Standart Forms</a></li>
-                            <li><a href="shop-faq.html">FAQ</a></li>
-                            <li><a href="shop-privacy-policy.html">Privacy Policy</a></li>
-                            <li><a href="shop-terms-conditions-page.html">Terms &amp; Conditions</a></li>
                         </ul>
                     </li>-->
                     <!-- BEGIN TOP SEARCH -->
