@@ -455,6 +455,12 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         });
     }
 
+    var get = (sku, idx) => {
+        f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
+            $scope.d.records[idx] = d;
+        });
+    }
+
     var upload = (x, idx) => {
         var content = new FormData(document.getElementById('formUpload_' + x.id));
         $http({
@@ -586,6 +592,18 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         x.productGroup = pg;
     }
 
+    var addRelated = (x) => {
+        f.post(service, 'Init', {}).then((d) => {
+            x.relatedProducts.push(d);
+        });
+    }
+
+    var removeRelated = (x, idx) => {
+        if (confirm('Briši?')) {
+            x.splice(idx, 1);
+        }
+    }
+
     $scope.f = {
         load: (productGroup, search) => {
             debugger;
@@ -593,6 +611,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         save: (x, idx) => {
             return save(x, idx)
+        },
+        get: (sku, idx) => {
+            return get(sku, idx)
         },
         upload: (x, idx) => {
             return upload(x, idx);
@@ -614,6 +635,12 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         setProductGroup: (x, pg) => {
             return setProductGroup(x, pg);
+        },
+        addRelated: (x) => {
+            return addRelated(x);
+        },
+        removeRelated: (x, idx) => {
+            return removeRelated(x, idx);
         }
     }
 }])

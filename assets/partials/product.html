@@ -227,10 +227,12 @@
             </div>
             <!-- END SIDEBAR & CONTENT -->
             <!-- BEGIN SIMILAR PRODUCTS -->
-            <div ng-if="d.bestsellingall" class="row margin-bottom-40">
+            <div ng-if="d.record.relatedProducts" class="row margin-bottom-40">
                 <div class="col-md-12 col-sm-12">
-                    <h2>Najpopularniji proizvodi</h2>
-                    <bestselling-directive data="d.bestsellingall"></bestselling-directive>
+                    <h2>{{'related products' | translate}}</h2>
+                    <specialproducts-directive data="d.record.relatedProducts"></specialproducts-directive>
+                    <!--<h2>Najpopularniji proizvodi</h2>
+                    <bestselling-directive data="d.bestsellingall"></bestselling-directive>-->
 
                     <!--<div class="owl-carousel owl-carousel4 owl-theme owl-loaded">
                         <div class="row">

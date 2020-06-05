@@ -68,7 +68,7 @@ public class Cart : System.Web.Services.WebService {
     [WebMethod]
     public string AddToCart(NewCart cart, Products.NewProduct x) {
         //cart.price_net_tot = x.product.price.net_discount * x.qty;
-        Products.NewProduct product = P.GetProduct(x.id, "hr");
+        Products.NewProduct product = P.GetProduct(x.sku, "hr");
         CartItem item = new CartItem();
         item.product = product;
         item.product.qty = x.qty;

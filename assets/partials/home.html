@@ -101,13 +101,13 @@
             <p>Godine iskustva poučile su nas da se kvaliteta uvijek isplati. Kamin Studio s ponosom promovira ekološki prihvatljiva rješenja. Na našim stranicama pronaći ćete široki izbor kamina i peći na drva, električnih kamina, kamina na bioetanol, norveških radijatora te plinskih kamina kao i našu stručnu pomoć pri svakom koraku.</p>
         </div>
         <!-- BEGIN SALE PRODUCT & NEW ARRIVALS -->
-        <div ng-if="d.bestselling.length>0" class="bg-light pt-5">
+        <div ng-if="d.bestbuy.length>0" class="bg-light pt-5">
             <div class="container">
                 <div class="row margin-bottom-40">
                     <!-- BEGIN SALE PRODUCT -->
                     <div class="col-md-12 sale-product">
-                        <h2>Najprodavanije</h2>
-                        <bestselling-directive data="d.bestselling"></bestselling-directive>
+                        <h2>{{'best buy' | translate}}</h2>
+                        <specialproducts-directive data="d.bestbuy"></specialproducts-directive>
 
                         <!--<div class="owl-carousel owl-carousel5 owl-theme owl-loaded">
                             <div class="row">
