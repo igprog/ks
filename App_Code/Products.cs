@@ -65,6 +65,7 @@ public class Products : System.Web.Services.WebService {
         public bool freeshipping;
         public bool bestbuy;
         public bool wifi;
+        public string relatedProductsStr;
         public List<NewProduct> relatedProducts;
         public double width;
         public double height;
@@ -274,9 +275,12 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Get(string id, string lang) {
+    public string Get(string sku, string lang) {
         try {
-            return JsonConvert.SerializeObject(GetProduct(id, lang), Formatting.None);
+            NewProduct x = GetProduct(sku, lang);
+            x.relatedProducts = GetRelatedProducts(x.relatedProductsStr, lang);
+
+            return JsonConvert.SerializeObject(x, Formatting.None);
         } catch(Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -301,7 +305,7 @@ public class Products : System.Web.Services.WebService {
                 foreach (var rp in x.relatedProducts) {
                     rp_.Add(string.Format("{0}", rp.sku));
                 }
-                productFeatures = string.Join(";", rp_);
+                relatedProducts = string.Join(";", rp_);
             }
             x.discount.coeff = x.discount.perc / 100;
             if (string.IsNullOrEmpty(x.id)) {
@@ -453,12 +457,12 @@ public class Products : System.Web.Services.WebService {
         return xxx;
     }
 
-    public NewProduct GetProduct(string id, string lang) {
+    public NewProduct GetProduct(string sku, string lang) {
         NewProduct x = new NewProduct();
         List<Features.NewFeature> features = F.Get(G.featureType.product);
-        string sql = string.Format(@"{0} WHERE p.id = '{1}'"
+        string sql = string.Format(@"{0} WHERE p.sku = '{1}'"
                                     , mainSql
-                                    , id);
+                                    , sku);
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
             using (var command = new SQLiteCommand(sql, connection)) {
@@ -548,8 +552,8 @@ public class Products : System.Web.Services.WebService {
         x.freeshipping = G.ReadB(reader, 19);
         x.bestbuy = G.ReadB(reader, 20);
         x.wifi = G.ReadB(reader, 21);
-        string relatedProducts = G.ReadS(reader, 22);
-        x.relatedProducts = new List<NewProduct>();  // TODO
+        x.relatedProductsStr = G.ReadS(reader, 22);
+        x.relatedProducts = new List<NewProduct>();
         x.width = G.ReadD(reader, 23);
         x.height = G.ReadD(reader, 24);
         x.depth = G.ReadD(reader, 25);
@@ -565,6 +569,19 @@ public class Products : System.Web.Services.WebService {
         //}
         x.qty = 1;
         return x;
+    }
+
+    private List<NewProduct> GetRelatedProducts(string relatedProducts, string lang) {
+        List<NewProduct> xx = new List<NewProduct>();
+        NewProduct x = new NewProduct();
+        if (!string.IsNullOrEmpty(relatedProducts)) {
+            string[] list = relatedProducts.Split(';');
+            foreach (var sku in list) {
+                x = GetProduct(sku, lang);
+                xx.Add(x);
+            }
+        }
+        return xx;
     }
 
     private Discount GetDiscount(double productDiscount, double pgDiscount) {
