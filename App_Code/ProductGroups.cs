@@ -26,7 +26,8 @@ public class ProductGroups : System.Web.Services.WebService {
         public string code;
         public string title;
         public string title_seo;
-        public string parent;
+        //public string parent;
+        public NewProductGroup parent;
         public Products.Discount discount;
         public string img;
         public int order;
@@ -41,7 +42,7 @@ public class ProductGroups : System.Web.Services.WebService {
             x.code = null;
             x.title = null;
             x.title_seo = null;
-            x.parent = null;
+            x.parent = new NewProductGroup();
             x.img = null;
             x.order = 0;
             x.discount = new Products.Discount();
@@ -75,7 +76,6 @@ public class ProductGroups : System.Web.Services.WebService {
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
-
     }
 
     [WebMethod]
@@ -87,10 +87,10 @@ public class ProductGroups : System.Web.Services.WebService {
             bool isUpdateDiscount = false;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO productGroups VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8})", x.id, x.code, x.title, x.parent, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
+                sql = string.Format(@"INSERT INTO productGroups VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8})", x.id, x.code, x.title, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
             } else {
-                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', parent = '{3}', discount = '{4}', discount_from = '{5}', discount_to = '{6}', img = '{7}', pg_order = {8} WHERE id = '{0}'", x.id, x.code, x.title, x.parent, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
-                if (x.code == x.parent) {
+                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', parent = '{3}', discount = '{4}', discount_from = '{5}', discount_to = '{6}', img = '{7}', pg_order = {8} WHERE id = '{0}'", x.id, x.code, x.title, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
+                if (x.code == x.parent.code) {
                     isUpdateDiscount = true;  //***** Update children groups discount (same sa parent group) *****
                 }
             }
@@ -121,7 +121,7 @@ public class ProductGroups : System.Web.Services.WebService {
     public string Delete(NewProductGroup x) {
         try {
             string sql = string.Format(@"DELETE FROM ProductGroups WHERE {0}"
-                        , x.code == x.parent ? string.Format("parent = '{0}'", x.code) : string.Format("code = '{0}'", x.code));
+                        , x.code == x.parent.code ? string.Format("parent = '{0}'", x.code) : string.Format("code = '{0}'", x.code));
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
                 using (var command = new SQLiteCommand(sql, connection)) {
@@ -151,6 +151,7 @@ public class ProductGroups : System.Web.Services.WebService {
                     xx = new List<NewProductGroup>();
                     while (reader.Read()) {
                         NewProductGroup x = ReadDataRow(reader);
+                        //x.parent = GetParentGroupData(x.parent.code);
                         xx.Add(x);
                     }
                 }
@@ -161,13 +162,31 @@ public class ProductGroups : System.Web.Services.WebService {
         return xx;
     }
 
+    public NewProductGroup GetParentGroupData(string parent) {
+        NewProductGroup x = new NewProductGroup();
+        using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            string sql = string.Format("{0} code = '{1}'", mainSql, parent);
+            using (var command = new SQLiteCommand(sql, connection)) {
+                using (var reader = command.ExecuteReader()) {
+                    while (reader.Read()) {
+                        x = ReadDataRow(reader);
+                    }
+                }
+            }
+            connection.Close();
+        }
+        return x;
+    }
+
     public NewProductGroup ReadDataRow(SQLiteDataReader reader) {
         NewProductGroup x = new NewProductGroup();
         x.id = G.ReadS(reader, 0);
         x.code = G.ReadS(reader, 1);
         x.title = G.ReadS(reader, 2);
         x.title_seo = G.GetSeoTitle(x.title);
-        x.parent = G.ReadS(reader, 3);
+        x.parent = new NewProductGroup();
+        x.parent.code = G.ReadS(reader, 3);
         x.discount = new Products.Discount();
         x.discount.coeff = G.ReadD(reader, 4);
         x.discount.perc = Math.Round(x.discount.coeff * 100, 1);
