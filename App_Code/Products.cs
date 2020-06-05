@@ -181,6 +181,10 @@ public class Products : System.Web.Services.WebService {
             x.img = null;
             x.price = new Price();
             x.discount = new Discount();
+            x.discount.coeff = 0;
+            x.discount.perc = 0;
+            x.discount.from = null;
+            x.discount.to = null;
             x.stock = 1000;
             x.isnew = false;
             x.outlet = false;
@@ -277,9 +281,11 @@ public class Products : System.Web.Services.WebService {
     [WebMethod]
     public string Get(string sku, string lang) {
         try {
-            NewProduct x = GetProduct(sku, lang);
-            x.relatedProducts = GetRelatedProducts(x.relatedProductsStr, lang);
-
+            NewProduct x = new NewProduct();
+            if (!string.IsNullOrEmpty(sku)) {
+                x = GetProduct(sku, lang);
+                x.relatedProducts = GetRelatedProducts(x.relatedProductsStr, lang);
+            }
             return JsonConvert.SerializeObject(x, Formatting.None);
         } catch(Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -476,6 +482,7 @@ public class Products : System.Web.Services.WebService {
         }
         Review R = new Review();
         x.reviews = R.GetData(x.sku);
+        x.productGroup.parent = PG.GetParentGroupData(x.productGroup.parent.code);
         return x;
     }
 
@@ -509,7 +516,8 @@ public class Products : System.Web.Services.WebService {
             x.productGroup.code = G.ReadS(reader, 3);
             x.productGroup.title = G.ReadS(reader, 30);
             x.productGroup.title_seo = G.GetSeoTitle(x.productGroup.title);
-            x.productGroup.parent = PG.GetParentGroup(x.productGroup.code);
+            x.productGroup.parent = new ProductGroups.NewProductGroup();
+            x.productGroup.parent.code = PG.GetParentGroup(x.productGroup.code);
         //}
         List<Tran.NewTran> tran = T.LoadData(x.id, G.recordType.productTitle, lang);
         x.title = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 4);

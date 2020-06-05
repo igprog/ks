@@ -299,7 +299,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 return init();
             },
             save: (x, idx) => {
-                x.parent = x.code;  // only for main product group
+                x.parent.code = x.code;  // only for main product group
                 return save(x, idx);
             },
             saveSubGroup: (x) => {
@@ -314,7 +314,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             initSubGroup: (x) => {
                 debugger;
                 f.post(service, 'Init', {}).then((d) => {
-                    d.parent = x.code;
+                    d.parent.code = x.code;
                     x.subGroups.push(d);
                 });
             },
@@ -456,9 +456,13 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
     var get = (sku, idx) => {
-        f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
-            $scope.d.records[idx] = d;
-        });
+        if (sku === null) {
+            newProduct();
+        } else {
+            f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
+                $scope.d.records[idx] = d;
+            });
+        }
     }
 
     var upload = (x, idx) => {
@@ -589,6 +593,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     };
 
     var setProductGroup = (x, pg) => {
+        debugger;
         x.productGroup = pg;
     }
 

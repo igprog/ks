@@ -620,7 +620,6 @@
                     <div ng-if="x!==null" class="mt-2">
                         <img ng-if="x.img" class="img-thumbnail" src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}" style="height:80px">
                         <span class="ml-2"><strong>SKU: {{x.sku}}</strong><label class="ml-2">{{x.title}}</label></span><br />
-                        <span class="ml-2"></span>
                     </div>
                     <div ng-if="x.id===null">
                         Uredi proizvod
@@ -635,7 +634,7 @@
                             <form>
                                 <div class="dropdown pt-20 pb-0 mb-3">
                                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                                        Grupa proizvoda: <span>{{x.productGroup.title}}</span>
+                                        Grupa proizvoda: <span class="ml-2"><span>{{x.productGroup.parent.title}} / </span>{{x.productGroup.title}}</span>
                                         <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
                                     </button>
                                     <ul class="dropdown-menu p-2">

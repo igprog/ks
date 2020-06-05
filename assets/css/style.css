@@ -284,6 +284,7 @@ header {
 .product-image-label.type-4{right: 7px; top: 20%; width: 40px; height: 40px; background: #d41b1b; margin-right: 10px;}
 .product-image-label.type-5{right: 7px; top: 40%; width: 40px; height: 40px; background: #d41b1b; margin-right: 10px;}
 .product-image-label.type-6{right: 7px; top: 60%; width: 40px; height: 40px; background: #44c464; margin-right: 10px;}
+.product-image-label.type-7{left: 7px; top: 60px; width: 40px; height: 40px; background: #44c464; margin-left: 10px;}
 
 /********** Sidebar **********/
 #body-row {
