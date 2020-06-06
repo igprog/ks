@@ -531,7 +531,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         record: [],
         review: null,
         stars: [1, 2, 3, 4, 5],
-        activeTab: 'description'
+        activeTab: 'description',
+        showColorVar: false
     }
     $scope.d = data;
 
@@ -564,6 +565,17 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.d.loading = true;
         f.post('Products', 'Get', { sku: sku, lang: 'hr' }).then((d) => {
             $scope.d.record = d;
+
+            if (d.styleProducts.length > 0) {
+                debugger;
+                angular.forEach(d.styleProducts, function (val, key) {
+                    //val.color !== null && val.color !== x.color ? true : false;
+                    if (val.color !== null && val.color !== d.color) {
+                        $scope.d.showColorVar = true;
+                    }
+                });
+            }
+
             initReview(d.sku);
             loadBestSelling('hr', $scope.d.record.productGroup.code, 3);
             loadBestSellingAll('hr', null, 4);
