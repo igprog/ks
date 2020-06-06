@@ -79,6 +79,7 @@ public class Products : System.Web.Services.WebService {
         public int qty;
         public Review.ReviewData reviews;
         public Discount pg_discount;
+        public List<NewProduct> styleProducts;
     }
 
     public class Price {
@@ -87,14 +88,6 @@ public class Products : System.Web.Services.WebService {
         public double discount;
         public double netWithDiscount;
         public double grossWithDiscount;
-        //public double netWithDiscountTot;  // total with quantity
-        //public double grossWithDiscountTot;  // total with quantity
-        //public double net;
-        //public double gross;
-        //public double net_discount;
-        //public double gross_discount;
-        //public double net_discount_tot;  // total with quantity
-        //public double gross_discount_tot;  // total with quantity
     }
 
     public class Discount {
@@ -106,10 +99,8 @@ public class Products : System.Web.Services.WebService {
 
     public class ProductsData {
         public List<NewProduct> data;
-        //public PriceRange priceRange;
         public double responseTime;
         public Filters filters;
-        //public SortTypes sortTypes;
     }
 
     public class PriceRange {
@@ -193,7 +184,6 @@ public class Products : System.Web.Services.WebService {
             x.features = F.Get(G.featureType.product);
             x.deliverydays = null;
             x.productorder = 0;
-
             x.freeshipping = true;
             x.bestbuy = false;
             x.wifi = false;
@@ -205,11 +195,12 @@ public class Products : System.Web.Services.WebService {
             x.color = null;
             x.energyClass = null;
             x.dataSheet = null;
-
             x.gallery = null;
             x.price = new Price();
             x.qty = 1;
             x.reviews = new Review.ReviewData();
+            x.pg_discount = new Discount();
+            x.styleProducts = new List<NewProduct>();
             return JsonConvert.SerializeObject(x, Formatting.None);    
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -285,6 +276,7 @@ public class Products : System.Web.Services.WebService {
             if (!string.IsNullOrEmpty(sku)) {
                 x = GetProduct(sku, lang);
                 x.relatedProducts = GetRelatedProducts(x.relatedProductsStr, lang);
+                x.styleProducts = GetStyleProducts(x.style, lang);
             }
             return JsonConvert.SerializeObject(x, Formatting.None);
         } catch(Exception e) {
@@ -502,7 +494,6 @@ public class Products : System.Web.Services.WebService {
             }
             connection.Close();
         }
-
         return xx;
     }
 
@@ -588,6 +579,16 @@ public class Products : System.Web.Services.WebService {
                 x = GetProduct(sku, lang);
                 xx.Add(x);
             }
+        }
+        return xx;
+    }
+
+    private List<NewProduct> GetStyleProducts(string style, string lang) {
+        List<NewProduct> xx = new List<NewProduct>();
+        NewProduct x = new NewProduct();
+        if (!string.IsNullOrEmpty(style)) {
+            string sql = string.Format("{0} WHERE p.style = '{1}'", mainSql, style);
+            xx = DataCollection(sql, lang, true);
         }
         return xx;
     }

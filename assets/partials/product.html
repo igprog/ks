@@ -69,7 +69,8 @@
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6">
-                                <h1>{{d.record.title}}</h1>
+                                <h2>{{d.record.title}}</h2>
+                                <h2>{{'sku' | translate}}: {{d.record.sku}}</h2>
                                 <div class="price-availability-block clearfix">
                                     <div class="price">
                                         <strong>{{d.record.price.grossWithDiscount | number}} <span>kn</span></strong>
@@ -102,13 +103,18 @@
                                             <option>XL</option>
                                         </select>
                                     </div>
-                                    <div class="pull-left">
+                                    <div ng-if="d.record.color" class="pull-left">
                                         <label class="control-label">Color:</label>
-                                        <select class="form-control input-sm">
+                                        <label ng-if="!d.showColorVar">{{d.record.color}}</label>
+                                        <select ng-if="d.showColorVar" ng-model="color" ng-options="x.color for x in d.record.styleProducts"  class="form-control input-sm" ng-change="get(color)"></select>
+                                        <!--<select ng-model="color" class="form-control input-sm" ng-change="get(color)">
+                                            <option value="{{x}}" ng-repeat="x in d.record.styleProducts">{{x.color}}</option>
+                                        </select>-->
+                                        <!--<select class="form-control input-sm">
                                             <option>Red</option>
                                             <option>Blue</option>
                                             <option>Black</option>
-                                        </select>
+                                        </select>-->
                                     </div>
                                 </div>
                                 <div class="product-page-cart">
