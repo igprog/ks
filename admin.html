@@ -619,7 +619,7 @@
                 <div class="card-header" data-toggle="collapse" data-target="#p_{{$index}}" ng-click="f.get(x.sku, $index)">
                     <div ng-if="x!==null" class="mt-2">
                         <img ng-if="x.img" class="img-thumbnail" src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}" style="height:80px">
-                        <span class="ml-2"><strong>SKU: {{x.sku}}</strong><label class="ml-2">{{x.title}}</label></span><br />
+                        <span class="ml-2"><strong>SKU: {{x.sku}}; Model: {{x.style}}</strong><label class="ml-2">{{x.title}}</label></span><br />
                     </div>
                     <div ng-if="x.id===null">
                         Uredi proizvod

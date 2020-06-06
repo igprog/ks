@@ -195,7 +195,7 @@
                             {{x.title}}
                         </a>
                         <ul class="dropdown-menu">
-                            <li>
+                            <li class="hidden-xs">
                                 <div class="header-navigation-content">
                                     <div class="row">
                                         <div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="y in x.subGroups track by $index">
@@ -212,6 +212,7 @@
                                     </div>
                                 </div>
                             </li>
+                            <li class="visible-xs" ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
                         </ul>
                     </li>
                     <!--<li class="dropdown dropdown100 nav-catalogue">
@@ -263,7 +264,7 @@
     </div>
     <!-- Header END -->
 
-    <ui-view autoscroll="true"></ui-view>
+    <ui-view autoscroll="false"></ui-view>
 
     <!-- BEGIN BRANDS -->
     <div class="brands">

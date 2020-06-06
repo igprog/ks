@@ -378,20 +378,13 @@ public class Products : System.Web.Services.WebService {
                    , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-                   , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+                   , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
                    , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
                    , "ORDER BY p.productorder DESC LIMIT 16");
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
-        //xxx.priceRange = new PriceRange();
-        //xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
-        //xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
-        xxx.filters = LoadFilters(xxx); // InitFilters();
-        //xxx.filters.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
-        //xxx.filters.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
-        //xxx.filters.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
-        //xxx.sortTypes = InitSortTypes();
+        xxx.filters = LoadFilters(xxx);
         return xxx;
     }
 
@@ -399,12 +392,12 @@ public class Products : System.Web.Services.WebService {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
-        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10}"
+        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}"
            , mainSql
            , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
            , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
            , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
            , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
            , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? ""
                     : string.Format(@"{0} 
@@ -417,41 +410,13 @@ public class Products : System.Web.Services.WebService {
            , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : "AND"))
            , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
            , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
+           , filters.bestbuy.val == false ? "" : string.Format(@"{0} p.bestbuy = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
+           , filters.wifi.val == false ? "" : string.Format(@"{0} p.wifi = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
            , string.Format("ORDER BY {0} LIMIT {1}", SortBySql(filters.sortBy.val), filters.show.val)
            );
-
-        //string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10}"
-        //   , mainSql
-        //   , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
-        //   , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
-        //   , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-        //   , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-        //   , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
-        //   , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" 
-        //            : string.Format(@"{0} 
-        //                        CASE WHEN p.discount = 0 AND pg.discount > 0 THEN
-        //                            CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(pg.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(pg.discount as decimal)) <= {2}
-        //                        ELSE
-        //                            CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) <= {2}
-        //                        END"
-        //   , (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "AND"), filters.price.minVal, filters.price.maxVal)
-        //   , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : "AND"))
-        //   , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
-        //   , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
-        //   , string.Format("ORDER BY {0} LIMIT {1}", SortBySql(filters.sortBy.val), filters.show.val)
-        //   );
-
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
-        //xxx.priceRange = new PriceRange();
-        //xxx.priceRange.min = xxx.data.Count > 0 ? xxx.data.Min(a => a.price.net_discount) : 0;
-        //xxx.priceRange.max = xxx.data.Count > 0 ? xxx.data.Max(a => a.price.net_discount) : 0;
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
-        //xxx.filters = LoadFilters(xxx); // InitFilters();
-                                        //xxx.filters.isnew.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.isnew) : 0;
-                                        //xxx.filters.outlet.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.outlet) : 0;
-                                        //xxx.filters.bestselling.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.bestselling) : 0;
-        //xxx.sortTypes = InitSortTypes();
         return xxx;
     }
 

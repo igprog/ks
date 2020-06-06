@@ -239,6 +239,7 @@ public class Orders : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
+            UpdateProductStock(x);
             return "OK";
         } catch (Exception e) {
             return e.Message;
@@ -417,6 +418,20 @@ public class Orders : System.Web.Services.WebService {
             return JsonConvert.DeserializeObject<OrderOptions>(json);
         } catch (Exception e) {
             return new OrderOptions();
+        }
+    }
+
+    public void UpdateProductStock(NewOrder order) {
+        string sql = null;
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            foreach (var x in order.cart.items) {
+                sql = string.Format("UPDATE products SET stock = {0} WHERE sku = '{1}'", x.product.stock - x.product.qty, x.product.sku);
+                using (var command = new SQLiteCommand(sql, connection)) {
+                    command.ExecuteNonQuery();
+                }
+            }
+            connection.Close();
         }
     }
     #endregion Methods

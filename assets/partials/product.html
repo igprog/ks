@@ -84,7 +84,7 @@
                                             <em>kn<span>{{d.record.price.gross | number}}</span> kn</em>
                                         </span>
                                     </div>-->
-                                    <div ng-if="d.record.deliverydays" class="availability">
+                                    <div ng-if="d.record.deliverydays&&d.record.stock>d.record.qty-1" class="availability">
                                         <!--Availability: <strong>In Stock</strong>-->
                                         {{'delivery date' | translate}}: <strong>{{d.record.deliverydays}} <span ng-if="d.record.deliverydays==1">{{'day' | translate}}</span><span ng-if="d.record.deliverydays!=1">{{'days' | translate}}</span></strong>
                                     </div>
@@ -238,7 +238,7 @@
             <!-- BEGIN SIMILAR PRODUCTS -->
             <div ng-if="d.record.relatedProducts" class="row margin-bottom-40">
                 <div class="col-md-12 col-sm-12">
-                    <h2>{{'related products' | translate}}</h2>
+                    <h2>{{'accessories' | translate}}</h2>
                     <specialproducts-directive data="d.record.relatedProducts"></specialproducts-directive>
                     <!--<h2>Najpopularniji proizvodi</h2>
                     <bestselling-directive data="d.bestsellingall"></bestselling-directive>-->
