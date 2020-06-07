@@ -824,15 +824,15 @@
                                 <div class="row">
                                     <div class="col-sm-4 form-group">
                                         <label>Širina (cm):</label>
-                                        <input ng-model="x.width" type="text" class="form-control" allow-only-numbers>
+                                        <input ng-model="x.dimension.width" type="text" class="form-control" allow-only-numbers>
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <label>Visina (cm):</label>
-                                        <input ng-model="x.height" type="text" class="form-control" allow-only-numbers>
+                                        <input ng-model="x.dimension.height" type="text" class="form-control" allow-only-numbers>
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <label>Dubina (cm):</label>
-                                        <input ng-model="x.depth" type="text" class="form-control" allow-only-numbers>
+                                        <input ng-model="x.dimension.depth" type="text" class="form-control" allow-only-numbers>
                                     </div>
                                 </div>
                                 <label class="text-success">Dodatne značajke:</label>
@@ -843,7 +843,7 @@
                                         <input ng-model="y.val" type="text" class="form-control" maxlength="200">
                                     </div>
                                 </div>
-                                <label class="text-success">Vezani proizvodi: (TODO)</label>
+                                <label class="text-success">Vezani proizvodi:</label>
                                 <hr class="mt-0" />
                                 <div class="row">
                                     <div class="col-sm-4">

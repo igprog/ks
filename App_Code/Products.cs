@@ -68,9 +68,10 @@ public class Products : System.Web.Services.WebService {
         public bool wifi;
         public string relatedProductsStr;
         public List<NewProduct> relatedProducts;
-        public double width;
-        public double height;
-        public double depth;
+        //public double width;
+        //public double height;
+        //public double depth;
+        public Dimension dimension;
         public double power;
         public Colors.NewColor color; 
         public string energyClass;
@@ -81,6 +82,8 @@ public class Products : System.Web.Services.WebService {
         public Review.ReviewData reviews;
         public Discount pg_discount;
         public List<NewProduct> styleProducts;
+        public List<Dimension> distinctDimensions;
+        public List<Colors.NewColor> distinctColors;
         public List<Colors.NewColor> colors;
     }
 
@@ -161,6 +164,12 @@ public class Products : System.Web.Services.WebService {
         public List<Colors.NewColor> data;
         public Colors.NewColor val;
     }
+
+    public class Dimension {
+        public double width;
+        public double height;
+        public double depth;
+    }
     #endregion Class
 
     #region WebMethod
@@ -196,9 +205,10 @@ public class Products : System.Web.Services.WebService {
             x.bestbuy = false;
             x.wifi = false;
             x.relatedProducts = new List<NewProduct>();
-            x.width = 0;
-            x.height = 0;
-            x.depth = 0;
+            x.dimension = new Dimension();
+            //x.width = 0;
+            //x.height = 0;
+            //x.depth = 0;
             x.power = 0;
             x.color = new Colors.NewColor();
             x.energyClass = null;
@@ -209,6 +219,8 @@ public class Products : System.Web.Services.WebService {
             x.reviews = new Review.ReviewData();
             x.pg_discount = new Discount();
             x.styleProducts = new List<NewProduct>();
+            x.distinctDimensions = new List<Dimension>();
+            x.distinctColors = new List<Colors.NewColor>();
             x.colors = C.LoadData();
             return JsonConvert.SerializeObject(x, Formatting.None);    
         } catch (Exception e) {
@@ -217,9 +229,9 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Load(string lang, string productGroup, string brand, string search, string type) {
+    public string Load(string lang, string productGroup, string brand, string search, string type, bool isDistinctStyle) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, isDistinctStyle), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -286,9 +298,33 @@ public class Products : System.Web.Services.WebService {
                 x = GetProduct(sku, lang);
                 x.relatedProducts = GetRelatedProducts(x.relatedProductsStr, lang);
                 x.styleProducts = GetStyleProducts(x.style, lang);
+                x.distinctDimensions = GetDistinctDimensions(x.style);
+                x.distinctColors = GetDistinctColors(x.style, x.dimension);
                 x.colors = C.LoadData();
             }
             return JsonConvert.SerializeObject(x, Formatting.None);
+        } catch(Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string GetVarDimProduct(string style, Dimension dimension, string lang) {
+        try {
+            string sql = string.Format(@"{0} WHERE p.style = '{1}' AND p.width = '{2}' AND p.height = '{3}' AND p.depth = '{4}'"
+                                        , mainSql , style , dimension.width, dimension.height, dimension.depth);
+            return JsonConvert.SerializeObject(GetProductData(sql, lang), Formatting.None);
+        } catch(Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string GetVarProduct(string style, string color, Dimension dimension, string lang) {
+        try {
+            string sql = string.Format(@"{0} WHERE p.style = '{1}' AND p.color = '{2}' AND p.width = '{3}' AND p.height = '{4}' AND p.depth = '{5}'"
+                                        , mainSql , style , color, dimension.width, dimension.height, dimension.depth);
+            return JsonConvert.SerializeObject(GetProductData(sql, lang), Formatting.None);
         } catch(Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -319,11 +355,11 @@ public class Products : System.Web.Services.WebService {
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
                 sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}',  '{17}', {18}, '{19}', '{20}', '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}')"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.width, x.height, x.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
             } else {
                 sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', stock = '{11}', isnew = '{12}', outlet = '{13}', bestselling = '{14}', isactive = '{15}', features = '{16}', deliverydays = '{17}', productorder = {18},
                                     freeshipping = '{19}', bestbuy = '{20}', wifi = '{21}', relatedproducts = '{22}', width = '{23}', height = '{24}', depth = '{25}', power = '{26}', color = '{27}', energyclass = '{28}', datasheet = '{29}' WHERE id = '{0}'"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.width, x.height, x.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -349,7 +385,7 @@ public class Products : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            return JsonConvert.SerializeObject(LoadData(null, null, null, null, null), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(null, null, null, null, null, true), Formatting.None);
             //return JsonConvert.SerializeObject("Proizvod izbrisan", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -379,7 +415,7 @@ public class Products : System.Web.Services.WebService {
     #endregion WebMethod
 
     #region Methods
-    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type) {
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type, bool isDistinctStyle) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
@@ -395,11 +431,13 @@ public class Products : System.Web.Services.WebService {
         xxx.data = DataCollection(sql, lang, true);
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
         xxx.filters = LoadFilters(xxx);
-        List<NewProduct> distinstStyle = (from x in xxx.data
-                                          select x).GroupBy(n => new { n.style })
-                                               .Select(g => g.FirstOrDefault())
-                                               .ToList();
-        xxx.data = distinstStyle;
+        if (isDistinctStyle) {
+            List<NewProduct> distinstStyle = (from x in xxx.data
+                                              select x).GroupBy(n => new { n.style })
+                                       .Select(g => g.FirstOrDefault())
+                                       .ToList();
+            xxx.data = distinstStyle;
+        }
         return xxx;
     }
 
@@ -448,6 +486,31 @@ public class Products : System.Web.Services.WebService {
         string sql = string.Format(@"{0} WHERE p.sku = '{1}'"
                                     , mainSql
                                     , sku);
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            using (var command = new SQLiteCommand(sql, connection)) {
+                var reader = command.ExecuteReader();
+                x = new NewProduct();
+                while (reader.Read()) {
+                    x = ReadDataRow(reader, lang, true, features);
+                }
+            }
+            connection.Close();
+        }
+        Review R = new Review();
+        x.reviews = R.GetData(x.sku);
+        x.productGroup.parent = PG.GetParentGroupData(x.productGroup.parent.code);
+        return x;
+    }
+
+    // refaktorirati
+    public NewProduct GetProductData(string sql, string lang) {
+        NewProduct x = new NewProduct();
+        List<Features.NewFeature> features = F.Get(G.featureType.product);
+        //string sql = string.Format(@"{0} WHERE p.style = '{1}' AND p.color = '{2}'"
+        //                            , mainSql
+        //                            , style
+        //                            , color);
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
             using (var command = new SQLiteCommand(sql, connection)) {
@@ -541,9 +604,10 @@ public class Products : System.Web.Services.WebService {
         x.wifi = G.ReadB(reader, 21);
         x.relatedProductsStr = G.ReadS(reader, 22);
         x.relatedProducts = new List<NewProduct>();
-        x.width = G.ReadD(reader, 23);
-        x.height = G.ReadD(reader, 24);
-        x.depth = G.ReadD(reader, 25);
+        x.dimension = new Dimension();
+        x.dimension.width = G.ReadD(reader, 23);
+        x.dimension.height = G.ReadD(reader, 24);
+        x.dimension.depth = G.ReadD(reader, 25);
         x.power = G.ReadD(reader, 26);
         x.color = C.GetData(G.ReadS(reader, 27)); // new Colors.NewColor();
         x.energyClass = G.ReadS(reader, 28);
@@ -715,6 +779,72 @@ public class Products : System.Web.Services.WebService {
         }
         return x;
     }
+
+    public List<Dimension> GetDistinctDimensions(string style) {
+        List<Dimension> xx = new List<Dimension>();
+        //string x, width, height, depth = null;
+        string sql = string.Format("SELECT DISTINCT width, height, depth FROM products WHERE style = '{0}'", style);
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            using (var command = new SQLiteCommand(sql, connection)) {
+                using (var reader = command.ExecuteReader()) {
+                    while (reader.Read()) {
+                        Dimension x = new Dimension();
+                        x.width = G.ReadD(reader, 0);
+                        x.height = G.ReadD(reader, 1);
+                        x.depth = G.ReadD(reader, 2);
+                        xx.Add(x);
+                    }
+                }
+            }
+            connection.Close();
+        }
+        return xx;
+    }
+
+    public List<Colors.NewColor> GetDistinctColors(string style, Dimension d) {
+        List<Colors.NewColor> xx = new List<Colors.NewColor>();
+        string sql = null;
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            //foreach (var d in dimensions) {
+                sql = string.Format(@"SELECT DISTINCT color FROM products WHERE style = '{0}' AND width = '{1}' AND height = '{2}' AND depth = '{3}'"
+                                    , style, d.width, d.height, d.depth);
+                using (var command = new SQLiteCommand(sql, connection)) {
+                    using (var reader = command.ExecuteReader()) {
+                        xx = new List<Colors.NewColor>();
+                        while (reader.Read()) {
+                            Colors.NewColor x = new Colors.NewColor();
+                            x = C.GetData(G.ReadS(reader, 0));
+                            xx.Add(x);
+                        }
+                    }
+                }
+            //}
+            connection.Close();
+        }
+        return xx;
+    }
+
+    //public List<Colors.NewColor> GetDistinctColors(string style, List<Dimension> dimensions) {
+    //    List<Colors.NewColor> xx = new List<Colors.NewColor>();
+    //    string sql = string.Format("SELECT DISTINCT color FROM products WHERE style = '{0}'", style);
+    //    using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+    //        connection.Open();
+    //        using (var command = new SQLiteCommand(sql, connection)) {
+    //            using (var reader = command.ExecuteReader()) {
+    //                xx = new List<Colors.NewColor>();
+    //                while (reader.Read()) {
+    //                    Colors.NewColor x = new Colors.NewColor();
+    //                    x = C.GetData(G.ReadS(reader, 0));
+    //                    xx.Add(x);
+    //                }
+    //            }
+    //        }
+    //        connection.Close();
+    //    }
+    //    return xx;
+    //}
     #endregion Methods
 
 }

@@ -451,7 +451,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var type = param.type !== undefined ? param.type : null;
 
         $scope.d.loading = true;
-        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, isDistinctStyle: true }).then((d) => {
             $scope.d.records = d.data;
             //$scope.d.priceRange = d.priceRange;
             $scope.d.filters = d.filters;
@@ -598,6 +598,26 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
     get($stateParams.sku);
+
+    $scope.getVarDimProduct = (style, dimension) => {
+        var dimension_ = angular.copy(JSON.parse(dimension));
+        debugger;
+        $scope.d.loading = true;
+        f.post('Products', 'GetVarDimProduct', { style: style, dimension: dimension_, lang: lang }).then((d) => {
+            get(d.sku);
+            $scope.d.loading = false;
+        });
+    }
+
+    $scope.getVarProduct = (style, color, dimension) => {
+        debugger;
+        var dimension_ = angular.copy(JSON.parse(angular.toJson(dimension)));
+        $scope.d.loading = true;
+        f.post('Products', 'GetVarProduct', { style: style, color: color, dimension: dimension_, lang: lang }).then((d) => {
+            get(d.sku);
+            $scope.d.loading = false;
+        });
+    }
 
     $scope.mainImgIdx = 0;
     $scope.selectImg = function (idx) {
