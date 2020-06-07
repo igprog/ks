@@ -750,8 +750,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
     }])
 
-.controller('featuresCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
-        var service = 'Features';
+.controller('colorsCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
+        var service = 'Colors';
         var data = {
             loading: false,
             records: []
@@ -768,17 +768,17 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             });
         }
 
-        var load = (type) => {
+        var load = () => {
             $scope.d.loading = true;
-            f.post(service, 'Load', { type: type }).then((d) => {
+            f.post(service, 'Load', {}).then((d) => {
                 $scope.d.records = d;
                 $scope.d.loading = false;
             });
         }
-        load(null);
+        load();
 
         var remove = (x, idx) => {
-            if (confirm('Briši značajku?')) {
+            if (confirm('Briši?')) {
                 x.splice(idx, 1);
             }
         }
@@ -795,7 +795,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             }
         }
 
-    }])
+}])
+
+
 
 .controller('uploadCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
     var service = 'Info';

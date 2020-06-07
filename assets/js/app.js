@@ -429,7 +429,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         search: $stateParams.search,
         responseTime: 0,
         filters: $sessionStorage.filters !== undefined ? $sessionStorage.filters : null,
-        isShowFilters: false  //***** only form mobile *****
+        isShowFilters: false,  //***** only form mobile *****
+        showAllColorBtn: false
     }
     debugger;
     $scope.d = data;
@@ -487,6 +488,20 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.records = d.data;
             $scope.d.loading = false;
         });
+    }
+
+    $scope.filterColor = (filters, slider, x) => {
+        filters.color.val = x;
+        $scope.filter(filters, slider);
+        $scope.d.showAllColorBtn = true;
+    }
+
+
+    $scope.clearfilterColor = (filters, slider, x) => {
+        var filters_ = angular.copy(filters);
+        filters_.color.val.code = null;
+        $scope.filter(filters_, slider);
+        $scope.d.showAllColorBtn = false;
     }
 
 

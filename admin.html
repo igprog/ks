@@ -65,6 +65,9 @@
                     <a class="nav-link" href="" title="značajke" ng-click="toggleTpl('features')">Značajke proizvoda</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="značajke" ng-click="toggleTpl('colors')">Boje</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="proizvodi" ng-click="toggleTpl('products')">Proizvodi</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
@@ -124,6 +127,12 @@
                     <a class="d-flex w-100 justify-content-start align-items-center text-dark">
                         <span class="fa fa-align-left fa-fw mr-3"></span>
                         <span class="menu-collapsed">Značajke proizvoda</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('colors')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-paint-brush fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Boje</span>
                     </a>
                 </li>
                 <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('products')">
@@ -573,6 +582,80 @@
                     </form>
                 </div>
             </div>
+
+            <div class="card shadow m-3">
+                <div class="card-header">
+                    <h2>Boje</h2>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed">
+                                <tr>
+                                    <th style="width:30px"></th>
+                                    <th style="width:200px">Kod</th>
+                                    <th style="min-width:200px">Naziv</th>
+                                    <th style="min-width:200px">Hex</th>
+                                    <th style="min-width:100px">Slika</th>
+                                </tr>
+                                <tr ng-repeat="x in d.records track by $index">
+                                    <td><button class="btn btn-outline-danger" ng-click="f.remove(d.records, $index)"><i class="fa fa-trash"></i></button></td>
+                                    <td><input ng-model="x.code" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.title" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.hex" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.img" type="text" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-outline-warning" ng-click="f.add()"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <button ng-click="f.save(d.records)" type="submit" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Spremi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <json-directive data="d" debug="config.debug"></json-directive>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="colors">
+        <div ng-if="d.isLogin" ng-controller="colorsCtrl">
+            <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+            <div class="card shadow m-3">
+                <div class="card-header">
+                    <h2>Boje</h2>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed">
+                                <tr>
+                                    <th style="width:30px"></th>
+                                    <th style="width:200px">Kod</th>
+                                    <th style="min-width:200px">Naziv</th>
+                                    <th style="min-width:200px">Hex</th>
+                                    <th style="min-width:100px">Slika</th>
+                                </tr>
+                                <tr ng-repeat="x in d.records track by $index">
+                                    <td><button class="btn btn-outline-danger" ng-click="f.remove(d.records, $index)"><i class="fa fa-trash"></i></button></td>
+                                    <td><input ng-model="x.code" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.title" type="text" class="form-control" /></td>
+                                    <td style="background-color:{{x.hex}}"><input ng-model="x.hex" type="text" class="form-control" /></td>
+                                    <td><input ng-model="x.img" type="text" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-outline-warning" ng-click="f.add()"><i class="fa fa-plus"></i></button></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <button ng-click="f.save(d.records)" type="submit" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Spremi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <json-directive data="d" debug="config.debug"></json-directive>
         </div>
     </script>
@@ -724,8 +807,8 @@
                                         <input ng-model="x.power" type="text" class="form-control" allow-only-numbers>
                                     </div>
                                     <div class="col-sm-6 form-group">
-                                        <label>Boja:</label>
-                                        <input ng-model="x.color" type="text" class="form-control">
+                                        <label>Boja:</label><span style="background-color:{{x.color.hex}}; border:solid" class="ml-2 pl-2 pr-2"></span><span class="ml-2">{{x.color.title}}</span>
+                                        <select ng-model="x.color" ng-options="y.title for y in x.colors" class="form-control"></select>
                                     </div>
                                 </div>
                                 <div>

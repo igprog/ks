@@ -581,3 +581,13 @@ legend.fieldset-border {
     width: 85px !important;
 }
 /****** Cart *****/
+
+.color-filter {
+    border:1px solid gray; margin:2px; height:20px; width:20px; display: inline-block;
+}
+.color-filter.active {
+    border:3px solid gray; margin:2px; height:28px; width:28px; display: inline-block;
+}
+.color-filter-all {
+    border:1px solid gray; margin:2px; height:20px; display: inline-block;
+}

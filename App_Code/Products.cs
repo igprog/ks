@@ -26,6 +26,7 @@ public class Products : System.Web.Services.WebService {
     Tran T = new Tran();
     Features F = new Features();
     ProductGroups PG = new ProductGroups();
+    Colors C = new Colors();
     string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder,
                             p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet,
                             pg.title, b.title, pg.discount
@@ -71,7 +72,7 @@ public class Products : System.Web.Services.WebService {
         public double height;
         public double depth;
         public double power;
-        public string color; 
+        public Colors.NewColor color; 
         public string energyClass;
         public string dataSheet;
 
@@ -80,6 +81,7 @@ public class Products : System.Web.Services.WebService {
         public Review.ReviewData reviews;
         public Discount pg_discount;
         public List<NewProduct> styleProducts;
+        public List<Colors.NewColor> colors;
     }
 
     public class Price {
@@ -120,6 +122,7 @@ public class Products : System.Web.Services.WebService {
         public FilterItem wifi;
         public SortBy sortBy;
         public Show show;
+        public ColorFilter color;
     }
 
     public class FilterItem {
@@ -152,6 +155,11 @@ public class Products : System.Web.Services.WebService {
     public class Show {
         public int[] values;
         public int val;
+    }
+
+    public class ColorFilter {
+        public List<Colors.NewColor> data;
+        public Colors.NewColor val;
     }
     #endregion Class
 
@@ -192,7 +200,7 @@ public class Products : System.Web.Services.WebService {
             x.height = 0;
             x.depth = 0;
             x.power = 0;
-            x.color = null;
+            x.color = new Colors.NewColor();
             x.energyClass = null;
             x.dataSheet = null;
             x.gallery = null;
@@ -201,6 +209,7 @@ public class Products : System.Web.Services.WebService {
             x.reviews = new Review.ReviewData();
             x.pg_discount = new Discount();
             x.styleProducts = new List<NewProduct>();
+            x.colors = C.LoadData();
             return JsonConvert.SerializeObject(x, Formatting.None);    
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -277,6 +286,7 @@ public class Products : System.Web.Services.WebService {
                 x = GetProduct(sku, lang);
                 x.relatedProducts = GetRelatedProducts(x.relatedProductsStr, lang);
                 x.styleProducts = GetStyleProducts(x.style, lang);
+                x.colors = C.LoadData();
             }
             return JsonConvert.SerializeObject(x, Formatting.None);
         } catch(Exception e) {
@@ -309,11 +319,11 @@ public class Products : System.Web.Services.WebService {
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
                 sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}',  '{17}', {18}, '{19}', '{20}', '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}')"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.width, x.height, x.depth, x.power, x.color, x.energyClass, x.dataSheet);
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.width, x.height, x.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
             } else {
                 sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', stock = '{11}', isnew = '{12}', outlet = '{13}', bestselling = '{14}', isactive = '{15}', features = '{16}', deliverydays = '{17}', productorder = {18},
                                     freeshipping = '{19}', bestbuy = '{20}', wifi = '{21}', relatedproducts = '{22}', width = '{23}', height = '{24}', depth = '{25}', power = '{26}', color = '{27}', energyclass = '{28}', datasheet = '{29}' WHERE id = '{0}'"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.width, x.height, x.depth, x.power, x.color, x.energyClass, x.dataSheet);
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.width, x.height, x.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -385,14 +395,21 @@ public class Products : System.Web.Services.WebService {
         xxx.data = DataCollection(sql, lang, true);
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
         xxx.filters = LoadFilters(xxx);
+        List<NewProduct> distinstStyle = (from x in xxx.data
+                                          select x).GroupBy(n => new { n.style })
+                                               .Select(g => g.FirstOrDefault())
+                                               .ToList();
+        xxx.data = distinstStyle;
         return xxx;
     }
 
     public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type, Filters filters) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
+
+        //TODO: refaktorirati (AND / OR)
         DB.CreateDataBase(G.db.products);
-        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}"
+        string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13}"
            , mainSql
            , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
            , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
@@ -412,6 +429,11 @@ public class Products : System.Web.Services.WebService {
            , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
            , filters.bestbuy.val == false ? "" : string.Format(@"{0} p.bestbuy = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
            , filters.wifi.val == false ? "" : string.Format(@"{0} p.wifi = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
+           , string.IsNullOrEmpty(filters.color.val.code) 
+                                           ? "" 
+                                           : string.Format(@"{0} p.color = '{1}'" , (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false && filters.wifi.val == false
+                                                                ? ""
+                                                                : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")), filters.color.val.code)
            , string.Format("ORDER BY {0} LIMIT {1}", SortBySql(filters.sortBy.val), filters.show.val)
            );
         ProductsData xxx = new ProductsData();
@@ -446,6 +468,7 @@ public class Products : System.Web.Services.WebService {
     public List<NewProduct> DataCollection(string sql, string lang, bool loadAllData) {
         List<NewProduct> xx = new List<NewProduct>();
         List<Features.NewFeature> features = F.Get(G.featureType.product);
+
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
             using (var command = new SQLiteCommand(sql, connection)) {
@@ -522,7 +545,7 @@ public class Products : System.Web.Services.WebService {
         x.height = G.ReadD(reader, 24);
         x.depth = G.ReadD(reader, 25);
         x.power = G.ReadD(reader, 26);
-        x.color = G.ReadS(reader, 27);
+        x.color = C.GetData(G.ReadS(reader, 27)); // new Colors.NewColor();
         x.energyClass = G.ReadS(reader, 28);
         x.dataSheet = G.ReadS(reader, 29);
 
@@ -628,6 +651,7 @@ public class Products : System.Web.Services.WebService {
         x.show = new Show();
         x.show.values = new int[] { 16, 32, 64 };
         x.show.val = 16;
+        x.color = C.GetDistinctColors(xxx.data);
         return x;
     }
 

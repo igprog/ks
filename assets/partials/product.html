@@ -90,9 +90,7 @@
                                     </div>
                                 </div>
                                 <div class="description">
-                                    <p>
-                                        {{d.record.shortdesc}}
-                                    </p>
+                                    <p>{{d.record.shortdesc}}</p>
                                 </div>
                                 <div class="product-page-options">
                                     <div class="pull-left">
@@ -106,7 +104,17 @@
                                     <div ng-if="d.record.color" class="pull-left">
                                         <label class="control-label">Color:</label>
                                         <label ng-if="!d.showColorVar">{{d.record.color}}</label>
-                                        <select ng-if="d.showColorVar" ng-model="color" ng-options="x.color for x in d.record.styleProducts"  class="form-control input-sm" ng-change="get(color)"></select>
+
+
+                                        <button style="background-color:{{x.color.hex}};" class="color-filter" ng-repeat="x in d.record.styleProducts" title="{{x.color.title | translate}}" ng-click="get(x)"></button>
+
+                                        <!--<button style="background-color:{{x.color.hex}};" class="color-filter_" ng-repeat="x in d.record.styleProducts track by $index" title="{{x.title | translate}}" ng-change="get(x)"></button>-->
+
+
+
+                                        <!--<select ng-if="d.showColorVar" ng-model="color" ng-options="x.color.title for x in d.record.styleProducts"  class="form-control input-sm" ng-change="get(color)"></select>-->
+                                        
+                                        
                                         <!--<select ng-model="color" class="form-control input-sm" ng-change="get(color)">
                                             <option value="{{x}}" ng-repeat="x in d.record.styleProducts">{{x.color}}</option>
                                         </select>-->

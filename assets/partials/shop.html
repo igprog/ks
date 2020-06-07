@@ -41,6 +41,16 @@
                                 <button type="button" class="btn btn-primary btn-main ml-2" ng-click="filter(d.filters, slider)">{{'filter' | translate}}</button>
                             </div>
                             <div id="slider-range"></div>
+                            <h3>
+                                {{'color' | translate}} 
+                            </h3>
+                            <div>
+                                <button style="background-color:{{x.hex}};" class="color-filter {{x.code===d.filters.color.val.code?'active':''}}" ng-repeat="x in d.filters.color.data track by $index" title="{{x.title | translate}}" ng-click="filterColor(d.filters, slider, x)"></button>
+                                <button ng-if="d.showAllColorBtn" class="color-filter-all" title="{{'all colors' | translate}}" ng-click="clearfilterColor(d.filters, slider, d.filters.color.val)">{{'all colors' | translate}}</button>
+                            </div>
+                            <!--<select ng-model="d.filters.color.val" ng-change="filter(d.filters, slider)">
+                                <option value="{{x.code}}" ng-repeat="x in d.filters.color.data track by $index">{{x.title}} - {{x.code}}</option>
+                            </select>-->
                         </div>
                         <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix hidden-xs">
                             <h2>{{'best selling' | translate}}</h2>
