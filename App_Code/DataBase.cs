@@ -20,8 +20,8 @@ public class DataBase {
                     title NVARCHAR(200),
                     parent VARCHAR(50),
                     discount VARCHAR(50),
-                    discount_from VARCHAR(50),
-                    discount_from VARCHAR(50),
+                    discountfrom VARCHAR(50),
+                    discountto VARCHAR(50),
                     img VARCHAR(50),
                     pg_order INTEGER)";
         CreateTable(path, sql);
@@ -50,6 +50,8 @@ public class DataBase {
                 img NVARCHAR(50),
                 price VARCHAR(50),
                 discount VARCHAR(50),
+                discountfrom VARCHAR(50),
+                discountto VARCHAR(50),
                 stock INTEGER(50),
                 isnew VARCHAR(50),
                 outlet VARCHAR(50),

@@ -74,7 +74,7 @@
                                 <div class="price-availability-block clearfix">
                                     <div class="price">
                                         <strong>{{d.record.price.grossWithDiscount | number}} <span>kn</span></strong>
-                                        <span ng-if="d.record.discount.coeff>0">
+                                        <span ng-if="d.record.discount.isValid">
                                             <em><span>{{d.record.price.gross | number}}</span> kn</em>
                                         </span>
                                     </div>

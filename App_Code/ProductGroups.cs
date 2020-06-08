@@ -17,7 +17,7 @@ using Igprog;
 public class ProductGroups : System.Web.Services.WebService {
     Global G = new Global();
     DataBase DB = new DataBase();
-    string mainSql = "SELECT id, code, title, parent, discount, discount_from, discount_to, img, pg_order FROM productGroups WHERE";
+    string mainSql = "SELECT id, code, title, parent, discount, discountfrom, discountto, img, pg_order FROM productGroups WHERE";
     public ProductGroups () {
     }
 
@@ -89,7 +89,7 @@ public class ProductGroups : System.Web.Services.WebService {
                 x.id = Guid.NewGuid().ToString();
                 sql = string.Format(@"INSERT INTO productGroups VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8})", x.id, x.code, x.title, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
             } else {
-                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', parent = '{3}', discount = '{4}', discount_from = '{5}', discount_to = '{6}', img = '{7}', pg_order = {8} WHERE id = '{0}'", x.id, x.code, x.title, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
+                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', parent = '{3}', discount = '{4}', discountfrom = '{5}', discountto = '{6}', img = '{7}', pg_order = {8} WHERE id = '{0}'", x.id, x.code, x.title, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
                 if (x.code == x.parent.code) {
                     isUpdateDiscount = true;  //***** Update children groups discount (same sa parent group) *****
                 }
@@ -102,7 +102,7 @@ public class ProductGroups : System.Web.Services.WebService {
                 connection.Close();
             }
             if (isUpdateDiscount) {
-                sql = string.Format(@"UPDATE productGroups SET discount = '{0}', discount_from = '{1}', discount_to = '{2}' WHERE parent = '{3}'", x.discount.coeff, x.discount.from, x.discount.to, x.code);
+                sql = string.Format(@"UPDATE productGroups SET discount = '{0}', discountfrom = '{1}', discountto = '{2}' WHERE parent = '{3}'", x.discount.coeff, x.discount.from, x.discount.to, x.code);
                 using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                     connection.Open();
                     using (var command = new SQLiteCommand(sql, connection)) {

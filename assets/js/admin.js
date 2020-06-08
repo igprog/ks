@@ -477,7 +477,10 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
         if (x.style === null) { x.style = x.sku; }
         if (x.discount.perc === null) { x.discount.perc = 0; }
-        f.post(service, 'Save', { x: x }).then((d) => {
+        var data = angular.copy(x);
+        data.discount.from = f.setDate(x.discount.from);
+        data.discount.to = f.setDate(x.discount.to);
+        f.post(service, 'Save', { x: data }).then((d) => {
             debugger;
             if (x.id === null) {
                 x.id = d;
@@ -492,6 +495,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         } else {
             f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
                 $scope.d.records[idx] = d;
+                debugger;
+                $scope.d.records[idx].discount.from = new Date(d.discount.from);
+                $scope.d.records[idx].discount.to = new Date(d.discount.to);
             });
         }
     }

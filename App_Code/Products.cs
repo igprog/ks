@@ -27,9 +27,9 @@ public class Products : System.Web.Services.WebService {
     Features F = new Features();
     ProductGroups PG = new ProductGroups();
     Colors C = new Colors();
-    string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder,
+    string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.discountfrom, p.discountto, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder,
                             p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet,
-                            pg.title, b.title, pg.discount
+                            pg.title, b.title, pg.discount, pg.discountfrom, pg.discountto
                         FROM products p   
                         LEFT OUTER JOIN productGroups pg
                         ON p.productGroup = pg.code
@@ -95,6 +95,7 @@ public class Products : System.Web.Services.WebService {
         public double perc;
         public string from;
         public string to;
+        public bool isValid;
     }
 
     public class ProductsData {
@@ -353,12 +354,12 @@ public class Products : System.Web.Services.WebService {
             x.discount.coeff = x.discount.perc / 100;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}',  '{17}', {18}, '{19}', '{20}', '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}')"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
+                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}')"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
             } else {
-                sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', stock = '{11}', isnew = '{12}', outlet = '{13}', bestselling = '{14}', isactive = '{15}', features = '{16}', deliverydays = '{17}', productorder = {18},
-                                    freeshipping = '{19}', bestbuy = '{20}', wifi = '{21}', relatedproducts = '{22}', width = '{23}', height = '{24}', depth = '{25}', power = '{26}', color = '{27}', energyclass = '{28}', datasheet = '{29}' WHERE id = '{0}'"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
+                sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', discountfrom = '{11}', discountto = '{12}', stock = '{13}', isnew = '{14}', outlet = '{15}', bestselling = '{16}', isactive = '{17}', features = '{18}', deliverydays = '{19}', productorder = {20},
+                                    freeshipping = '{21}', bestbuy = '{22}', wifi = '{23}', relatedproducts = '{24}', width = '{25}', height = '{26}', depth = '{27}', power = '{28}', color = '{29}', energyclass = '{30}', datasheet = '{31}' WHERE id = '{0}'"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -562,7 +563,7 @@ public class Products : System.Web.Services.WebService {
         //if (loadAllData) {
         x.productGroup = new ProductGroups.NewProductGroup();
             x.productGroup.code = G.ReadS(reader, 3);
-            x.productGroup.title = G.ReadS(reader, 30);
+            x.productGroup.title = G.ReadS(reader, 32);
             x.productGroup.title_seo = G.GetSeoTitle(x.productGroup.title);
             x.productGroup.parent = new ProductGroups.NewProductGroup();
             x.productGroup.parent.code = PG.GetParentGroup(x.productGroup.code);
@@ -577,7 +578,7 @@ public class Products : System.Web.Services.WebService {
             x.longdesc = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 6);
             x.brand = new Brands.NewBrands();
             x.brand.code = G.ReadS(reader, 7);
-            x.brand.title = G.ReadS(reader, 31);
+            x.brand.title = G.ReadS(reader, 33);
             x.brand.title_seo = G.GetSeoTitle(x.brand.title);
         }
         x.img = G.ReadS(reader, 8);
@@ -586,38 +587,40 @@ public class Products : System.Web.Services.WebService {
         x.price.net = x.price.gross - (x.price.gross / 1.25);
         //double productDiscount = G.ReadD(reader, 10);  // Product Discount
         //double pgDisCount = G.ReadI(reader, 20);  // Product Group Discount
-        x.discount = GetDiscount(G.ReadD(reader, 10), G.ReadD(reader, 32));
+
+        x.discount = GetDiscount(G.ReadD(reader, 10), G.ReadS(reader, 11), G.ReadS(reader, 12), G.ReadD(reader, 34), G.ReadS(reader, 35), G.ReadS(reader, 36));
+
         //x.discount = new Discount();
         //x.discount.coeff = G.ReadD(reader, 10);
         //x.discount.perc = Math.Round(x.discount.coeff * 100, 1);
         //x.price.discount = x.price.net * x.discount.coeff;
         //x.price.netWithDiscount = x.price.net - x.price.discount;
         
-        x.price.discount = x.price.gross * x.discount.coeff;  // TODO: Dali se popust racuna na neto ili na bruto ???
+        x.price.discount = x.price.gross * (x.discount.isValid ? x.discount.coeff : 0);
         x.price.grossWithDiscount = x.price.gross - x.price.discount;
         //if (loadAllData) {
-        x.stock = G.ReadI(reader, 11);
-            x.isnew = G.ReadB(reader, 12);
-            x.outlet = G.ReadB(reader, 13);
-            x.bestselling = G.ReadB(reader, 14);
-            x.isactive = G.ReadB(reader, 15);
-            x.features = F.GetProductFeatures(features, G.ReadS(reader, 16));
-            x.deliverydays = G.ReadS(reader, 17);
-            x.productorder = G.ReadI(reader, 18);
+        x.stock = G.ReadI(reader, 13);
+            x.isnew = G.ReadB(reader, 14);
+            x.outlet = G.ReadB(reader, 15);
+            x.bestselling = G.ReadB(reader, 16);
+            x.isactive = G.ReadB(reader, 17);
+            x.features = F.GetProductFeatures(features, G.ReadS(reader, 18));
+            x.deliverydays = G.ReadS(reader, 19);
+            x.productorder = G.ReadI(reader, 20);
 
-        x.freeshipping = G.ReadB(reader, 19);
-        x.bestbuy = G.ReadB(reader, 20);
-        x.wifi = G.ReadB(reader, 21);
-        x.relatedProductsStr = G.ReadS(reader, 22);
+        x.freeshipping = G.ReadB(reader, 21);
+        x.bestbuy = G.ReadB(reader, 22);
+        x.wifi = G.ReadB(reader, 23);
+        x.relatedProductsStr = G.ReadS(reader, 24);
         x.relatedProducts = new List<NewProduct>();
         x.dimension = new Dimension();
-        x.dimension.width = G.ReadD(reader, 23);
-        x.dimension.height = G.ReadD(reader, 24);
-        x.dimension.depth = G.ReadD(reader, 25);
-        x.power = G.ReadD(reader, 26);
-        x.color = C.GetData(G.ReadS(reader, 27)); // new Colors.NewColor();
-        x.energyClass = G.ReadS(reader, 28);
-        x.dataSheet = G.ReadS(reader, 29);
+        x.dimension.width = G.ReadD(reader, 25);
+        x.dimension.height = G.ReadD(reader, 26);
+        x.dimension.depth = G.ReadD(reader, 27);
+        x.power = G.ReadD(reader, 28);
+        x.color = C.GetData(G.ReadS(reader, 29)); // new Colors.NewColor();
+        x.energyClass = G.ReadS(reader, 30);
+        x.dataSheet = G.ReadS(reader, 31);
 
         //x.pg_discount = new Discount();
         //x.pg_discount.coeff = G.ReadI(reader, 20);
@@ -651,13 +654,43 @@ public class Products : System.Web.Services.WebService {
         return xx;
     }
 
-    private Discount GetDiscount(double productDiscount, double pgDiscount) {
+    private Discount GetDiscount(double productDiscount, string pFrom, string pTo, double pgDiscount, string pgFrom, string pgTo) {
         Discount x = new Discount();
-        double discount = productDiscount > 0 ? productDiscount : pgDiscount;
-        x.coeff = discount;
+        //double discount = 0; // productDiscount > 0 ? productDiscount : pgDiscount;
+        DateTime today = DateTime.Now;
+        //DateTime from = DateTime.Now;
+        //DateTime to = DateTime.Now;
+        //int diff = 0;
+         
+        if (productDiscount > 0) {
+            x.coeff = productDiscount;
+            x.from = pFrom;
+            x.to = pTo;
+        } else {
+            x.coeff = pgDiscount;
+            x.from = pgFrom;
+            x.to = pgTo;
+        }
+        //x.coeff = discount;
         x.perc = Math.Round(x.coeff * 100, 1);
+
+        if (today >= Convert.ToDateTime(x.from) && today <= Convert.ToDateTime(x.to)) {
+            x.isValid = true;
+        }
+
+
+
         return x;
     }
+
+    //private Discount GetDiscount(double productDiscount, double pgDiscount) {
+    //    Discount x = new Discount();
+    //    double discount = productDiscount > 0 ? productDiscount : pgDiscount;
+    //    x.coeff = discount;
+    //    x.perc = Math.Round(x.coeff * 100, 1);
+
+    //    return x;
+    //}
 
     public void RemoveMainImg(string productId, string img) {
         string img_ = img.Contains('?') ? img.Split('?')[0] : img;
@@ -813,44 +846,22 @@ public class Products : System.Web.Services.WebService {
         string sql = null;
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
-            //foreach (var d in dimensions) {
-                sql = string.Format(@"SELECT DISTINCT color FROM products WHERE style = '{0}' AND width = '{1}' AND height = '{2}' AND depth = '{3}'"
-                                    , style, d.width, d.height, d.depth);
-                using (var command = new SQLiteCommand(sql, connection)) {
-                    using (var reader = command.ExecuteReader()) {
-                        xx = new List<Colors.NewColor>();
-                        while (reader.Read()) {
-                            Colors.NewColor x = new Colors.NewColor();
-                            x = C.GetData(G.ReadS(reader, 0));
-                            xx.Add(x);
-                        }
+            sql = string.Format(@"SELECT DISTINCT color FROM products WHERE style = '{0}' AND width = '{1}' AND height = '{2}' AND depth = '{3}'"
+                                , style, d.width, d.height, d.depth);
+            using (var command = new SQLiteCommand(sql, connection)) {
+                using (var reader = command.ExecuteReader()) {
+                    xx = new List<Colors.NewColor>();
+                    while (reader.Read()) {
+                        Colors.NewColor x = new Colors.NewColor();
+                        x = C.GetData(G.ReadS(reader, 0));
+                        xx.Add(x);
                     }
                 }
-            //}
+            }
             connection.Close();
         }
         return xx;
     }
-
-    //public List<Colors.NewColor> GetDistinctColors(string style, List<Dimension> dimensions) {
-    //    List<Colors.NewColor> xx = new List<Colors.NewColor>();
-    //    string sql = string.Format("SELECT DISTINCT color FROM products WHERE style = '{0}'", style);
-    //    using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
-    //        connection.Open();
-    //        using (var command = new SQLiteCommand(sql, connection)) {
-    //            using (var reader = command.ExecuteReader()) {
-    //                xx = new List<Colors.NewColor>();
-    //                while (reader.Read()) {
-    //                    Colors.NewColor x = new Colors.NewColor();
-    //                    x = C.GetData(G.ReadS(reader, 0));
-    //                    xx.Add(x);
-    //                }
-    //            }
-    //        }
-    //        connection.Close();
-    //    }
-    //    return xx;
-    //}
     #endregion Methods
 
 }
