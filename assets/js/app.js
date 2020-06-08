@@ -406,8 +406,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 .controller('shopCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams) {
 
-    //$scope.search = { price_min: '', price_max: '', amount_min: 1000, amount_max: 5000 };
-
     $scope.slider = {
         minValue: 0,
         maxValue: 0,
@@ -445,7 +443,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var load = (param) => {
         if ($sessionStorage.filters !== undefined) { $sessionStorage.filters = null; };
-        var pg_code = param.pg_code !== undefined ? param.pg_code : null;
+        var pg_code = param.pg_code !== undefined ? param.pg_code : null
+        $sessionStorage.pg_code = pg_code;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
         var search = param.search !== undefined ? param.search : null;
         var type = param.type !== undefined ? param.type : null;
@@ -512,7 +511,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.slider.options.ceil = $sessionStorage.filters.price.max;
         }
     }
-    if ($scope.d.filters) {
+    debugger;
+    if ($scope.d.filters && $sessionStorage.pg_code === $stateParams.pg_code) {
         $scope.filter($scope.d.filters, $scope.slider);
     } else {
         load($stateParams);
@@ -609,11 +609,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
-    $scope.getVarProduct = (style, color, dimension) => {
+    $scope.getVarColorProduct = (style, color, dimension) => {
         debugger;
         var dimension_ = angular.copy(JSON.parse(angular.toJson(dimension)));
         $scope.d.loading = true;
-        f.post('Products', 'GetVarProduct', { style: style, color: color, dimension: dimension_, lang: lang }).then((d) => {
+        f.post('Products', 'GetVarColorProduct', { style: style, color: color, dimension: dimension_, lang: lang }).then((d) => {
             get(d.sku);
             $scope.d.loading = false;
         });

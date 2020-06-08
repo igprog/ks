@@ -62,21 +62,16 @@ public class Products : System.Web.Services.WebService {
         public List<Features.NewFeature> features;
         public string deliverydays;
         public int productorder;
-
         public bool freeshipping;
         public bool bestbuy;
         public bool wifi;
         public string relatedProductsStr;
         public List<NewProduct> relatedProducts;
-        //public double width;
-        //public double height;
-        //public double depth;
         public Dimension dimension;
         public double power;
         public Colors.NewColor color; 
         public string energyClass;
         public string dataSheet;
-
         public Price price;
         public int qty;
         public Review.ReviewData reviews;
@@ -211,6 +206,10 @@ public class Products : System.Web.Services.WebService {
             //x.depth = 0;
             x.power = 0;
             x.color = new Colors.NewColor();
+            x.color.code = null;
+            x.color.title = null;
+            x.color.hex = null;
+            x.color.img = null;
             x.energyClass = null;
             x.dataSheet = null;
             x.gallery = null;
@@ -240,7 +239,7 @@ public class Products : System.Web.Services.WebService {
     [WebMethod]
     public string Filter(string lang, string productGroup, string brand, string search, string type, Filters filters) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, filters), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, filters, true), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -297,7 +296,7 @@ public class Products : System.Web.Services.WebService {
             if (!string.IsNullOrEmpty(sku)) {
                 x = GetProduct(sku, lang);
                 x.relatedProducts = GetRelatedProducts(x.relatedProductsStr, lang);
-                x.styleProducts = GetStyleProducts(x.style, lang);
+                //x.styleProducts = GetStyleProducts(x.style, lang);
                 x.distinctDimensions = GetDistinctDimensions(x.style);
                 x.distinctColors = GetDistinctColors(x.style, x.dimension);
                 x.colors = C.LoadData();
@@ -320,7 +319,7 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string GetVarProduct(string style, string color, Dimension dimension, string lang) {
+    public string GetVarColorProduct(string style, string color, Dimension dimension, string lang) {
         try {
             string sql = string.Format(@"{0} WHERE p.style = '{1}' AND p.color = '{2}' AND p.width = '{3}' AND p.height = '{4}' AND p.depth = '{5}'"
                                         , mainSql , style , color, dimension.width, dimension.height, dimension.depth);
@@ -424,12 +423,11 @@ public class Products : System.Web.Services.WebService {
                    , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
                    , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-                   , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+                   , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
                    , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
                    , "ORDER BY p.productorder DESC LIMIT 16");
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
-        xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
         xxx.filters = LoadFilters(xxx);
         if (isDistinctStyle) {
             List<NewProduct> distinstStyle = (from x in xxx.data
@@ -438,10 +436,11 @@ public class Products : System.Web.Services.WebService {
                                        .ToList();
             xxx.data = distinstStyle;
         }
+        xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
         return xxx;
     }
 
-    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type, Filters filters) {
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type, Filters filters, bool isDistinctStyle) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
@@ -452,7 +451,7 @@ public class Products : System.Web.Services.WebService {
            , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
            , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
            , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '%{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
            , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
            , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? ""
                     : string.Format(@"{0} 
@@ -476,6 +475,13 @@ public class Products : System.Web.Services.WebService {
            );
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
+        if (isDistinctStyle) {
+            List<NewProduct> distinstStyle = (from x in xxx.data
+                                              select x).GroupBy(n => new { n.style })
+                                       .Select(g => g.FirstOrDefault())
+                                       .ToList();
+            xxx.data = distinstStyle;
+        }
         xxx.responseTime = stopwatch.Elapsed.TotalSeconds;
         return xxx;
     }

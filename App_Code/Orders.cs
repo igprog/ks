@@ -140,7 +140,8 @@ public class Orders : System.Web.Services.WebService {
     [WebMethod]
     public string Load() {
         try {
-            return JsonConvert.SerializeObject(LoadData(mainSql), Formatting.None);
+            string sql = string.Format("{0} ORDER BY o.rowid DESC", mainSql);
+            return JsonConvert.SerializeObject(LoadData(sql), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -249,7 +250,6 @@ public class Orders : System.Web.Services.WebService {
     [WebMethod]
     public string Get(string x) {
         try {
-
             return JsonConvert.SerializeObject(LoadData(mainSql), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);

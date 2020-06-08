@@ -102,7 +102,7 @@ public class ProductGroups : System.Web.Services.WebService {
                 connection.Close();
             }
             if (isUpdateDiscount) {
-                sql = string.Format(@"UPDATE productGroups SET discount = '{0}' WHERE parent = '{1}'", x.discount.coeff, x.code);
+                sql = string.Format(@"UPDATE productGroups SET discount = '{0}', discount_from = '{1}', discount_to = '{2}' WHERE parent = '{3}'", x.discount.coeff, x.discount.from, x.discount.to, x.code);
                 using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                     connection.Open();
                     using (var command = new SQLiteCommand(sql, connection)) {

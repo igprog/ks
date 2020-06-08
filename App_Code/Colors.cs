@@ -68,20 +68,6 @@ public class Colors : System.Web.Services.WebService {
         File.WriteAllText(Server.MapPath(path), JsonConvert.SerializeObject(value));
     }
 
-    //public List<NewColor> GetData(string code) {
-    //    List<NewColor> x = new List<NewColor>();
-    //    string json = ReadFile();
-    //    if (!string.IsNullOrEmpty(json)) {
-    //        x = JsonConvert.DeserializeObject<List<NewColor>>(json);
-    //        if (!string.IsNullOrEmpty(code)) {
-    //            x = x.Where(a => a.code == code).OrderBy(a => a.order).ToList();
-    //        }
-    //        return x;
-    //    } else {
-    //        return x;
-    //    }
-    //}
-
     public NewColor InitData() {
         NewColor x = new NewColor();
         x.code = null;
@@ -106,11 +92,14 @@ public class Colors : System.Web.Services.WebService {
      public NewColor GetData(string code) {
         List<NewColor> xx = LoadData();
         NewColor x = new NewColor();
-        x = xx.Find(a => a.code == code);
+        if (!string.IsNullOrEmpty(code)) {
+            x = xx.Find(a => a.code == code);
+            if (x == null) {
+                x = new NewColor();
+            }
+        }
         return x;
     }
-
-
 
     public string ReadFile() {
         if (File.Exists(Server.MapPath(path))) {
@@ -120,30 +109,16 @@ public class Colors : System.Web.Services.WebService {
         }
     }
 
-
-
     public Products.ColorFilter GetDistinctColors(List<Products.NewProduct> products) {
         var x = new Products.ColorFilter();
         x.data = new List<NewColor>();
         x.val = new NewColor();
         List<NewColor> xx = new List<NewColor>();
         if (products.Count > 0) {
-            x.data = products.Select(a => a.color).Distinct().ToList();
+            //x.data = products.Select(a => a.color).Distinct().ToList();
+            x.data = products.Select(a => a.color).Where(a => a.code != null).Distinct().ToList();
         }
         return x;
     }
-
-    //public List<NewFeature> InitProductFeatures(List<NewFeature> features) {
-    //    NewFeature x = new NewFeature();
-    //    List<NewFeature> xx = new List<NewFeature>();
-    //    foreach (NewFeature o in features) {
-    //        x = new NewFeature();
-    //        x.code = o.code;
-    //        x.title = o.title;
-    //        x.unit = o.unit;
-    //        xx.Add(x);
-    //    }
-    //    return xx;
-    //}
 
 }

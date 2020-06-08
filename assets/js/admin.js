@@ -37,6 +37,14 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 return response.data.d;
             });
         },
+        setDate: (x) => {
+            var day = x.getDate();
+            day = day < 10 ? '0' + day : day;
+            var mo = x.getMonth();
+            mo = mo + 1 < 10 ? '0' + (mo + 1) : mo + 1;
+            var yr = x.getFullYear();
+            return yr + '-' + mo + '-' + day;
+        },
         initCodeName: (x) => {
             if (x.id === null) {
                 x.code = x.title
@@ -244,13 +252,36 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             $scope.d.loading = true;
             f.post(service, 'Load', {}).then((d) => {
                 $scope.d.records = d;
+                angular.forEach(d, function (val, key) {
+                    debugger;
+                    if (val.discount.from !== null) {
+                        $scope.d.records[key].discount.from = new Date(val.discount.from);
+                    }
+                    if (val.discount.to !== null) {
+                        $scope.d.records[key].discount.to = new Date(val.discount.to);
+                    }
+                    /***** SubGroups Date *****/
+                    angular.forEach(val.subGroups, function (val1, key1) {
+                        debugger;
+                        if (val1.discount.from !== null) {
+                            $scope.d.records[key].subGroups[key1].discount.from = new Date(val1.discount.from);
+                        }
+                        if (val1.discount.to !== null) {
+                            $scope.d.records[key].subGroups[key1].discount.to = new Date(val1.discount.to);
+                        }
+                    });
+                });
                 $scope.d.loading = false;
             });
         }
         load();
 
         var save = (x, idx) => {
-            f.post(service, 'Save', { x: x }).then((d) => {
+            debugger;
+            var data = angular.copy(x);
+            data.discount.from = f.setDate(x.discount.from);
+            data.discount.to = f.setDate(x.discount.to);
+            f.post(service, 'Save', { x: data }).then((d) => {
                 debugger;
                 //$scope.d.records[idx] = d;
                 x = d;
@@ -304,9 +335,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             },
             saveSubGroup: (x) => {
                 return save(x);
-            },
-            get: () => {
-                return get();
             },
             remove: (x) => {
                 return remove(x)
@@ -451,7 +479,10 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         if (x.discount.perc === null) { x.discount.perc = 0; }
         f.post(service, 'Save', { x: x }).then((d) => {
             debugger;
-            $scope.d.records[idx].id = d;
+            if (x.id === null) {
+                x.id = d;
+            }
+            //$scope.d.records[idx].id = d;
         });
     }
 
@@ -696,59 +727,106 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 }])
 
 .controller('ordersCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
-        var service = 'Orders';
-        var data = {
-            loading: false,
-            records: []
-        }
-        $scope.d = data;
+    var service = 'Orders';
+    var data = {
+        loading: false,
+        records: []
+    }
+    $scope.d = data;
 
-        var load = () => {
-            $scope.d.loading = true;
-            f.post(service, 'Load', { }).then((d) => {
-                $scope.d.records = d;
-                $scope.d.loading = false;
-            });
-        }
-        load();
+    var load = () => {
+        $scope.d.loading = true;
+        f.post(service, 'Load', {}).then((d) => {
+            $scope.d.records = d;
+            $scope.d.loading = false;
+        });
+    }
+    load();
 
-        var getUser = (id, idx) => {
-            debugger;
-            f.post('Users', 'Get', { id: id }).then((d) => {
-                $scope.d.records[idx].user = d;
-            });
-        }
+    var getUser = (id, idx) => {
+        debugger;
+        f.post('Users', 'Get', { id: id }).then((d) => {
+            $scope.d.records[idx].user = d;
+        });
+    }
 
-        var save = (x) => {
-            debugger;
-            f.post(service, 'Save', { x: x }).then((d) => {
+    var save = (x) => {
+        debugger;
+        f.post(service, 'Save', { x: x }).then((d) => {
+            //$scope.d.records = d;
+        });
+    }
+
+    var remove = (x) => {
+        if (confirm('Briši narudžbu?')) {
+            f.post(service, 'Delete', { x: x }).then((d) => {
                 //$scope.d.records = d;
             });
         }
+    }
 
-        var remove = (x) => {
-            if (confirm('Briši narudžbu?')) {
-                f.post(service, 'Delete', { x: x }).then((d) => {
-                    //$scope.d.records = d;
-                });
-            }
+    $scope.f = {
+        load: () => {
+            return load();
+        },
+        getUser: (id, idx) => {
+            return getUser(id, idx);
+        },
+        save: (x) => {
+            return save(x)
+        },
+        remove: (x) => {
+            return remove(x);
         }
+    }
+}])
 
-        $scope.f = {
-            load: () => {
-                return load();
-            },
-            getUser: (id, idx) => {
-                return getUser(id, idx);
-            },
-            save: (x) => {
-                return save(x)
-            },
-            remove: (x) => {
-                return remove(x);
-            }
+.controller('featuresCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
+    var service = 'Features';
+    var data = {
+        loading: false,
+        records: []
+    }
+    $scope.d = data;
+
+    var add = () => {
+        $scope.d.records.push({});
+    }
+
+    var save = (x) => {
+        f.post(service, 'Save', { x: x }).then((d) => {
+            $scope.d.records = d;
+        });
+    }
+
+    var load = (type) => {
+        $scope.d.loading = true;
+        f.post(service, 'Load', { type: type}).then((d) => {
+            $scope.d.records = d;
+            $scope.d.loading = false;
+        });
+    }
+    load(null);
+
+    var remove = (x, idx) => {
+        if (confirm('Briši?')) {
+            x.splice(idx, 1);
         }
-    }])
+    }
+
+    $scope.f = {
+        add: () => {
+            return add();
+        },
+        save: (x) => {
+            return save(x)
+        },
+        remove: (x, idx) => {
+            return remove(x, idx)
+        }
+    }
+
+}])
 
 .controller('colorsCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
         var service = 'Colors';

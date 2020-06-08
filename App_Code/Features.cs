@@ -88,15 +88,17 @@ public class Features : System.Web.Services.WebService {
                 string[] o_ = o.Split(':');
                 var po = new NewFeature();
                 var po_ = features.Find(a => a.code == o_[0]);
-                po.code = po_.code;
-                po.title = po_.title;
-                po.val = o_[1];
-                po.unit = po_.unit;
-                po.icon = po_.icon;
-                po.faicon = po_.faicon;
-                po.type = po_.type;
-                po.order = po_.order;
-                xx.Add(po);
+                if (po_ != null) {
+                    po.code = po_.code;
+                    po.title = po_.title;
+                    po.val = o_[1];
+                    po.unit = po_.unit;
+                    po.icon = po_.icon;
+                    po.faicon = po_.faicon;
+                    po.type = po_.type;
+                    po.order = po_.order;
+                    xx.Add(po);
+                }
             }
             // ****** if not exists in data collection (new features)  *****
             foreach (var f in features) {

@@ -93,7 +93,7 @@
                                     <p>{{d.record.shortdesc}}</p>
                                 </div>
                                 <div class="product-page-options">
-                                    <div ng-if="d.record.dimension" class="pull-left">
+                                    <div ng-if="d.record.dimension.width>0&&d.record.dimension.height>0&&d.record.dimension.depth>0" class="pull-left">
                                         <label class="control-label">{{'size'}}:</label>
                                         <select ng-model="d.record.dimension" class="form-control input-sm" ng-change="getVarDimProduct(d.record.style, d.record.dimension)">
                                             <option value="{{x}}" ng-repeat="x in d.record.distinctDimensions track by $index">{{x.width}}x{{x.height}}x{{x.depth}}</option>
@@ -105,11 +105,11 @@
                                             <option>XL</option>
                                         </select>-->
                                     </div>
-                                    <div ng-if="d.record.color" class="pull-left">
+                                    <div ng-if="d.record.color.code" class="pull-left">
                                         <label class="control-label">Color:</label>
-                                        <label ng-if="!d.showColorVar">{{d.record.color}}</label>
+                                        <label ng-if="!d.showColorVar">{{d.record.color.title}}</label>
 
-                                        <button style="background-color:{{x.hex}};" class="color-filter" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarProduct(d.record.style, x.code, d.record.dimension)"></button>
+                                        <button style="background-color:{{x.hex}};" class="color-filter" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
 
                                         <!--<button style="background-color:{{x.color.hex}};" class="color-filter" ng-repeat="x in d.record.styleProducts" title="{{x.color.title | translate}}" ng-click="get(x)"></button>-->
 
@@ -249,7 +249,7 @@
             </div>
             <!-- END SIDEBAR & CONTENT -->
             <!-- BEGIN SIMILAR PRODUCTS -->
-            <div ng-if="d.record.relatedProducts" class="row margin-bottom-40">
+            <div ng-if="d.record.relatedProducts.length>0" class="row margin-bottom-40">
                 <div class="col-md-12 col-sm-12">
                     <h2>{{'accessories' | translate}}</h2>
                     <specialproducts-directive data="d.record.relatedProducts"></specialproducts-directive>
