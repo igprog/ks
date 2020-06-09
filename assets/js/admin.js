@@ -279,8 +279,12 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         var save = (x, idx) => {
             debugger;
             var data = angular.copy(x);
-            data.discount.from = f.setDate(x.discount.from);
-            data.discount.to = f.setDate(x.discount.to);
+            if (x.discount.from !== null) {
+                data.discount.from = f.setDate(x.discount.from);
+            }
+            if (x.discount.to !== null) {
+                data.discount.to = f.setDate(x.discount.to);
+            }
             f.post(service, 'Save', { x: data }).then((d) => {
                 debugger;
                 //$scope.d.records[idx] = d;
@@ -478,8 +482,12 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         if (x.style === null) { x.style = x.sku; }
         if (x.discount.perc === null) { x.discount.perc = 0; }
         var data = angular.copy(x);
-        data.discount.from = f.setDate(x.discount.from);
-        data.discount.to = f.setDate(x.discount.to);
+        if (data.discount.from !== null) {
+            data.discount.from = f.setDate(data.discount.from);
+        }
+        if (data.discount.to !== null) {
+            data.discount.to = f.setDate(data.discount.to);
+        }
         f.post(service, 'Save', { x: data }).then((d) => {
             debugger;
             if (x.id === null) {
@@ -490,9 +498,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
     var get = (sku, idx) => {
-        if (sku === null) {
-            newProduct();
-        } else {
+        if (sku !== null) {
             f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
                 $scope.d.records[idx] = d;
                 debugger;
@@ -501,6 +507,19 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             });
         }
     }
+
+    //var get = (sku, idx) => {
+    //    if (sku === null) {
+    //        //newProduct();
+    //    } else {
+    //        f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
+    //            $scope.d.records[idx] = d;
+    //            debugger;
+    //            $scope.d.records[idx].discount.from = new Date(d.discount.from);
+    //            $scope.d.records[idx].discount.to = new Date(d.discount.to);
+    //        });
+    //    }
+    //}
 
     var upload = (x, idx) => {
         var content = new FormData(document.getElementById('formUpload_' + x.id));

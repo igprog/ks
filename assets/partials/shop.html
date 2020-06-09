@@ -73,10 +73,14 @@
                             <div class="col-md-6">
                                 <form id="search_form">
                                     <div class="input-group">
-                                        <input ng-model="search_" type="text" placeholder="Pretraži..." class="form-control">
+                                        <input ng-model="d.search" type="text" placeholder="Pretraži..." class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit" form="search_form" ng-click="search(d.search)">Pretraži</button>
+                                        </span>
+                                        <!--<input ng-model="search_" type="text" placeholder="Pretraži..." class="form-control">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="submit" form="search_form" ng-click="search(search_)">Pretraži</button>
-                                        </span>
+                                        </span>-->
                                     </div>
                                 </form>
                             </div>
@@ -90,7 +94,7 @@
                         <div class="col-md-10 col-sm-10">
                             <div class="pull-right">
                                 <label class="control-label">{{'show' | translate}}:</label>
-                                <select ng-model="d.filters.show.val" class="form-control input-sm" ng-change="filter(d.filters, slider)">
+                                <select ng-model="d.filters.show.val" class="form-control input-sm" ng-change="sortBy(d.filters, slider)">
                                     <option value="{{x}}" ng-repeat="x in d.filters.show.values" >{{x}}</option>
                                 </select>
                             </div>
@@ -109,7 +113,7 @@
                         <!-- BEGIN PRODUCT LIST -->
                         <div class="row product-list">
                             <!-- PRODUCT ITEM START -->
-                            <div class="col-md-4 col-sm-6 col-xs-6" ng-repeat="x in d.records track by $index">
+                            <div ng-if="$index>=(d.filters.show.val*d.filters.page)-d.filters.show.val&&$index<d.filters.show.val*d.filters.page" class="col-md-4 col-sm-6 col-xs-6" ng-repeat="x in d.records track by $index">
                                 <div class="product-item">
                                     <div class="pi-img-wrapper">
                                         <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
@@ -146,7 +150,25 @@
                         <!-- END PRODUCT LIST -->
                         <!-- BEGIN PAGINATOR -->
                         <div class="row">
-                            <div class="col-md-4 col-sm-4 items-info">Items 1 to 9 of 10 total</div>
+                            <div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to {{toPage()}} of {{d.totRecords}} total</div>
+
+                            <!--<div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to <span ng-if="d.records.length>d.filters.show.val">{{d.filters.show.val*d.filters.page}}</span><span ng-if="d.records.length<=d.filters.show.val">{{d.records.length}}</span> of {{d.totRecords}} total</div>-->
+                            <!--<div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to {{d.totRecords>d.filters.show.val?d.filters.show.val:d.totRecords}} of {{d.totRecords}} total</div>-->
+                            <div class="col-md-8 col-sm-8">
+                                <ul class="pagination pull-right">
+                                    <li><a href="" ng-click="setCurrPage(d.filters.page-1)">&laquo;</a></li>
+                                    <li ng-repeat="x in d.pages" ng-click="setCurrPage(x)"><span ng-if="x===d.filters.page">{{x}}</span><a ng-if="x!==d.filters.page" href="">{{x}}</a></li>
+                                    <li><a href="" ng-click="setCurrPage(d.filters.page+1)">&raquo;</a></li>
+                                </ul>
+                                <!--<ul class="pagination pull-right">
+                                    <li><a href="" ng-click="setCurrPage(d.filters.page-1)">&laquo;</a></li>
+                                    <li ng-repeat="x in d.pages" ng-click="setCurrPage(x)"><span ng-if="x===d.filters.page">{{x}}</span><a ng-if="x!==d.filters.page" href="">{{x}}</a></li>
+                                    <li><a href="" ng-click="setCurrPage(d.filters.page+1)">&raquo;</a></li>
+                                </ul>-->
+                            </div>
+                        </div>
+                        <!--<div class="row">
+                            <div class="col-md-4 col-sm-4 items-info">Items 1 to {{d.totRecords>d.filters.show.val?d.filters.show.val:d.totRecords}} of {{d.totRecords}} total</div>
                             <div class="col-md-8 col-sm-8">
                                 <ul class="pagination pull-right">
                                     <li><a href="javascript:;">&laquo;</a></li>
@@ -158,7 +180,7 @@
                                     <li><a href="javascript:;">&raquo;</a></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div>-->
                         <!-- END PAGINATOR -->
                     </div>
 
