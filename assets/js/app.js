@@ -144,7 +144,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $state.go('category', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
     }
 
-    $scope.search = (search) => {
+    $rootScope.search = (search) => {
         debugger;
         $state.go('search', { search: search });
     }
@@ -428,7 +428,10 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         responseTime: 0,
         filters: $sessionStorage.filters !== undefined ? $sessionStorage.filters : null,
         isShowFilters: false,  //***** only form mobile *****
-        showAllColorBtn: false
+        showAllColorBtn: false,
+        totRecords: 0,
+        totPages: 0,
+        pages: []
     }
     debugger;
     $scope.d = data;
@@ -454,6 +457,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.records = d.data;
             //$scope.d.priceRange = d.priceRange;
             $scope.d.filters = d.filters;
+            $scope.d.totRecords = d.totRecords;
+            setTotPages();
             //$scope.d.sortTypes = d.sortTypes;
 
             $scope.slider.minValue = $scope.d.filters.price.min;
@@ -485,8 +490,33 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.d.loading = true;
         f.post('Products', 'Filter', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, filters: filters}).then((d) => {
             $scope.d.records = d.data;
+            $scope.d.totRecords = d.totRecords;
+            setTotPages();
             $scope.d.loading = false;
         });
+    }
+
+    $scope.search = (search) => {
+        debugger;
+        //$scope.d.search = search;
+        $rootScope.search(search);
+        //$state.go('search', { search: search });
+    }
+
+    var setTotPages = () => {
+        $scope.d.totPages = Math.ceil($scope.d.totRecords / $scope.d.filters.show.val);
+        $scope.d.pages = [];
+        for (var i = 1; i <= $scope.d.totPages; i++) {
+            debugger;
+            $scope.d.pages.push(i);
+        }
+    }
+
+    $scope.setCurrPage = (x) => {
+        debugger;
+        if (x <= 0 || x > $scope.d.totPages) { return false; }
+        $scope.d.filters.page = x;
+        //$scope.filter($scope.d.filters, $scope.slider);
     }
 
     $scope.filterColor = (filters, slider, x) => {
@@ -532,6 +562,23 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.showFilters = () => {
         $scope.d.isShowFilters = !$scope.d.isShowFilters;
+    }
+
+    $scope.sortBy = (filters, slider) => {
+        filters.page = 1;
+        $scope.filter(filters, slider);
+    }
+
+    $scope.toPage = () => {
+        if ($scope.d.records.length > $scope.d.filters.show.val) {
+            debugger;
+            var rest = ($scope.d.filters.show.val * $scope.d.filters.page) % $scope.d.records.length;
+            var rest_ = rest < $scope.d.filters.show.val ? rest : 0;
+            return ($scope.d.filters.show.val * $scope.d.filters.page) - rest_;
+        } else {
+            //if ($scope.d.filters.show.val * $scope.filters.page)
+            return $scope.d.records.length;
+        }
     }
 
 }])
