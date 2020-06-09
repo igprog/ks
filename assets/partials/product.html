@@ -130,6 +130,9 @@
                                         </select>-->
                                     </div>
                                 </div>
+                                <div ng-if="d.record.dataSheet" class="card shadow mt-3 mb-4 p-3">
+                                    <a href="../upload/{{d.record.id}}/datasheet/{{d.record.dataSheet}}" title="{{d.record.dataSheet}}"><i class="fa fa-file-pdf-o"></i> Informacijski list</a>
+                                </div>
                                 <div class="product-page-cart">
                                     <div class="product-quantity">
                                         <input ng-model="d.record.qty" type="number" value="1" class="form-control input-sm" style="width:70px">

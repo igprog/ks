@@ -429,7 +429,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         currProductGroup: null,
         productGroupId: null,
         search: null,
-        responseTime: 0
+        responseTime: 0,
+        dataSheetFolder: 'datasheet'
     }
     $scope.d = data;
 
@@ -474,7 +475,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     loadBrands();
 
     var save = (x, idx) => {
-        debugger;
         if (x.sku === null) {
             alert('Upiši SKU (kataloški broj)');
             return false;
@@ -489,7 +489,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             data.discount.to = f.setDate(data.discount.to);
         }
         f.post(service, 'Save', { x: data }).then((d) => {
-            debugger;
             if (x.id === null) {
                 x.id = d;
             }
@@ -501,7 +500,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         if (sku !== null) {
             f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
                 $scope.d.records[idx] = d;
-                debugger;
                 $scope.d.records[idx].discount.from = new Date(d.discount.from);
                 $scope.d.records[idx].discount.to = new Date(d.discount.to);
             });
@@ -536,8 +534,25 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         });
     }
 
+    var uploadDataSheet = (x, idx) => {
+        var content = new FormData(document.getElementById('formUploadDataSheet_' + x.id));
+        $http({
+            url: '../UploadHandler.ashx',
+            method: 'POST',
+            headers: { 'Content-Type': undefined },
+            data: content,
+        }).then(function (response) {
+            debugger;
+            x.dataSheet = response.data;
+            save(x, idx);
+            //loadProductGallery(x);
+        },
+        function (response) {
+            alert(response.data.d);
+        });
+    }
+
     var loadProductGallery = (x) => {
-        debugger;
         f.post(service, 'LoadProductGallery', { productId: x.id }).then((d) => {
             x.gallery = d;
             if (x.gallery.length === 1) {
@@ -678,6 +693,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         upload: (x, idx) => {
             return upload(x, idx);
+        },
+        uploadDataSheet: (x, idx) => {
+            return uploadDataSheet(x, idx);
         },
         deleteImg: (x, img) => {
             return deleteImg(x, img);

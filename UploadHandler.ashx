@@ -39,6 +39,11 @@ public class UploadHandler : IHttpHandler {
 
                     fname = context.Server.MapPath(string.Format("~/upload/{0}/{1}", imgFolder, imgId));
                     //fname = context.Server.MapPath(string.Format("~/upload/{0}/{1}", imgFolder, img));
+                    if (imgFolder == "datasheet") {
+                        fname = context.Server.MapPath(string.Format("~/upload/{0}/{1}/{2}", imgId, imgFolder, file.FileName));
+                    }
+
+
                 }
 
                 if (!string.IsNullOrEmpty(file.FileName)) {
@@ -49,6 +54,10 @@ public class UploadHandler : IHttpHandler {
                     } else {
                         folderPath = context.Server.MapPath(string.Format("~/upload/{0}", imgFolder));
                         versionPath = context.Server.MapPath(string.Format("~/upload/{0}/version.txt", imgFolder));
+
+                        if (imgFolder == "datasheet") {
+                            folderPath = context.Server.MapPath(string.Format("~/upload/{0}/{1}", imgId, imgFolder));
+                        }
 
                         //TODO:
                         //if (Directory.Exists(folderPath) && imgFolder == "temp") {
@@ -68,7 +77,7 @@ public class UploadHandler : IHttpHandler {
                         //    File.WriteAllText(versionPath, DateTime.Now.Ticks.ToString());
                         //}
 
-                        context.Response.Write(imgId);
+                        context.Response.Write(file.FileName);
                     } else {
                         context.Response.Write("product limit exceeded");  //TODO
                     }
