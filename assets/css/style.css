@@ -538,6 +538,10 @@ legend.fieldset-border {
     .zoom-in {
         cursor: auto;
     }
+
+    .header .mobi-toggler {
+        margin: 25px 0 0 10px !important;
+    }
 }
 
 @media screen and (max-height: 450px) {

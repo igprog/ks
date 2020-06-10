@@ -882,8 +882,12 @@
                                 </div>
                                 <div class="pt-3">
                                     <hr />
-                                    <label>Informacijski list:</label>
-                                    <a href="../upload/{{x.id}}/{{dataSheetFolder}}/{{x.dataSheet}}" class="card shadow m-2 p-2" title="{{x.dataSheet}}" >{{x.dataSheet}}</a>
+                                    <label>Tehnička dokumentacija:</label>
+                                    <div class="card shadow m-3">
+                                        <div class="card-body">
+                                            <a href="../upload/{{x.id}}/{{dataSheetFolder}}/{{x.dataSheet}}" title="{{x.dataSheet}}">{{x.dataSheet}}</a>
+                                        </div>
+                                    </div>
                                     <form id="formUploadDataSheet_{{x.id}}" ng-submit="f.uploadDataSheet(x, $index)" enctype="multipart/form-data" method="post">
                                         <input id="imgFolder" name="imgFolder" ng-model="d.dataSheetFolder" type="text" hidden="hidden">
                                         <input id="imgId" name="imgId" ng-model="x.id" type="text" hidden="hidden">

@@ -130,9 +130,6 @@
                                         </select>-->
                                     </div>
                                 </div>
-                                <div ng-if="d.record.dataSheet" class="card shadow mt-3 mb-4 p-3">
-                                    <a href="../upload/{{d.record.id}}/datasheet/{{d.record.dataSheet}}" title="{{d.record.dataSheet}}"><i class="fa fa-file-pdf-o"></i> Informacijski list</a>
-                                </div>
                                 <div class="product-page-cart">
                                     <div class="product-quantity">
                                         <input ng-model="d.record.qty" type="number" value="1" class="form-control input-sm" style="width:70px">
@@ -170,6 +167,7 @@
                                 <ul id="tab" class="nav nav-tabs">
                                     <li class="{{d.activeTab==='description'?'active':''}}"><a href="#description" onclick="return false;" data-toggle="tab">{{'description' | translate}}</a></li>
                                     <li class="{{d.activeTab==='information'?'active':''}}"><a href="#information" onclick="return false;" data-toggle="tab">{{'specification' | translate}}</a></li>
+                                    <li ng-if="d.record.dataSheet" class="{{d.activeTab==='documentation'?'active':''}}"><a href="#documentation" onclick="return false;" data-toggle="tab">{{'technical documentation' | translate}}</a></li>
                                     <li class="{{d.activeTab==='reviews'?'active':''}}"><a href="#reviews" onclick="return false;" data-toggle="tab">{{'reviews' | translate}} ({{d.record.reviews.count}})</a></li>
                                     <!--<li class="{{d.tpl==='descTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">{{'description' | translate}}</a></li>
                                     <li class="{{d.tpl==='infoTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">{{'specification' | translate}}</a></li>
@@ -190,6 +188,13 @@
                                                 <td>{{x.val}} {{x.unit}}</td>
                                             </tr>
                                         </table>
+                                    </div>
+                                    <div ng-if="d.record.dataSheet" id="documentation" class="tab-pane fade">
+                                        <div ng-if="d.record.dataSheet" class="card shadow m-3">
+                                            <div class="card-body">
+                                                <a href="../upload/{{d.record.id}}/datasheet/{{d.record.dataSheet}}" title="{{d.record.dataSheet}}"><i class="fa fa-file-pdf-o"></i> {{d.record.dataSheet}}</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div id="reviews" class="tab-pane fade">
                                         <!--<p>There are no reviews for this product.</p>-->

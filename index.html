@@ -87,6 +87,7 @@
                 <div class="col-md-4 additional-shop-info">
                     <ul class="list-unstyled list-inline">
                         <li ng-cloak><a href="tel:{{d.info.phone}}"><i class="fa fa-phone"></i><span>{{d.info.phone}}</span></a></li>
+                        <li ng-cloak><a href="mailto:{{d.info.email}}"><i class="fa fa-envelope"></i><span>{{d.info.email}}</span></a></li>
                         <!-- BEGIN CURRENCIES -->
                         <!--<li class="shop-currencies">
                             <a href="javascript:void(0);">€</a>
@@ -110,11 +111,11 @@
                 </div>
                 <!-- END TOP BAR LEFT PART -->
                 <!-- BEGIN TOP BAR MENU -->
-                <div class="col-md-8 additional-nav">
+                <div class="col-md-8 additional-nav hidden-xs">
                     <ul ng-cloak class="list-unstyled list-inline pull-right">
                         <li><a href="" ng-click="go('about')">{{'about us' | translate}}</a></li>
-                        <li><a href="">Prodajna mjesta</a></li>
-                        <li><a href="">Korisnička podrška</a></li>
+                        <li><a href="" ng-click="go('shops')">Prodajna mjesta</a></li>
+                        <li><a href="" ng-click="go('support')">Korisnička podrška</a></li>
                         <li><a href="" ng-click="go('contact')">{{'contact' | translate}}</a></li>
                         <!--<li><a href="shop-account.html">My Account</a></li>
                         <li><a href="shop-wishlist.html">My Wishlist</a></li>
@@ -340,13 +341,16 @@
                 <div class="col-md-3 col-sm-6 pre-footer-col">
                     <h2>{{'informations' | translate}}</h2>
                     <ul class="list-unstyled">
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('about')">{{'about us' | translate}}</a></li>
                         <li><i class="fa fa-angle-right"></i> <a href="">{{'delivery Information' | translate}}</a></li>
                         <!--<li><i class="fa fa-angle-right"></i> <a href="javascript:;">Customer Service</a></li>
                         <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Order Tracking</a></li>
                         <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Shipping &amp; Returns</a></li>-->
-                        <li><i class="fa fa-angle-right"></i> <a href="contacts.html">{{'contact us' | translate}}</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('contact')">{{'contact us' | translate}}</a></li>
                         <!--<li><i class="fa fa-angle-right"></i> <a href="javascript:;">Careers</a></li>-->
-                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">{{'payment methods' | translate}}</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="">{{'payment methods' | translate}}</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('shops')">Prodajna mjesta</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('support')">Korisnička podrška</a></li>
                     </ul>
                 </div>
                 <!-- END INFO BLOCK -->

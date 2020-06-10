@@ -116,7 +116,23 @@ public class Colors : System.Web.Services.WebService {
         List<NewColor> xx = new List<NewColor>();
         if (products.Count > 0) {
             //x.data = products.Select(a => a.color).Distinct().ToList();
-            x.data = products.Select(a => a.color).Where(a => a.code != null).Distinct().ToList();
+            //x.data = products.Select(a => a.color).Where(a => a.code != null).Distinct().ToList();
+            List<NewColor> cc = new List<NewColor>();
+            NewColor c = new NewColor();
+            foreach (var p in products) {
+                if (p.color.code != null) {
+                    c = new NewColor();
+                    if (cc.Count == 0) {
+                        cc.Add(p.color);
+                    } else {
+                        if (!cc.Contains(p.color)) {
+                            cc.Add(p.color);
+                            break;
+                        }
+                    }
+                }
+            }
+            x.data = cc;
         }
         return x;
     }

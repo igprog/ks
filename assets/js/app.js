@@ -45,6 +45,12 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         .state('contact', {
             url: '/contact', templateUrl: './assets/partials/contact.html', controller: 'contactCtrl'
         })
+        .state('shops', {
+            url: '/shops', templateUrl: './assets/partials/shops.html', controller: 'shopsCtrl'
+        })
+        .state('support', {
+            url: '/support', templateUrl: './assets/partials/support.html', controller: 'supportCtrl'
+        })
 
     $urlRouterProvider.otherwise("/");
 
@@ -931,6 +937,36 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $scope.removeImg = function () {
         $scope.d.file = null;
     }
+
+}])
+
+.controller('shopsCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', function ($scope, $http, $rootScope, f, $translate) {
+    var data = {
+        info: []
+    }
+    $scope.d = data;
+
+    //var load = (lang) => {
+    //    f.post('Info', 'Load', { lang: lang }).then((d) => {
+    //        $scope.d.info = d;
+    //    });
+    //}
+    //load('hr');
+
+}])
+
+.controller('supportCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', function ($scope, $http, $rootScope, f, $translate) {
+    var data = {
+        info: []
+    }
+    $scope.d = data;
+
+    //var load = (lang) => {
+    //    f.post('Info', 'Load', { lang: lang }).then((d) => {
+    //        $scope.d.info = d;
+    //    });
+    //}
+    //load('hr');
 
 }])
 
