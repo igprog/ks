@@ -30,7 +30,7 @@
                         <div class="item" ng-repeat="x in d.bestselling">
                             <a href=""><img src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}"></a>
                             <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                            <div class="price">{{x.price.grossWithDiscount | number}} kn</div>
+                            <div class="price">{{x.price.grossWithDiscount}} kn</div>
                         </div>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                                     <div class="price">
                                         <strong>{{d.record.price.grossWithDiscount | number}} <span>kn</span></strong>
                                         <span ng-if="d.record.discount.isValid">
-                                            <em><span>{{d.record.price.gross | number}}</span> kn</em>
+                                            <em><span>{{d.record.price.gross}}</span> kn</em>
                                         </span>
                                     </div>
                                     <!--<div class="price">

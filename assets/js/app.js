@@ -138,6 +138,23 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 .controller('appCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$translatePartialLoader', '$state', '$localStorage', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $translatePartialLoader, $state, $localStorage) {
 
+    var data = {
+        loading: false,
+        productGroups: null,
+        brands: null,
+        outlet: [],
+        newproducts: [],
+        records: [],
+        cart: null,
+        search: null,
+        info: null,
+        lastReviews: null,
+        stars: [1, 2, 3, 4, 5],
+        imgFolder: 'productgroups',
+        autoscroll: true
+    }
+    $rootScope.d = data;
+
     //$scope.shop = (code, productgroup, subgroup) => {
     //    $state.go('shop', { pg_code: code, productgroup: productgroup, subgroup: subgroup });
     //}
@@ -148,6 +165,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.goCategory = (pg_code, productgroup, subgroup) => {
         $state.go('category', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
+        //$rootScope.d.autoscroll = false;
     }
 
     $rootScope.search = (search) => {
@@ -165,20 +183,22 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $state.go('type', { type: type });
     }
 
-    $scope.home = () => {
-        $state.go('home');
-    }
+    //$scope.home = () => {
+    //    $state.go('home');
+    //}
 
     //$scope.go = (x, param) => {
     //    $state.go(x, { name: param });
     //}
     $scope.go = (x) => {
+        //$rootScope.d.autoscroll = true;
         $state.go(x);
     }
     $state.go('home');
 
     $scope.get = (x) => {
         debugger;
+        //$rootScope.d.autoscroll = true;
         $state.go('product', { title_seo: x.title_seo, sku: x.sku });
     }
 
@@ -195,21 +215,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $sessionStorage.filters = null;
     }
 
-    var data = {
-        loading: false,
-        productGroups: null,
-        brands: null,
-        outlet: [],
-        newproducts: [],
-        records: [],
-        cart: null,
-        search: null,
-        info: null,
-        lastReviews: null,
-        stars: [1, 2, 3, 4, 5],
-        imgFolder: 'productgroups'
-    }
-    $rootScope.d = data;
 
     /***** Cart *****/
     var initCart = () => {
@@ -384,6 +389,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $scope.d = data;
 
+    $rootScope.d.autoscroll = false;
+
     var loadProductGroups = () => {
         $scope.d.loading = true;
         f.post('ProductGroups', 'Load', {}).then((d) => {
@@ -437,10 +444,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         showAllColorBtn: false,
         totRecords: 0,
         totPages: 0,
-        pages: []
+        pages: [],
+        autoscroll: true
     }
     debugger;
     $scope.d = data;
+
+    $rootScope.d.autoscroll = true;
     //$scope.d.search = $scope.search_;
 
     var loadProductGroups = () => {
@@ -604,6 +614,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $scope.d = data;
 
+    $rootScope.d.autoscroll = true;
+
     var loadProductGroups = () => {
         $scope.d.loading = true;
         f.post('ProductGroups', 'Load', {}).then((d) => {
@@ -740,6 +752,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $scope.d = data;
 
+    $rootScope.d.autoscroll = true;
+
     debugger;
     if (localStorage.cart != undefined && localStorage.cart != 'undefined' && localStorage.cart != '') {
         $rootScope.d.cart = JSON.parse(localStorage.cart);
@@ -802,6 +816,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         sameAsBillingAddress: true
     }
     $scope.d = data;
+
+    $rootScope.d.autoscroll = true;
 
     var init = (x) => {
         debugger;
@@ -891,6 +907,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $scope.d = data;
 
+    $rootScope.d.autoscroll = true;
+
     var load = (lang) => {
         f.post('Info', 'Load', { lang: lang }).then((d) => {
             $scope.d.info = d;
@@ -901,6 +919,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }])
 
 .controller('contactCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', function ($scope, $http, $rootScope, f, $translate) {
+
+    $rootScope.d.autoscroll = true;
+
     var service = 'Contact';
     $scope.loading = false;
 
@@ -946,6 +967,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $scope.d = data;
 
+    $rootScope.d.autoscroll = true;
+
     //var load = (lang) => {
     //    f.post('Info', 'Load', { lang: lang }).then((d) => {
     //        $scope.d.info = d;
@@ -960,6 +983,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         info: []
     }
     $scope.d = data;
+
+    $rootScope.d.autoscroll = true;
 
     //var load = (lang) => {
     //    f.post('Info', 'Load', { lang: lang }).then((d) => {
