@@ -674,7 +674,7 @@ public class Products : System.Web.Services.WebService {
         //x.price.discount = x.price.net * x.discount.coeff;
         //x.price.netWithDiscount = x.price.net - x.price.discount;
         
-        x.price.discount = x.price.gross * (x.discount.isValid ? x.discount.coeff : 0);
+        x.price.discount = Math.Round(x.price.gross * (x.discount.isValid ? x.discount.coeff : 0), 2);
         x.price.grossWithDiscount = x.price.gross - x.price.discount;
         //if (loadAllData) {
         x.stock = G.ReadI(reader, 13);

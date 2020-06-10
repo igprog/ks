@@ -3,11 +3,11 @@
         <div class="col-md-3" ng-repeat="x in data">
             <div>
                 <div class="product-item">
-                    <div class="pi-img-wrapper">
+                    <div class="pi-img-wrapper" ng-click="get(x)">
                         <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
                         <div>
-                            <a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">{{'zoom' | translate}}</a>
-                            <a href="" class="btn btn-default" ng-click="get(x)">{{'view' | translate}}</a>
+                            <!--<a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">{{'zoom' | translate}}</a>
+                            <a href="" class="btn btn-default" ng-click="get(x)">{{'view' | translate}}</a>-->
                         </div>
                     </div>
                     <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
