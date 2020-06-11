@@ -30,12 +30,40 @@ public class Features : System.Web.Services.WebService {
         public string faicon;
         public string type;
         public int order;
+        public List<Global.CodeTitle> productgroups;
+    }
+
+    [WebMethod]
+    public string Init() {
+        NewFeature x = new NewFeature();
+        x.code = null;
+        x.title = null;
+        x.val = null;
+        x.unit = null;
+        x.icon = null;
+        x.faicon = null;
+        x.type = G.featureType.product;
+        x.order = 0;
+        x.productgroups = new List<Global.CodeTitle>();
+        Global.CodeTitle pg = new Global.CodeTitle();
+        x.productgroups.Add(pg);
+        return JsonConvert.SerializeObject(x, Formatting.None);
     }
 
     [WebMethod]
     public string Load(string type) {
         try {
             return JsonConvert.SerializeObject(Get(type), Formatting.None);
+        } catch (Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string GetProductFeatures(ProductGroups.NewProductGroup productGroup) {
+        try {
+            List<NewFeature> features = Get(G.featureType.product);
+            return JsonConvert.SerializeObject(InitProductFeatures(features, productGroup), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -80,7 +108,7 @@ public class Features : System.Web.Services.WebService {
         }
     }
 
-    public List<NewFeature> GetProductFeatures(List<NewFeature> features, string data) {
+    public List<NewFeature> GetProductFeatures(List<NewFeature> features, string data, ProductGroups.NewProductGroup productGroup) {
         var xx = new List<NewFeature>();
         if (!string.IsNullOrEmpty(data)) {
             string[] opt = data.Split(';');
@@ -97,6 +125,7 @@ public class Features : System.Web.Services.WebService {
                     po.faicon = po_.faicon;
                     po.type = po_.type;
                     po.order = po_.order;
+                    po.productgroups = new List<Global.CodeTitle>();
                     xx.Add(po);
                 }
             }
@@ -108,20 +137,25 @@ public class Features : System.Web.Services.WebService {
             }
             // *************************************************************
         } else {
-            xx = InitProductFeatures(features);
+            xx = InitProductFeatures(features, productGroup);
         }
         return xx;
     }
 
-    public List<NewFeature> InitProductFeatures(List<NewFeature> features) {
+    public List<NewFeature> InitProductFeatures(List<NewFeature> features, ProductGroups.NewProductGroup productGroup) {
         NewFeature x = new NewFeature();
         List<NewFeature> xx = new List<NewFeature>();
-        foreach (NewFeature o in features) {
-            x = new NewFeature();
-            x.code = o.code;
-            x.title = o.title;
-            x.unit = o.unit;
-            xx.Add(x);
+        foreach (NewFeature f in features) {
+            foreach(var pg in f.productgroups) {
+                if (pg.code == productGroup.parent.code) {
+                    x = new NewFeature();
+                    x.code = f.code;
+                    x.title = f.title;
+                    x.unit = f.unit;
+                    x.productgroups = new List<Global.CodeTitle>();
+                    xx.Add(x);
+                }
+            }
         }
         return xx;
     }

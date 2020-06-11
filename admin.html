@@ -538,12 +538,13 @@
                                 <tr>
                                     <th style="width:30px"></th>
                                     <th style="width:200px">Kod</th>
-                                    <th style="min-width:200px">Naziv</th>
-                                    <th style="min-width:200px">Opis (vrijednost)</th>
-                                    <th style="min-width:100px">Jedinica</th>
-                                    <th style="width:200px">Ikona</th>
-                                    <th style="width:200px">Fa icon</th>
-                                    <th style="min-width:100px">Tip</th>
+                                    <th style="width:200px">Naziv</th>
+                                    <th style="width:200px">Opis (vrijednost)</th>
+                                    <th style="width:50px">Jedinica</th>
+                                    <th style="width:50px">Ikona</th>
+                                    <th style="width:50px">Fa icon</th>
+                                    <th style="width:200px">Grupe proizvoda</th>
+                                    <th style="width:20px">Tip</th>
                                     <th style="width:30px">Redosljed</th>
                                 </tr>
                                 <tr ng-repeat="x in d.records track by $index">
@@ -568,11 +569,22 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <td>
+                                        <div ng-repeat="y in x.productgroups" class="form-inline">
+                                            <button class="btn btn-outline-danger" ng-click="f.remove(x.productgroups, $index)"><i class="fa fa-trash"></i></button>
+                                            <select ng-model="y.code" class="form-control">
+                                                <option value="{{pg.code}}" ng-repeat="pg in d.productGroups">{{pg.title}}</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-outline-warning" ng-click="f.addProductGroup(x.productgroups)"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                    </td>
                                     <td><input ng-model="x.type" type="text" class="form-control" /></td>
                                     <td><input ng-model="x.order" type="number" class="form-control" /></td>
                                 </tr>
                                 <tr>
-                                    <td><button class="btn btn-outline-warning" ng-click="f.add()"><i class="fa fa-plus"></i></button></td>
+                                    <td><button class="btn btn-outline-warning" ng-click="f.add(d.records)"><i class="fa fa-plus"></i></button></td>
                                 </tr>
                             </table>
                         </div>
@@ -693,10 +705,10 @@
                                         <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
                                     </button>
                                     <ul class="dropdown-menu p-2">
-                                        <li ng-repeat="pg in d.productGroups">
+                                        <li ng-repeat="pg in d.productGroups" >
                                             <a href=""><strong>{{pg.title}}</strong></a>
                                             <ul>
-                                                <li ng-repeat="sg in pg.subGroups track by $index"><a href="" ng-click="f.setProductGroup(x, sg)"><em class="pl-2">{{sg.title}}</em></a></li>
+                                                <li ng-repeat="sg in pg.subGroups track by $index"><a href="" ng-click="f.setProductGroup(x, pg, sg)"><em class="pl-2">{{sg.title}}</em></a></li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -813,7 +825,7 @@
                                 <hr class="mt-0" />
                                 <div class="row">
                                     <div class="col-sm-4 form-group" ng-repeat="y in x.features">
-                                        <label>{{y.title | translate}} <em>({{y.unit}})</em>:</label>
+                                        <label>{{y.title | translate}} <em ng-if="y.unit">({{y.unit}})</em>:</label>
                                         <input ng-model="y.val" type="text" class="form-control" maxlength="200">
                                     </div>
                                 </div>

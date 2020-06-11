@@ -197,7 +197,7 @@ public class Products : System.Web.Services.WebService {
             x.outlet = false;
             x.bestselling = false;
             x.isactive = true;
-            x.features = F.Get(G.featureType.product);
+            x.features = new List<Features.NewFeature>(); // F.Get(G.featureType.product);
             x.deliverydays = null;
             x.productorder = 0;
             x.freeshipping = true;
@@ -682,7 +682,7 @@ public class Products : System.Web.Services.WebService {
             x.outlet = G.ReadB(reader, 15);
             x.bestselling = G.ReadB(reader, 16);
             x.isactive = G.ReadB(reader, 17);
-            x.features = F.GetProductFeatures(features, G.ReadS(reader, 18));
+            x.features = F.GetProductFeatures(features, G.ReadS(reader, 18), x.productGroup);
             x.deliverydays = G.ReadS(reader, 19);
             x.productorder = G.ReadI(reader, 20);
 

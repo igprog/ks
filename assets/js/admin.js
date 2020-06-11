@@ -663,9 +663,15 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
     };
 
-    var setProductGroup = (x, pg) => {
+    var setProductGroup = (x, pg, sg) => {
         debugger;
-        x.productGroup = pg;
+        if (x.id === null) {
+            x.productGroup = sg;
+            f.post('Features', 'getProductFeatures', { productGroup: pg }).then((d) => {
+                debugger;
+                x.features = d;
+            });
+        }
     }
 
     var addRelated = (x) => {
@@ -712,8 +718,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         openTranPopup: (x, type) => {
             return openTranPopup(x, type);
         },
-        setProductGroup: (x, pg) => {
-            return setProductGroup(x, pg);
+        setProductGroup: (x, pg, sg) => {
+            return setProductGroup(x, pg, sg);
         },
         addRelated: (x) => {
             return addRelated(x);
@@ -828,12 +834,17 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     var service = 'Features';
     var data = {
         loading: false,
-        records: []
+        records: [],
+        productGroups: []
     }
     $scope.d = data;
 
-    var add = () => {
-        $scope.d.records.push({});
+    var add = (x) => {
+        f.post(service, 'Init', { x: x }).then((d) => {
+            x.push(d);
+        });
+        
+        //$scope.d.records.push({});
     }
 
     var save = (x) => {
@@ -857,15 +868,35 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
     }
 
+    var addProductGroup = (x) => {
+        x.push({});
+    }
+
+    //var removeProductGroup = (x) => {
+    //    x.push({});
+    //}
+
+    var loadProductGroups = () => {
+        $scope.d.loading = true;
+        f.post('ProductGroups', 'Load', {}).then((d) => {
+            $scope.d.productGroups = d;
+            $scope.d.loading = false;
+        });
+    }
+    loadProductGroups();
+
     $scope.f = {
-        add: () => {
-            return add();
+        add: (x) => {
+            return add(x);
         },
         save: (x) => {
             return save(x)
         },
         remove: (x, idx) => {
             return remove(x, idx)
+        },
+        addProductGroup: (x) => {
+            return addProductGroup(x);
         }
     }
 

@@ -10,21 +10,8 @@
             <!-- BEGIN SIDEBAR & CONTENT -->
             <div class="row margin-bottom-40">
                 <!-- BEGIN SIDEBAR -->
-                <div class="sidebar col-md-3 col-sm-5">
-
+                <!--<div class="sidebar col-md-3 col-sm-5">
                     <pg-directive pg="d.productGroups" record="d.record"></pg-directive>
-
-                    <!--<ul class="list-group margin-bottom-25 sidebar-menu">
-                        <li class="list-group-item clearfix dropdown {{x.code===d.record.productGroup.parent?'active':''}}" ng-repeat="x in d.productGroups track by $index">
-                            <a href="" ng-click="shop(x.code, x.title_seo, null)"><i class="fa fa-angle-right"></i> {{x.title}}</a>
-                            <ul class="dropdown-menu" ng-repeat="y in x.subGroups track by $index">
-                                <li class="list-group-item dropdown clearfix {{y.code===d.record.productGroup.code?'active':''}}">
-                                    <a href="">{{y.title}}</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>-->
-
                     <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix">
                         <h2>Najprodavanije</h2>
                         <div class="item" ng-repeat="x in d.bestselling">
@@ -33,10 +20,10 @@
                             <div class="price">{{x.price.grossWithDiscount}} kn</div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- END SIDEBAR -->
                 <!-- BEGIN CONTENT -->
-                <div class="col-md-9 col-sm-7">
+                <div class="col-md-12 col-sm-12">
                     <div class="product-page">
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
