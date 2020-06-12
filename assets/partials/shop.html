@@ -65,6 +65,9 @@
                 <!-- END SIDEBAR -->
                 <!-- BEGIN CONTENT -->
                 <div class="col-md-9 col-sm-7">
+                    <div ng-if="d.parentProductGroup" class="pb-5">
+                        <p>{{d.parentProductGroup.desc}}</p>
+                    </div>
                     <div class="content-search margin-bottom-20">
                         <div class="row">
                             <div class="col-md-6">

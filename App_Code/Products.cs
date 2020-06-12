@@ -103,6 +103,7 @@ public class Products : System.Web.Services.WebService {
         public List<NewProduct> data;
         public Filters filters;
         public int totRecords;
+        public ProductGroups.NewProductGroup parentProductGroup;
         public double responseTime;
     }
 
@@ -454,6 +455,7 @@ public class Products : System.Web.Services.WebService {
             xxx.data = distinstStyle;
         }
         xxx.totRecords = GetTotRecords(searchSql);
+        xxx.parentProductGroup = PG.GetParentGroupData(productGroup);
         xxx.responseTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 5);
         return xxx;
     }

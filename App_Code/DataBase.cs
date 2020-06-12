@@ -18,6 +18,7 @@ public class DataBase {
                     (id VARCHAR(50),
                     code VARCHAR(50) PRIMARY KEY,
                     title NVARCHAR(200),
+                    desc NVARCHAR(200),
                     parent VARCHAR(50),
                     discount VARCHAR(50),
                     discountfrom VARCHAR(50),

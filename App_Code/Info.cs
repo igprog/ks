@@ -35,6 +35,7 @@ public class Info : System.Web.Services.WebService {
         public string about;
         public Social social;
         public PaymentDetails paymentDetails;
+        public string specialProductGroup;
 
     }
 

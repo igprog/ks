@@ -134,6 +134,14 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 .controller('infoCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
     var service = 'Info';
 
+    //var data = {
+    //    loading: false,
+    //    record: null,
+    //    productGroups: [],
+    //}
+    //$scope.d = data;
+
+
     var save = (x) => {
         f.post(service, 'Save', { x: x }).then((d) => {
             $scope.d = d;
@@ -146,6 +154,19 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         });
     }
     load();
+
+    var loadProductGroups = () => {
+        f.post('ProductGroups', 'Load', {}).then((d) => {
+            $scope.productGroups = d;
+        });
+    }
+    loadProductGroups();
+
+    var setSepcialProductGroup = (x) => {
+        debugger;
+        $scope.d.specialProductGroup = x.code;
+    }
+
 
     var openTranPopup = function (x, type) {
         $mdDialog.show({
@@ -225,6 +246,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         openTranPopup: (x, type) => {
             return openTranPopup(x, type)
+        },
+        setSepcialProductGroup: (x) => {
+            return setSepcialProductGroup(x);
         }
     }
 

@@ -17,7 +17,7 @@ using Igprog;
 public class ProductGroups : System.Web.Services.WebService {
     Global G = new Global();
     DataBase DB = new DataBase();
-    string mainSql = "SELECT id, code, title, parent, discount, discountfrom, discountto, img, pg_order FROM productGroups WHERE";
+    string mainSql = "SELECT id, code, title, desc, parent, discount, discountfrom, discountto, img, pg_order FROM productGroups WHERE";
     public ProductGroups () {
     }
 
@@ -25,6 +25,7 @@ public class ProductGroups : System.Web.Services.WebService {
         public string id;
         public string code;
         public string title;
+        public string desc;
         public string title_seo;
         //public string parent;
         public NewProductGroup parent;
@@ -42,6 +43,7 @@ public class ProductGroups : System.Web.Services.WebService {
             x.code = null;
             x.title = null;
             x.title_seo = null;
+            x.desc = null;
             x.parent = new NewProductGroup();
             x.img = null;
             x.order = 0;
@@ -87,9 +89,9 @@ public class ProductGroups : System.Web.Services.WebService {
             bool isUpdateDiscount = false;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO productGroups VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8})", x.id, x.code, x.title, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
+                sql = string.Format(@"INSERT INTO productGroups VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', {9})", x.id, x.code, x.title, x.desc, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
             } else {
-                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', parent = '{3}', discount = '{4}', discountfrom = '{5}', discountto = '{6}', img = '{7}', pg_order = {8} WHERE id = '{0}'", x.id, x.code, x.title, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
+                sql = string.Format(@"UPDATE productGroups SET code = '{1}', title = '{2}', desc = '{3}', parent = '{4}', discount = '{5}', discountfrom = '{6}', discountto = '{7}', img = '{8}', pg_order = {9} WHERE id = '{0}'", x.id, x.code, x.title, x.desc, x.parent.code, x.discount.coeff, x.discount.from, x.discount.to, x.img, x.order);
                 if (x.code == x.parent.code) {
                     isUpdateDiscount = true;  //***** Update children groups discount (same sa parent group) *****
                 }
@@ -185,15 +187,16 @@ public class ProductGroups : System.Web.Services.WebService {
         x.code = G.ReadS(reader, 1);
         x.title = G.ReadS(reader, 2);
         x.title_seo = G.GetSeoTitle(x.title);
+        x.desc = G.ReadS(reader, 3);
         x.parent = new NewProductGroup();
-        x.parent.code = G.ReadS(reader, 3);
+        x.parent.code = G.ReadS(reader, 4);
         x.discount = new Products.Discount();
-        x.discount.coeff = G.ReadD(reader, 4);
+        x.discount.coeff = G.ReadD(reader, 5);
         x.discount.perc = Math.Round(x.discount.coeff * 100, 1);
-        x.discount.from = G.ReadS(reader, 5);
-        x.discount.to = G.ReadS(reader, 6);
-        x.img = G.ReadS(reader, 7);
-        x.order = G.ReadI(reader, 8);
+        x.discount.from = G.ReadS(reader, 6);
+        x.discount.to = G.ReadS(reader, 7);
+        x.img = G.ReadS(reader, 8);
+        x.order = G.ReadI(reader, 9);
         x.subGroups = GetSubGroups(x.code);
         return x;
     }

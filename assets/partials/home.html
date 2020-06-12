@@ -108,7 +108,6 @@
                     <div class="col-md-12 sale-product">
                         <h2>{{'best buy' | translate}}</h2>
                         <specialproducts-directive data="d.bestbuy"></specialproducts-directive>
-
                         <!--<div class="owl-carousel owl-carousel5 owl-theme owl-loaded">
                             <div class="row">
                                 <div class="col-sm-3" ng-repeat="x in d.bestselling">
@@ -137,13 +136,44 @@
         </div>
         <!-- END SALE PRODUCT & NEW ARRIVALS -->
 
+        <div ng-if="d.specialProductGroup.length>0" class="pt-5">
+            <div class="container">
+                <div class="row margin-bottom-40">
+                    <!-- BEGIN SALE PRODUCT -->
+                    <div class="col-md-12 sale-product">
+                        <h2>{{'best selling' | translate}}</h2>
+                        <!--<specialproducts-directive data="d.specialProductGroup"></specialproducts-directive>-->
 
-        <div class="container pt-5">
+                        <div id="myCarousel" class="carousel slide">
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <div class="row">
+                                        <div class="col-sm-3" ng-repeat="x in d.specialProductGroup | limitTo:4">
+                                            <a href="../upload/{{x.id}}/gallery/{{x.img}}"><img src="../upload/{{x.id}}/gallery/{{x.img}}" style="height:200px" alt="Image" class="img-responsive"></a>
+                                            <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
+                                            <div class="pi-price">{{x.price.grossWithDiscount | number}} kn</div>
+                                            <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">{{'add to cart' | translate}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="left carousel-control" href="#myCarousel" data-slide="prev"><i class="fa fa-chevron-left fa-2x"></i></a>
+                            <a class="right carousel-control" href="#myCarousel" data-slide="next"><i class="fa fa-chevron-right fa-2x"></i></a>
+                        </div>
+
+
+                    </div>
+                    <!-- END SALE PRODUCT -->
+                </div>
+            </div>
+        </div>
+
+
+        <!--<div class="container pt-5">
             <div class="row">
                 <div class="col-md-4">
                     <div class="banner-wrapper mb-30">
                         <a href="" ng-click="goType('bestselling')"><img src="assets/img/banner/jotul-peci-i-kamini.jpg" class="img-responsive" style="display:inline-block" alt="image"></a>
-                        <!--<a href="" ng-click="go('shop', 'najnoviji-proizvodi')"><img src="assets/img/banner/jotul-peci-i-kamini.jpg" class="img-responsive" alt="image"></a>-->
                         <div class="banner-content">
                             <h2>NAJPRODAVANIJI PROIZVODI</h2>
                         </div>
@@ -166,7 +196,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
+
+
+
+
         <div class="product-area pb-190 p-5">
             <div class="container text-center">
                 <div class="question-area">
@@ -184,4 +218,5 @@
             </div>
         </div>
     </div>
+    <json-directive data="d" desc="'(d)'" debug="true"></json-directive>
 </div>

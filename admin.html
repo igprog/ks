@@ -286,6 +286,30 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
+                                <label class="text-success">Izdvojena grupa proizvoda</label>
+                                <hr class="mt-0" />
+                                <div class="form-group">
+                                    <label for="pg">Grupa Proizvoda:</label>
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            Grupa proizvoda: {{d.specialProductGroup}}
+                                            <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
+                                        </button>
+                                        <ul class="dropdown-menu p-2">
+                                            <li ng-repeat="x in productGroups">
+                                                <a href="" ng-click="f.setSepcialProductGroup(x)"><strong>{{x.title}}</strong></a>
+                                                <ul>
+                                                    <li ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="f.setSepcialProductGroup(y)"><em class="pl-2">{{y.title}}</em></a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
                                 <label class="text-success">Društvene mreže</label>
                                 <hr class="mt-0" />
                                 <div class="form-group">
@@ -353,6 +377,11 @@
                                             <label>Redoslijed:</label>
                                             <input ng-model="x.order" type="number" class="form-control" maxlength="30">
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Opis:</label>
+                                        <textarea ng-model="x.desc" rows="4" class="form-control" maxlength="4000"></textarea>
+                                        <tran-btn ng-click="f.openTranPopup(x, 'productGroupDesc')"></tran-btn>
                                     </div>
                                     <!--<div ng-if="x.id">
                                         <label>Slika</label>

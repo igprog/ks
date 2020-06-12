@@ -192,8 +192,8 @@
                     </li>-->
                     <!--<li><a href="shop-item.html">Kids</a></li>-->
                     <li class="dropdown dropdown100 nav-catalogue" ng-repeat="x in d.productGroups track by $index">
-                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
-                            {{x.title}}
+                        <a href="" ng-click="goCategory(x.code, x.title_seo, null)">
+                            {{x.title}} <i class="fa fa-angle-down dropdown-toggle pull-right visible-xs" data-toggle="dropdown"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="hidden-xs">

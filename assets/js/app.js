@@ -232,7 +232,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.addToCart = (x) => {
-        debugger;
         $scope.d.loading = true;
         f.post('Cart', 'AddToCart', { cart: $rootScope.d.cart, x: x }).then((d) => {
             $rootScope.d.cart = d;
@@ -242,7 +241,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.calcTotPrice = (x) => {
-        debugger;
         f.post('Cart', 'CalcTotPrice', { cart: x }).then((d) => {
             $scope.d.cart = d;
             $rootScope.d.cart = d;
@@ -252,7 +250,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.removeCartItem = function (x, idx) {
-        debugger;
         $scope.d.cart.items.splice(idx, 1);
         //$rootScope.d.cart.items.splice(idx, 1);
         $scope.calcTotPrice($scope.d.cart);
@@ -295,8 +292,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadInfo = (lang) => {
         f.post('Info', 'Load', { lang: lang }).then((d) => {
-            //$rootScope.info = d;
-            $scope.d.info = d;
+            $rootScope.d.info = d;
         });
     }
 
@@ -382,6 +378,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         loading: false,
         productGroups: null,
         bestbuy: [],
+        specialProductGroup: [],
         records: [],
         info: null,
         mainGallery: null,
@@ -415,6 +412,21 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadBestBuy('hr', null, 4);
 
+    var loadSpecialProductGroup = (lang, pg) => {
+        debugger;
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg, brand: null, search: null, type: null, isDistinctStyle: true }).then((d) => {
+            $scope.d.specialProductGroup = d.data;
+        });
+    }
+
+    var loadInfo = (lang) => {
+        f.post('Info', 'Load', { lang: lang }).then((d) => {
+            $scope.d.info = d;
+            loadSpecialProductGroup(lang, d.specialProductGroup);
+        });
+    }
+    loadInfo('hr');
+
 }])
 
 .controller('shopCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams) {
@@ -445,7 +457,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         totRecords: 0,
         totPages: 0,
         pages: [],
-        autoscroll: true
+        autoscroll: true,
+        parentProductGroup: null
     }
     debugger;
     $scope.d = data;
@@ -474,6 +487,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             //$scope.d.priceRange = d.priceRange;
             $scope.d.filters = d.filters;
             $scope.d.totRecords = d.totRecords;
+            $scope.d.parentProductGroup = d.parentProductGroup;
             setTotPages();
             //$scope.d.sortTypes = d.sortTypes;
 
