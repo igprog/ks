@@ -10,8 +10,21 @@
                 <li data-target="#carousel-example-generic" data-slide-to="3"></li>
             </ol>-->
 
-            <div class="carousel-inner" role="listbox">
+            <div ng-controller="CarouselDemoCtrl">
+                <div style="height:30%">
+                    <carousel interval="myInterval">
+                        <slide ng-repeat="x in config.banners" active="slide.active">
+                            <div style="margin:auto;">
+                                <div>
+                                    <img src="../upload/banner/{{x}}" style="float:left">
+                                </div>
+                            </div>
+                        </slide>
+                    </carousel>
+                </div>
+            </div>
 
+            <!--<div class="carousel-inner" role="listbox">
                 <div class="item carousel-item-four active">
                     <div class="container">
                         <div class="carousel-position-four text-center">
@@ -24,55 +37,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="item carousel-item-five">
-                    <div class="container">
-                        <div class="carousel-position-four text-center">
-                            <h2 class="animate-delay carousel-title-v4" data-animation="animated fadeInDown">
-                                Unlimted
-                            </h2>
-                            <p class="carousel-subtitle-v2" data-animation="animated fadeInDown">
-                                Layout Options
-                            </p>
-                            <p class="carousel-subtitle-v3 margin-bottom-30" data-animation="animated fadeInUp">
-                                Fully Responsive
-                            </p>
-                            <a class="carousel-btn" href="#" data-animation="animated fadeInUp">See More Details</a>
-                        </div>
-                        <img class="carousel-position-five animate-delay hidden-sm hidden-xs" src="assets/pages/img/shop-slider/slide2/price.png" alt="Price" data-animation="animated zoomIn">
-                    </div>
-                </div>
-
-                <div class="item carousel-item-six">
-                    <div class="container">
-                        <div class="carousel-position-four text-center">
-                            <span class="carousel-subtitle-v3 margin-bottom-15" data-animation="animated fadeInDown">
-                                Full Admin &amp; Frontend
-                            </span>
-                            <p class="carousel-subtitle-v4" data-animation="animated fadeInDown">
-                                eCommerce UI
-                            </p>
-                            <p class="carousel-subtitle-v3" data-animation="animated fadeInDown">
-                                Is Ready For Your Project
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item carousel-item-seven">
-                    <div class="center-block">
-                        <div class="center-block-wrap">
-                            <div class="center-block-body">
-                                <h2 class="carousel-title-v1 margin-bottom-20" data-animation="animated fadeInDown">
-                                    The most <br />
-                                    wanted bijouterie
-                                </h2>
-                                <a class="carousel-btn" href="#" data-animation="animated fadeInUp">But It Now!</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-            </div>
+            </div>-->
 
             <!--<a class="left carousel-control carousel-control-shop" href="#carousel-example-generic" role="button" data-slide="prev">
                 <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -193,8 +158,6 @@
         </div>-->
 
 
-
-
         <div class="product-area pb-190 p-5">
             <div class="container text-center">
                 <div class="question-area">
@@ -211,6 +174,108 @@
                 </div>
             </div>
         </div>
+
+
+
+        Test
+
+        <div ng-controller="CarouselDemoCtrl">
+            <div style="height: auto">
+                <carousel interval="myInterval">
+                    <slide ng-repeat="x in d.specialProductGroup" >
+                        <!--<div class="" style="width:600px;margin:auto;height:100px">
+                        <div>
+                            <img ng-src="{{slide.image}}" width="200px" style="float:left; padding:10px">
+                        </div>
+                        <div>
+                            <img ng-src="{{slides[getSecondIndex($index+1)].image}}" width="200px" style="float:left; padding:10px">
+                        </div>
+                        <div>
+                            <img ng-src="{{slides[getSecondIndex($index+2)].image}}" width="200px" style="float:left; padding:10px">
+                        </div>
+                    </div>-->
+                        <div style="margin:auto;" class="row">
+                            <div class="col-3">
+                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index)].img}}" width="100px" style="float:left; padding:10px">
+                                <p>{{x.title}}</p>
+                            </div>
+                            <div class="col-3">
+                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index+1)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index+1)].img}}" width="100px" style="float:left; padding:10px">
+                                <p>{{x.title}}</p>
+                            </div>
+                            <div class="col-3">
+                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index+2)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index+2)].img}}" width="100px" style="float:left; padding:10px">
+                                <p>{{x.title}}</p>
+                            </div>
+                            <div class="col-3">
+                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index+3)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index+3)].img}}" width="100px" style="float:left; padding:10px">
+                                <p>{{x.title}}</p>
+                            </div>
+                        </div>
+                        <!--<div class="row" style="width:600px;margin:auto;">
+                            <div class="col-sm-4">
+                                <img src="../upload/{{x.id}}/gallery/{{x.img}}" width="200px" style="float:left; padding:10px">
+                            </div>
+                            <div class="col-sm-4">
+                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index+1)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index+1)].img}}" width="200px" style="float:left; padding:10px">
+                            </div>
+                            <div class="col-sm-4">
+                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index+2)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index+2)].img}}" width="200px" style="float:left; padding:10px">
+                            </div>
+                        </div>-->
+                    </slide>
+                </carousel>
+            </div>
+        </div>
+
+        <script>
+            $('.carousel .item').each(function () {
+                var next = $(this).next();
+                if (!next.length) {
+                    next = $(this).siblings(':first');
+                }
+                next.children(':first-child').clone().appendTo($(this));
+
+                if (next.next().length > 0) {
+                    next.next().children(':first-child').clone().appendTo($(this));
+                }
+                else {
+                    $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
+                }
+            });
+        </script>
+
+        <!--<div ng-controller="CarouselDemoCtrl">
+            <div style="height: 305px">
+                <carousel interval="myInterval">
+                    <slide ng-repeat="slide in slides" active="slide.active">
+                        <div class="" style="width:600px;margin:auto;height:100px">
+                        <div>
+                            <img ng-src="{{slide.image}}" width="200px" style="float:left; padding:10px">
+                        </div>
+                        <div>
+                            <img ng-src="{{slides[getSecondIndex($index+1)].image}}" width="200px" style="float:left; padding:10px">
+                        </div>
+                        <div>
+                            <img ng-src="{{slides[getSecondIndex($index+2)].image}}" width="200px" style="float:left; padding:10px">
+                        </div>
+                    </div>
+                        <div class="row" style="width:600px;margin:auto;">
+                            <div class="col-sm-4">
+                                <img ng-src="{{slide.image}}" width="200px" style="float:left; padding:10px">
+                            </div>
+                            <div class="col-sm-4">
+                                <img ng-src="{{slides[getSecondIndex($index+1)].image}}" width="200px" style="float:left; padding:10px">
+                            </div>
+                            <div class="col-sm-4">
+                                <img ng-src="{{slides[getSecondIndex($index+2)].image}}" width="200px" style="float:left; padding:10px">
+                            </div>
+                        </div>
+                    </slide>
+                </carousel>
+            </div>
+        </div>-->
+
     </div>
     <json-directive data="d" desc="'(d)'" debug="true"></json-directive>
 </div>

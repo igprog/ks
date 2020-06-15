@@ -2,7 +2,7 @@
 app.js
 (c) 2020 IG PROG, www.igprog.hr
 */
-angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSlider'])
+angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSlider', 'ui.bootstrap'])
 .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$translateProvider', '$translatePartialLoaderProvider', ($stateProvider, $urlRouterProvider, $httpProvider, $translateProvider, $translatePartialLoaderProvider) => {
 
     $stateProvider
@@ -1014,6 +1014,32 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     //    });
     //}
     //load('hr');
+
+}])
+
+.controller('CarouselDemoCtrl', ['$scope', function ($scope) {
+        
+
+    $scope.myInterval = 5000;
+    var slides = $scope.slides = [];
+    $scope.addSlide = function () {
+        var newWidth = 600 + slides.length + 1;
+        slides.push({
+            image: 'http://placekitten.com/' + newWidth + '/300',
+            text: ['More', 'Extra', 'Lots of', 'Surplus'][slides.length % 4] + ' ' +
+                ['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
+        });
+    };
+    for (var i = 0; i < 4; i++) {
+        $scope.addSlide();
+    }
+
+    $scope.getSecondIndex = function (index) {
+        if (index - slides.length >= 0)
+            return index - slides.length;
+        else
+            return index;
+    }
 
 }])
 
