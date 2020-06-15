@@ -119,26 +119,32 @@ var Layout = function () {
     }
 
     var handleSearch = function() {    
-        $('.search-btn').click(function () {            
+        $('.search-btn').click(function () {
+            debugger;
             if($('.search-btn').hasClass('show-search-icon')){
                 if ($(window).width()>767) {
-                    $('.search-box').fadeOut(300);
+                    $('.search-box').fadeOut(200);
                 } else {
-                    $('.search-box').fadeOut(0);
+                    $('.search-box').fadeOut(200);
                 }
                 $('.search-btn').removeClass('show-search-icon');
             } else {
                 if ($(window).width()>767) {
                     $('.search-box').fadeIn(300);
                 } else {
-                    $('.search-box').fadeIn(0);
+                    $('.search-box').fadeIn(300);
                 }
                 $('.search-btn').addClass('show-search-icon');
             } 
         }); 
 
         // close search box on body click
-        if($('.search-btn').size() != 0) {
+        if ($('.search-btn').size() != 0) {
+            if ($(window).width() <= 767) {
+                $('.search-box').fadeOut(0);
+            } else {
+                $('.search-box').fadeIn(0);
+            }
             $('.search-box, .search-btn').on('click', function(e){
                 e.stopPropagation();
             });

@@ -108,27 +108,21 @@
                     <div class="col-md-12 sale-product">
                         <h2>{{'best buy' | translate}}</h2>
                         <specialproducts-directive data="d.bestbuy"></specialproducts-directive>
-                        <!--<div class="owl-carousel owl-carousel5 owl-theme owl-loaded">
-                            <div class="row">
-                                <div class="col-sm-3" ng-repeat="x in d.bestselling">
-                                    <div>
-                                        <div class="product-item">
-                                            <div class="pi-img-wrapper">
-                                                <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
-                                                <div>
-                                                    <a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">Zoom</a>
-                                                    <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-                                                </div>
-                                            </div>
-                                            <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                            <div class="pi-price">{{x.price.net_discount | number}} kn</div>
-                                            <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">Dodaj u košaricu</a>
-                                            <div class="sticker sticker-sale"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
+                    </div>
+                    <!-- END SALE PRODUCT -->
+                </div>
+            </div>
+        </div>
+        <!-- END SALE PRODUCT & NEW ARRIVALS -->
+
+        <!-- BEGIN Op -->
+        <div ng-if="d.bestbuy.length>0" class="bg-light pt-5">
+            <div class="container">
+                <div class="row margin-bottom-40">
+                    <!-- BEGIN SALE PRODUCT -->
+                    <div class="col-md-12 sale-product">
+                        <h2>{{'opportunity' | translate}}</h2>
+                        <specialproducts-directive data="d.opportunity"></specialproducts-directive>
                     </div>
                     <!-- END SALE PRODUCT -->
                 </div>
@@ -139,12 +133,12 @@
         <div ng-if="d.specialProductGroup.length>0" class="pt-5">
             <div class="container">
                 <div class="row margin-bottom-40">
-                    <!-- BEGIN SALE PRODUCT -->
+                    <!-- BEGIN SPECIAL PRODUCT GROUP -->
                     <div class="col-md-12 sale-product">
                         <h2>{{'best selling' | translate}}</h2>
-                        <!--<specialproducts-directive data="d.specialProductGroup"></specialproducts-directive>-->
+                        <specialproducts-directive data="d.specialProductGroup"></specialproducts-directive>
 
-                        <div id="myCarousel" class="carousel slide">
+                        <!--<div id="myCarousel" class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="item active">
                                     <div class="row">
@@ -159,11 +153,11 @@
                             </div>
                             <a class="left carousel-control" href="#myCarousel" data-slide="prev"><i class="fa fa-chevron-left fa-2x"></i></a>
                             <a class="right carousel-control" href="#myCarousel" data-slide="next"><i class="fa fa-chevron-right fa-2x"></i></a>
-                        </div>
+                        </div>-->
 
 
                     </div>
-                    <!-- END SALE PRODUCT -->
+                    <!-- END SPECIAL PRODUCT GROUP -->
                 </div>
             </div>
         </div>

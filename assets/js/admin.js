@@ -454,7 +454,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         productGroupId: null,
         search: null,
         responseTime: 0,
-        dataSheetFolder: 'datasheet'
+        dataSheetFolder: 'datasheet',
+        accessories: []
     }
     $scope.d = data;
 
@@ -476,27 +477,27 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
     var loadProductGroups = () => {
-        //$scope.d.loading = true;
         f.post('ProductGroups', 'Load', {}).then((d) => {
             $scope.d.productGroups = d;
-            //load($scope.d.productGroups[0]);
             load(null, null);
             $scope.d.productGroupId = $scope.d.productGroups[0].id;
-            //$scope.d.loading = false;
-
         });
     }
     loadProductGroups();
 
     var loadBrands = () => {
-        //$scope.d.loading = true;
         f.post('Brands', 'Load', {}).then((d) => {
             $scope.d.brands = d;
-            //$scope.d.loading = false;
-
         });
     }
     loadBrands();
+
+    var loadAccessories = () => {
+        f.post(service, 'Load', { lang: 'hr', productGroup: 'accessories', brand: null, search: null, type: null, isDistinctStyle: false }).then((d) => {
+            $scope.d.accessories = d;
+        });
+    }
+    loadAccessories();
 
     var save = (x, idx) => {
         if (x.sku === null) {

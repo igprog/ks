@@ -55,7 +55,7 @@
                                     <a href="" ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-6">
+                            <div class="col-md-6 col-sm-6 pl-5">
                                 <h2>{{d.record.title}}</h2>
                                 <h2>{{'sku' | translate}}: {{d.record.sku}}</h2>
                                 <div class="price-availability-block clearfix">
@@ -79,44 +79,39 @@
                                 <div class="description">
                                     <p>{{d.record.shortdesc}}</p>
                                 </div>
-                                <div class="product-page-options">
-                                    <div ng-if="d.record.dimension.width>0&&d.record.dimension.height>0&&d.record.dimension.depth>0" class="pull-left">
-                                        <label class="control-label">{{'size'}}:</label>
+                                <div class="pt-2 pb-5">
+                                    <div ng-if="d.record.dimension.width>0&&d.record.dimension.height>0&&d.record.dimension.depth>0">
+                                        <label class="control-label">{{'size'}}: {{d.record.dimension.width}}x{{d.record.dimension.height}}x{{d.record.dimension.depth}}</label>
+                                        <div>
+                                            <a ng-model="x" href="" class="btn btn-default m-2" ng-repeat="x in d.record.distinctDimensions track by $index" title="{{x.title | translate}}" ng-click="getVarDimProduct(d.record.style, x)">{{x.width}}x{{x.height}}x{{x.depth}}</a>
+                                        </div>
+                                    </div>
+                                    <div ng-if="d.record.color.code">
+                                        <label class="control-label">Color: <span ng-if="!d.showColorVar">{{d.record.color.title}}</span></label>
+                                        <div>
+                                            <button style="background-color:{{x.hex}};" class="color-filter-lg" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--<div class="product-page-options">
+                                    <div ng-if="d.record.dimension.width>0&&d.record.dimension.height>0&&d.record.dimension.depth>0">
+                                        <label class="control-label">{{'size'}}: {{d.record.dimension.width}}x{{d.record.dimension.height}}x{{d.record.dimension.depth}}</label>
+                                        <div>
+                                            <a ng-model="x" href="" class="btn btn-default m-2" ng-repeat="x in d.record.distinctDimensions track by $index" title="{{x.title | translate}}" ng-click="getVarDimProduct(d.record.style, x)">{{x.width}}x{{x.height}}x{{x.depth}}</a>
+                                        </div>
                                         <select ng-model="d.record.dimension" class="form-control input-sm" ng-change="getVarDimProduct(d.record.style, d.record.dimension)">
                                             <option value="{{x}}" ng-repeat="x in d.record.distinctDimensions track by $index">{{x.width}}x{{x.height}}x{{x.depth}}</option>
                                         </select>
-                                        <!--<label class="control-label">Size:</label>
-                                        <select class="form-control input-sm">
-                                            <option>L</option>
-                                            <option>M</option>
-                                            <option>XL</option>
-                                        </select>-->
                                     </div>
-                                    <div ng-if="d.record.color.code" class="pull-left">
-                                        <label class="control-label">Color:</label>
-                                        <label ng-if="!d.showColorVar">{{d.record.color.title}}</label>
-
-                                        <button style="background-color:{{x.hex}};" class="color-filter" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
-
-                                        <!--<button style="background-color:{{x.color.hex}};" class="color-filter" ng-repeat="x in d.record.styleProducts" title="{{x.color.title | translate}}" ng-click="get(x)"></button>-->
-
-                                        <!--<button style="background-color:{{x.color.hex}};" class="color-filter_" ng-repeat="x in d.record.styleProducts track by $index" title="{{x.title | translate}}" ng-change="get(x)"></button>-->
-
-
-
-                                        <!--<select ng-if="d.showColorVar" ng-model="color" ng-options="x.color.title for x in d.record.styleProducts"  class="form-control input-sm" ng-change="get(color)"></select>-->
-                                        
-                                        
-                                        <!--<select ng-model="color" class="form-control input-sm" ng-change="get(color)">
-                                            <option value="{{x}}" ng-repeat="x in d.record.styleProducts">{{x.color}}</option>
-                                        </select>-->
-                                        <!--<select class="form-control input-sm">
-                                            <option>Red</option>
-                                            <option>Blue</option>
-                                            <option>Black</option>
-                                        </select>-->
+                                    <div ng-if="d.record.color.code">
+                                        <label class="control-label">Color: <span ng-if="!d.showColorVar">{{d.record.color.title}}</span></label>
+                                        <div>
+                                            <button style="background-color:{{x.hex}};" class="color-filter-lg" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
+                                        </div>
                                     </div>
-                                </div>
+                                </div>-->
+
                                 <div class="product-page-cart">
                                     <div class="product-quantity">
                                         <input ng-model="d.record.qty" type="number" value="1" class="form-control input-sm" style="width:70px">

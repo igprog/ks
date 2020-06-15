@@ -757,6 +757,9 @@
                                         <label>Model:</label>
                                         <input ng-model="x.style" type="text" class="form-control" maxlength="200">
                                     </div>
+                                    <div class="col-sm-4">
+                                        <input id="isactive_{{$index}}" type="checkbox" ng-model="x.isactive" title="Aktivan" class="m-2" /> <label for="isactive_{{$index}}">Aktivan</label>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Naziv:</label>
@@ -808,12 +811,14 @@
                                 <div class="form-group">
                                     <input id="isnew_{{$index}}" type="checkbox" ng-model="x.isnew" title="Novi proizvod" class="m-2" /> <label for="isnew_{{$index}}">Novi proizvod</label>
                                     <input id="outlet_{{$index}}" type="checkbox" ng-model="x.outlet" title="Akcija" class="m-2" /> <label for="outlet_{{$index}}">Akcija</label>
-                                    <input id="bestselling_{{$index}}" type="checkbox" ng-model="x.bestselling" title="Akcija" class="m-2" /> <label for="bestselling_{{$index}}">Najprodavaniji</label>
-                                    <input id="bestselling_{{$index}}" type="checkbox" ng-model="x.freeshipping" title="Besplatna dostave" class="m-2" /> <label for="freeshipping_{{$index}}">Najprodavaniji</label>
-                                    <input id="bestselling_{{$index}}" type="checkbox" ng-model="x.bestbuy" title="Akcija" class="m-2" /> <label for="bestbuy_{{$index}}">Best Buy</label>
-                                    <input id="bestselling_{{$index}}" type="checkbox" ng-model="x.wifi" title="Akcija" class="m-2" /> <label for="wifi_{{$index}}">WI-FI</label>
-                                    <input id="isactive_{{$index}}" type="checkbox" ng-model="x.isactive" title="Aktivan" class="m-2" /> <label for="isactive_{{$index}}">Aktivan</label>
+                                    <input id="bestselling_{{$index}}" type="checkbox" ng-model="x.bestselling" title="Najprodavaniji" class="m-2" /> <label for="bestselling_{{$index}}">Najprodavaniji</label>
                                 </div>
+                                <div class="form-group">
+                                    <input id="freeshipping_{{$index}}" type="checkbox" ng-model="x.freeshipping" title="Besplatna dostave" class="m-2" /> <label for="freeshipping_{{$index}}">Besplatna dostava</label>
+                                    <input id="bestbuy_{{$index}}" type="checkbox" ng-model="x.bestbuy" title="Best buy" class="m-2" /> <label for="bestbuy_{{$index}}">Best Buy</label>
+                                    <input id="opportunity_{{$index}}" type="checkbox" ng-model="x.opportunity" title="Ne propustite priliku" class="m-2" /> <label for="opportunity_{{$index}}">Ne propustite priliku</label>
+                                </div>
+
                                 <label class="text-success">Značajke:</label>
                                 <hr class="mt-0" />
                                 <div class="row">
@@ -834,6 +839,9 @@
                                     <div class="col-sm-6 form-group">
                                         <label>Boja:</label><span style="background-color:{{x.color.hex}}; border:1px solid gray" class="ml-2 pl-2 pr-2"></span><span class="ml-2">{{x.color.title}}</span>
                                         <select ng-model="x.color" ng-options="y.title for y in x.colors" class="form-control"></select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="wifi_{{$index}}" type="checkbox" ng-model="x.wifi" title="wi-fi" class="m-2" /> <label for="wifi_{{$index}}">WI-FI</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -861,7 +869,7 @@
                                 <label class="text-success">Vezani proizvodi:</label>
                                 <hr class="mt-0" />
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <table class="table">
                                             <tr>
                                                 <th></th>
@@ -869,7 +877,11 @@
                                             </tr>
                                             <tr ng-repeat="y in x.relatedProducts">
                                                 <td><button class="btn btn-outline-danger" ng-click="f.removeRelated(x.relatedProducts, $index)"><i class="fa fa-trash"></i></button></td>
-                                                <td><input ng-model="y.sku" class="form-control" /></td>
+                                                <td>
+                                                    <select ng-model="y.sku" class="form-control">
+                                                        <option value="{{a.sku}}" ng-repeat="a in d.accessories.data">{{a.sku}} - {{a.title}}</option>
+                                                    </select>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">

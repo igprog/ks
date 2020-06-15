@@ -595,6 +595,10 @@ legend.fieldset-border {
 .color-filter-all {
     border:1px solid gray; margin:2px; height:20px; display: inline-block;
 }
+.color-filter-lg {
+    border:1px solid gray; margin:2px; height:40px; width:40px; display: inline-block;
+}
+
 
 .header .mobi-toggler {
     background-color: #e34f00 !important;

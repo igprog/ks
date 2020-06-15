@@ -29,7 +29,7 @@ public class Products : System.Web.Services.WebService {
     Colors C = new Colors();
     int defalutLimit = 12;
     string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.discountfrom, p.discountto, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder,
-                            p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet,
+                            p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet, p.opportunity, p.keyfeatures, p.inserts,
                             pg.title, b.title, pg.discount, pg.discountfrom, pg.discountto
                         FROM products p   
                         LEFT OUTER JOIN productGroups pg
@@ -73,6 +73,9 @@ public class Products : System.Web.Services.WebService {
         public Colors.NewColor color; 
         public string energyClass;
         public string dataSheet;
+        public bool opportunity;
+        public List<string> keyFeatures;
+        public string inserts;
         public Price price;
         public int qty;
         public Review.ReviewData reviews;
@@ -126,6 +129,7 @@ public class Products : System.Web.Services.WebService {
         public Show show;
         public int page;
         public ColorFilter color;
+        public FilterItem opportunity;
     }
 
     public class FilterItem {
@@ -217,6 +221,9 @@ public class Products : System.Web.Services.WebService {
             x.color.img = null;
             x.energyClass = null;
             x.dataSheet = null;
+            x.opportunity = false;
+            x.keyFeatures = new List<string>();
+            x.inserts = null;
             x.gallery = null;
             x.price = new Price();
             x.qty = 1;
@@ -358,12 +365,12 @@ public class Products : System.Web.Services.WebService {
             x.discount.coeff = x.discount.perc / 100;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}')"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
+                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, x.keyFeatures, x.inserts);
             } else {
                 sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', discountfrom = '{11}', discountto = '{12}', stock = '{13}', isnew = '{14}', outlet = '{15}', bestselling = '{16}', isactive = '{17}', features = '{18}', deliverydays = '{19}', productorder = {20},
-                                    freeshipping = '{21}', bestbuy = '{22}', wifi = '{23}', relatedproducts = '{24}', width = '{25}', height = '{26}', depth = '{27}', power = '{28}', color = '{29}', energyclass = '{30}', datasheet = '{31}' WHERE id = '{0}'"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet);
+                                    freeshipping = '{21}', bestbuy = '{22}', wifi = '{23}', relatedproducts = '{24}', width = '{25}', height = '{26}', depth = '{27}', power = '{28}', color = '{29}', energyclass = '{30}', datasheet = '{31}', opportunity = '{32}', keyfeatures = '{33}', inserts = '{34}' WHERE id = '{0}'"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, x.keyFeatures, x.inserts);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -423,19 +430,10 @@ public class Products : System.Web.Services.WebService {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
-        //string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6}"
-        //           , mainSql
-        //           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
-        //           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
-        //           , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-        //           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-        //           , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
-        //           , "ORDER BY p.productorder DESC LIMIT 16");
-
         string searchSql = string.Format(@"{0} {1} {2} {3} {4}"
                    , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
-                   , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
-                   , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
+                   , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
+                   , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("LOWER(p.brand) = '{0}'", brand.ToLower()) : string.Format("AND p.brand = '{0}'", brand))
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
                    , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type)));
 
@@ -467,10 +465,10 @@ public class Products : System.Web.Services.WebService {
         //TODO: refaktorirati (AND / OR)
         DB.CreateDataBase(G.db.products);
 
-        string searchSql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}"
+        string searchSql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}"
            , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val && !filters.bestbuy.val && !filters.wifi.val) ? "" : "WHERE"
-           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
-           , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
+           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
+           , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("LOWER(p.brand) = '{0}'", brand.ToLower()) : string.Format("AND p.brand = '{0}'", brand))
            , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("(p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%')", search) : string.Format("AND p.title LIKE '{0}%'", brand))
            , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
            , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? ""
@@ -484,49 +482,15 @@ public class Products : System.Web.Services.WebService {
            , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : "AND"))
            , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
            , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
-           , filters.bestbuy.val == false ? "" : string.Format(@"{0} p.bestbuy = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
-           , filters.wifi.val == false ? "" : string.Format(@"{0} p.wifi = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
+           , filters.bestbuy.val == false ? "" : string.Format(@"{0} p.bestbuy = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false || filters.bestselling.val == false ? "AND" : "OR")))
+           , filters.wifi.val == false ? "" : string.Format(@"{0} p.wifi = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false || filters.bestselling.val == false || filters.bestbuy.val == false ? "AND" : "OR")))
+           , filters.opportunity.val == false ? "" : string.Format(@"{0} p.opportunity = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false && filters.wifi.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false || filters.bestselling.val == false || filters.bestbuy.val == false || filters.wifi.val == false ? "AND" : "OR")))
            , string.IsNullOrEmpty(filters.color.val.code)
                                            ? ""
                                            : string.Format(@"{0} p.color = '{1}'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false && filters.wifi.val == false
                                                                 ? ""
                                                                 : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")), filters.color.val.code)
                                         );
-
-        //string sql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12} {13}"
-        //   , mainSql
-        //   , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val) ? "" : "WHERE"
-        //   , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(p.productGroup = '{0}' OR pg.parent = '{0}')", productGroup)
-        //   , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("p.brand = '{0}'", brand) : string.Format("AND p.brand = '{0}'", brand))
-        //   , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-        //   , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
-        //   , filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? ""
-        //            : string.Format(@"{0} 
-        //                        CASE WHEN p.discount = 0 AND pg.discount > 0 THEN
-        //                            CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(pg.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(pg.discount as decimal)) <= {2}
-        //                        ELSE
-        //                            CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) >= {1} AND CAST(p.price as decimal) - (CAST(p.price as decimal) * CAST(p.discount as decimal)) <= {2}
-        //                        END"
-        //   , (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "AND"), filters.price.minVal, filters.price.maxVal)
-        //   , filters.isnew.val == false ? "" : string.Format(@"{0} p.isnew = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 ? "" : "AND"))
-        //   , filters.outlet.val == false ? "" : string.Format(@"{0} p.outlet = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false ? "" : string.Format("{0}", filters.isnew.val == false ? "AND" : "OR")))
-        //   , filters.bestselling.val == false ? "" : string.Format(@"{0} p.bestselling = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
-        //   , filters.bestbuy.val == false ? "" : string.Format(@"{0} p.bestbuy = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
-        //   , filters.wifi.val == false ? "" : string.Format(@"{0} p.wifi = 'True'", (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false ? "" : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")))
-        //   , string.IsNullOrEmpty(filters.color.val.code) 
-        //                                   ? "" 
-        //                                   : string.Format(@"{0} p.color = '{1}'" , (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && filters.price.minVal <= 0 && filters.price.maxVal <= 0 && filters.isnew.val == false && filters.outlet.val == false && filters.bestselling.val == false && filters.bestbuy.val == false && filters.wifi.val == false
-        //                                                        ? ""
-        //                                                        : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")), filters.color.val.code)
-        //   , string.Format("ORDER BY {0} LIMIT {1}", SortBySql(filters.sortBy.val), filters.show.val)
-        //   );
-
-
-        //string sql = string.Format(@"{0} {1} {2}"
-        //           , mainSql
-        //           , searchSql
-        //           , string.Format("ORDER BY {0} LIMIT {1} OFFSET {2}", SortBySql(filters.sortBy.val), filters.show.val, (filters.page - 1) * filters.show.val));
-
         string sql = string.Format(@"{0} {1} {2}"
                    , mainSql
                    , searchSql
@@ -594,10 +558,6 @@ public class Products : System.Web.Services.WebService {
     public NewProduct GetProductData(string sql, string lang) {
         NewProduct x = new NewProduct();
         List<Features.NewFeature> features = F.Get(G.featureType.product);
-        //string sql = string.Format(@"{0} WHERE p.style = '{1}' AND p.color = '{2}'"
-        //                            , mainSql
-        //                            , style
-        //                            , color);
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
             using (var command = new SQLiteCommand(sql, connection)) {
@@ -618,7 +578,6 @@ public class Products : System.Web.Services.WebService {
     public List<NewProduct> DataCollection(string sql, string lang, bool loadAllData) {
         List<NewProduct> xx = new List<NewProduct>();
         List<Features.NewFeature> features = F.Get(G.featureType.product);
-
         using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
             using (var command = new SQLiteCommand(sql, connection)) {
@@ -643,7 +602,7 @@ public class Products : System.Web.Services.WebService {
         //if (loadAllData) {
         x.productGroup = new ProductGroups.NewProductGroup();
             x.productGroup.code = G.ReadS(reader, 3);
-            x.productGroup.title = G.ReadS(reader, 32);
+            x.productGroup.title = G.ReadS(reader, 35);
             x.productGroup.title_seo = G.GetSeoTitle(x.productGroup.title);
             x.productGroup.parent = new ProductGroups.NewProductGroup();
             x.productGroup.parent.code = PG.GetParentGroup(x.productGroup.code);
@@ -658,7 +617,7 @@ public class Products : System.Web.Services.WebService {
             x.longdesc = !string.IsNullOrEmpty(lang) && tran.Count > 0 ? tran[0].tran : G.ReadS(reader, 6);
             x.brand = new Brands.NewBrands();
             x.brand.code = G.ReadS(reader, 7);
-            x.brand.title = G.ReadS(reader, 33);
+            x.brand.title = G.ReadS(reader, 36);
             x.brand.title_seo = G.GetSeoTitle(x.brand.title);
         }
         x.img = G.ReadS(reader, 8);
@@ -668,7 +627,7 @@ public class Products : System.Web.Services.WebService {
         //double productDiscount = G.ReadD(reader, 10);  // Product Discount
         //double pgDisCount = G.ReadI(reader, 20);  // Product Group Discount
 
-        x.discount = GetDiscount(G.ReadD(reader, 10), G.ReadS(reader, 11), G.ReadS(reader, 12), G.ReadD(reader, 34), G.ReadS(reader, 35), G.ReadS(reader, 36));
+        x.discount = GetDiscount(G.ReadD(reader, 10), G.ReadS(reader, 11), G.ReadS(reader, 12), G.ReadD(reader, 37), G.ReadS(reader, 38), G.ReadS(reader, 39));
 
         //x.discount = new Discount();
         //x.discount.coeff = G.ReadD(reader, 10);
@@ -701,6 +660,11 @@ public class Products : System.Web.Services.WebService {
         x.color = C.GetData(G.ReadS(reader, 29)); // new Colors.NewColor();
         x.energyClass = G.ReadS(reader, 30);
         x.dataSheet = G.ReadS(reader, 31);
+        x.opportunity = G.ReadB(reader, 32);
+        x.keyFeatures = new List<string>(); // G.ReadS(reader, 33); //TODO;
+        x.inserts = G.ReadS(reader, 34);
+
+
 
         //x.pg_discount = new Discount();
         //x.pg_discount.coeff = G.ReadI(reader, 20);
@@ -736,12 +700,7 @@ public class Products : System.Web.Services.WebService {
 
     private Discount GetDiscount(double productDiscount, string pFrom, string pTo, double pgDiscount, string pgFrom, string pgTo) {
         Discount x = new Discount();
-        //double discount = 0; // productDiscount > 0 ? productDiscount : pgDiscount;
         DateTime today = DateTime.Now;
-        //DateTime from = DateTime.Now;
-        //DateTime to = DateTime.Now;
-        //int diff = 0;
-         
         if (productDiscount > 0) {
             x.coeff = productDiscount;
             x.from = pFrom;
@@ -751,26 +710,14 @@ public class Products : System.Web.Services.WebService {
             x.from = pgFrom;
             x.to = pgTo;
         }
-        //x.coeff = discount;
         x.perc = Math.Round(x.coeff * 100, 1);
-
-        if (today >= Convert.ToDateTime(x.from) && today <= Convert.ToDateTime(x.to)) {
-            x.isValid = true;
+        if (!string.IsNullOrEmpty(x.from) && (!string.IsNullOrEmpty(x.to))) {
+            if (today >= Convert.ToDateTime(x.from) && today <= Convert.ToDateTime(x.to)) {
+                x.isValid = true;
+            }
         }
-
-
-
         return x;
     }
-
-    //private Discount GetDiscount(double productDiscount, double pgDiscount) {
-    //    Discount x = new Discount();
-    //    double discount = productDiscount > 0 ? productDiscount : pgDiscount;
-    //    x.coeff = discount;
-    //    x.perc = Math.Round(x.coeff * 100, 1);
-
-    //    return x;
-    //}
 
     public void RemoveMainImg(string productId, string img) {
         string img_ = img.Contains('?') ? img.Split('?')[0] : img;
@@ -836,6 +783,11 @@ public class Products : System.Web.Services.WebService {
         x.show.val = defalutLimit;
         x.page = 1;
         x.color = C.GetDistinctColors(xxx.data);
+        x.opportunity = new FilterItem();
+        x.opportunity.code = "opportunity";
+        x.opportunity.title = "opportunity";
+        x.opportunity.val = false;
+        x.opportunity.tot = xxx.data.Count > 0 ? xxx.data.Count(a => a.opportunity) : 0;
         return x;
     }
 

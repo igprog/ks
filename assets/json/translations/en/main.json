@@ -99,5 +99,7 @@
   "price": "Price",
   "total": "Total",
   "net": "Net",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "opportunity": "Do not miss opportunity",
+  "best selling": "Best Selling"
 }

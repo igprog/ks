@@ -71,7 +71,10 @@ public class DataBase {
                 power VARCHAR(50),
                 color VARCHAR(50),
                 energyclass VARCHAR(50),
-                datasheet VARCHAR(50))";
+                datasheet VARCHAR(50),
+                opportunity VARCHAR(50),
+                keyfeatures NVARCHAR(200),
+                inserts NVARCHAR(50))";
         CreateTable(path, sql);
     }
 

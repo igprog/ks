@@ -305,9 +305,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadData = () => {
         loadProductGroups();
-        loadBrands();
-        loadOutlet('hr', null, 4);
-        loadNewProducts('hr', null, 4);
+        //loadBrands();
+        //loadOutlet('hr', null, 4);
+        //loadNewProducts('hr', null, 4);
         loadInfo($rootScope.lang);
     }
 
@@ -382,7 +382,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         records: [],
         info: null,
         mainGallery: null,
-        services: []
+        services: [],
+        opportunity: []
     }
     $scope.d = data;
 
@@ -426,6 +427,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
     loadInfo('hr');
+
+    var loadOpportunity = (lang, pg, limit) => {
+        f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'opportunity', limit: limit }).then((d) => {
+            $scope.d.opportunity = d;
+        });
+    }
+    loadOpportunity('hr', null, 4);
 
 }])
 
@@ -679,10 +687,10 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     get($stateParams.sku);
 
     $scope.getVarDimProduct = (style, dimension) => {
-        var dimension_ = angular.copy(JSON.parse(dimension));
+        //var dimension_ = angular.copy(JSON.parse(dimension));
         debugger;
         $scope.d.loading = true;
-        f.post('Products', 'GetVarDimProduct', { style: style, dimension: dimension_, lang: lang }).then((d) => {
+        f.post('Products', 'GetVarDimProduct', { style: style, dimension: dimension, lang: lang }).then((d) => {
             get(d.sku);
             $scope.d.loading = false;
         });
