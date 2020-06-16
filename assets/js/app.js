@@ -632,7 +632,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         review: null,
         stars: [1, 2, 3, 4, 5],
         activeTab: 'description',
-        showColorVar: false
+        showColorVar: false,
+        showReivewForm: true
     }
     $scope.d = data;
 
@@ -663,19 +664,26 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
+    var initReview = (sku) => {
+        f.post('Review', 'Init', { sku: sku }).then((d) => {
+            $scope.d.review = d;
+        });
+    }
+
     var get = (sku) => {
         $scope.d.loading = true;
         f.post('Products', 'Get', { sku: sku, lang: 'hr' }).then((d) => {
             $scope.d.record = d;
-
-            if (d.styleProducts.length > 0) {
-                debugger;
-                angular.forEach(d.styleProducts, function (val, key) {
-                    //val.color !== null && val.color !== x.color ? true : false;
-                    if (val.color !== null && val.color !== d.color) {
-                        $scope.d.showColorVar = true;
-                    }
-                });
+            debugger;
+            if (d.styleProducts !== null) {
+                if (d.styleProducts.length > 0) {
+                    angular.forEach(d.styleProducts, function (val, key) {
+                        //val.color !== null && val.color !== x.color ? true : false;
+                        if (val.color !== null && val.color !== d.color) {
+                            $scope.d.showColorVar = true;
+                        }
+                    });
+                }
             }
 
             initReview(d.sku);
@@ -725,12 +733,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     //$scope.rating = 0;
 
-    var initReview = (sku) => {
-        f.post('Review', 'Init', {sku: sku}).then((d) => {
-            $scope.d.review = d;
-        });
-    }
-
     $scope.saveRating = (x) => {
         if (x.rating < 1) {
             alert($translate.instant('please rate product'));
@@ -740,6 +742,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         x.lang = 'hr';
         f.post('Review', 'Save', { x: x }).then((d) => {
             $scope.d.record.reviews = d;
+            $scope.d.showReivewForm = false;
         });
     }
 

@@ -74,7 +74,7 @@ public class DataBase {
                 datasheet VARCHAR(50),
                 opportunity VARCHAR(50),
                 keyfeatures NVARCHAR(200),
-                inserts NVARCHAR(50))";
+                fireboxinsert NVARCHAR(50))";
         CreateTable(path, sql);
     }
 

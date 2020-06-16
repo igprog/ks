@@ -92,6 +92,9 @@
                                             <button style="background-color:{{x.hex}};" class="color-filter-lg" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
                                         </div>
                                     </div>
+                                    <div ng-if="d.record.fireboxInsert" class="pt-4">
+                                        <label class="control-label">{{'insert' | translate}}: {{d.record.fireboxInsert}}</label>
+                                    </div>
                                 </div>
 
                                 <!--<div class="product-page-options">
@@ -144,6 +147,13 @@
                                     <li><a class="evernote" data-original-title="evernote" href="javascript:;"></a></li>
                                     <li><a class="tumblr" data-original-title="tumblr" href="javascript:;"></a></li>
                                 </ul>
+
+                                <div ng-if="d.record.keyFeatures.length>0" class="pt-4">
+                                    <label>{{'key features' | translate}}</label>
+                                    <ul ng-repeat="x in d.record.keyFeatures">
+                                        <li>{{x.title}}</li>
+                                    </ul>
+                                </div>
                             </div>
                             <div class="product-page-content">
                                 <ul id="tab" class="nav nav-tabs">
@@ -174,7 +184,7 @@
                                     <div ng-if="d.record.dataSheet" id="documentation" class="tab-pane fade">
                                         <div ng-if="d.record.dataSheet" class="card shadow m-3">
                                             <div class="card-body">
-                                                <a href="../upload/{{d.record.id}}/datasheet/{{d.record.dataSheet}}" title="{{d.record.dataSheet}}"><i class="fa fa-file-pdf-o"></i> {{d.record.dataSheet}}</a>
+                                                <a href="../upload/{{d.record.id}}/datasheet/{{d.record.dataSheet}}" title="{{d.record.dataSheet}}"><i class="fa fa-file-text-o"></i> {{d.record.dataSheet}}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +212,7 @@
         </div>
     </div>-->
                                         <!-- BEGIN FORM-->
-                                        <form id="review" class="reviews-form" role="form">
+                                        <form ng-if="d.showReivewForm" id="review" class="reviews-form" role="form">
                                             <h2>{{'write a review' | translate}}</h2>
                                             <div class="form-group">
                                                 <label for="name">{{'name' | translate}} <span class="require">*</span></label>
@@ -242,6 +252,7 @@
             <div ng-if="d.record.relatedProducts.length>0" class="row margin-bottom-40">
                 <div class="col-md-12 col-sm-12">
                     <h2>{{'accessories' | translate}}</h2>
+                    <hr />
                     <specialproducts-directive data="d.record.relatedProducts"></specialproducts-directive>
                     <!--<h2>Najpopularniji proizvodi</h2>
                     <bestselling-directive data="d.bestsellingall"></bestselling-directive>-->

@@ -29,7 +29,7 @@ public class Products : System.Web.Services.WebService {
     Colors C = new Colors();
     int defalutLimit = 12;
     string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.discountfrom, p.discountto, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder,
-                            p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet, p.opportunity, p.keyfeatures, p.inserts,
+                            p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet, p.opportunity, p.keyfeatures, p.fireboxinsert,
                             pg.title, b.title, pg.discount, pg.discountfrom, pg.discountto
                         FROM products p   
                         LEFT OUTER JOIN productGroups pg
@@ -74,8 +74,8 @@ public class Products : System.Web.Services.WebService {
         public string energyClass;
         public string dataSheet;
         public bool opportunity;
-        public List<string> keyFeatures;
-        public string inserts;
+        public List<Global.CodeTitle> keyFeatures;
+        public string fireboxInsert;
         public Price price;
         public int qty;
         public Review.ReviewData reviews;
@@ -222,8 +222,8 @@ public class Products : System.Web.Services.WebService {
             x.energyClass = null;
             x.dataSheet = null;
             x.opportunity = false;
-            x.keyFeatures = new List<string>();
-            x.inserts = null;
+            x.keyFeatures = new List<Global.CodeTitle>();
+            x.fireboxInsert = null;
             x.gallery = null;
             x.price = new Price();
             x.qty = 1;
@@ -362,15 +362,23 @@ public class Products : System.Web.Services.WebService {
                 }
                 relatedProducts = string.Join(";", rp_);
             }
+            string keyFeatures = null;
+            if (x.keyFeatures.Count > 0) {
+                var kf_ = new List<string>();
+                foreach (var kf in x.keyFeatures) {
+                    kf_.Add(string.Format("{0}", kf.title));
+                }
+                keyFeatures = string.Join(";", kf_);
+            }
             x.discount.coeff = x.discount.perc / 100;
             if (string.IsNullOrEmpty(x.id)) {
                 x.id = Guid.NewGuid().ToString();
                 sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, x.keyFeatures, x.inserts);
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
             } else {
                 sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', discountfrom = '{11}', discountto = '{12}', stock = '{13}', isnew = '{14}', outlet = '{15}', bestselling = '{16}', isactive = '{17}', features = '{18}', deliverydays = '{19}', productorder = {20},
-                                    freeshipping = '{21}', bestbuy = '{22}', wifi = '{23}', relatedproducts = '{24}', width = '{25}', height = '{26}', depth = '{27}', power = '{28}', color = '{29}', energyclass = '{30}', datasheet = '{31}', opportunity = '{32}', keyfeatures = '{33}', inserts = '{34}' WHERE id = '{0}'"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, x.keyFeatures, x.inserts);
+                                    freeshipping = '{21}', bestbuy = '{22}', wifi = '{23}', relatedproducts = '{24}', width = '{25}', height = '{26}', depth = '{27}', power = '{28}', color = '{29}', energyclass = '{30}', datasheet = '{31}', opportunity = '{32}', keyfeatures = '{33}', fireboxinsert = '{34}' WHERE id = '{0}'"
+                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
             }
             using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                 connection.Open();
@@ -661,10 +669,8 @@ public class Products : System.Web.Services.WebService {
         x.energyClass = G.ReadS(reader, 30);
         x.dataSheet = G.ReadS(reader, 31);
         x.opportunity = G.ReadB(reader, 32);
-        x.keyFeatures = new List<string>(); // G.ReadS(reader, 33); //TODO;
-        x.inserts = G.ReadS(reader, 34);
-
-
+        x.keyFeatures = GetKeyFeatures(G.ReadS(reader, 33)); // new List<Global.CodeTitle>(); // G.ReadS(reader, 33); //TODO;
+        x.fireboxInsert = G.ReadS(reader, 34);
 
         //x.pg_discount = new Discount();
         //x.pg_discount.coeff = G.ReadI(reader, 20);
@@ -892,6 +898,23 @@ public class Products : System.Web.Services.WebService {
                 }
             }
             connection.Close();
+        }
+        return xx;
+    }
+
+    public List<Global.CodeTitle> GetKeyFeatures(string features) {
+        List<Global.CodeTitle> xx = new List<Global.CodeTitle>();
+        if (!string.IsNullOrEmpty(features)) {
+            Global.CodeTitle x = new Global.CodeTitle();
+            string[] list = features.Split(';');
+            int count = 0;
+            foreach (var l in list) {
+                x = new Global.CodeTitle();
+                x.code = count.ToString();
+                x.title = l;
+                xx.Add(x);
+                count++;
+            }
         }
         return xx;
     }

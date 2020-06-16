@@ -455,7 +455,17 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         search: null,
         responseTime: 0,
         dataSheetFolder: 'datasheet',
-        accessories: []
+        accessories: [],
+        fireboxInserts: [
+            {
+                code: 1,
+                title: 'bioetanol'
+            },
+            {
+                code: 2,
+                title: 'elektric'
+            }
+        ]
     }
     $scope.d = data;
 
@@ -711,6 +721,20 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
     }
 
+    var addKeyFeatures = (x) => {
+        debugger;
+        x.push({code: null, title: null});
+        //f.post(service, 'Init', {}).then((d) => {
+        //    x.keyFeatures.push(d.keyFeatures);
+        //});
+    }
+
+    var removeKeyFeatures = (x, idx) => {
+        if (confirm('Briši?')) {
+            x.splice(idx, 1);
+        }
+    }
+
     $scope.f = {
         load: (productGroup, search) => {
             debugger;
@@ -751,6 +775,12 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         removeRelated: (x, idx) => {
             return removeRelated(x, idx);
+        },
+        addKeyFeatures: (x) => {
+            return addKeyFeatures(x);
+        },
+        removeKeyFeatures: (x, idx) => {
+            return removeKeyFeatures(x, idx);
         }
     }
 }])

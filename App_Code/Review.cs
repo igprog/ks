@@ -134,7 +134,7 @@ public class Review : System.Web.Services.WebService {
 
     #region Methods
     public ReviewData GetData(string sku) {
-        string sql = string.Format("{0} WHERE r.sku = '{1}' AND r.isactive = 'True'", mainSql, sku);
+        string sql = string.Format("{0} WHERE r.sku = '{1}' AND r.isactive = 'True' ORDER BY r.rowid DESC", mainSql, sku);
         return LoadData(sql);
     }
 
