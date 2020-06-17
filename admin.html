@@ -894,28 +894,30 @@
                                         <option value="{{i.title}}" ng-repeat="i in d.fireboxInserts">{{i.title}}</option>
                                     </select>
                                 </div>
-                                <label class="text-success">Vezani proizvodi:</label>
-                                <hr class="mt-0" />
-                                <div class="table-responsive">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <th style="width:50px"></th>
-                                            <th>SKU - Naziv</th>
-                                        </tr>
-                                        <tr ng-repeat="y in x.relatedProducts">
-                                            <td><button class="btn btn-outline-danger" ng-click="f.removeRelated(x.relatedProducts, $index)"><i class="fa fa-trash"></i></button></td>
-                                            <td>
-                                                <select ng-model="y.sku" class="form-control">
-                                                    <option value="{{a.sku}}" ng-repeat="a in d.accessories.data">{{a.sku}} - {{a.title}}</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <button class="btn btn-warning" ng-click="f.addRelated(x)"><i class="fa fa-plus"></i></button>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <div class="mt-2">
+                                    <label class="text-success">Vezani proizvodi:</label>
+                                    <hr class="mt-0" />
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless">
+                                            <tr>
+                                                <th style="width:50px"></th>
+                                                <th>SKU - Naziv</th>
+                                            </tr>
+                                            <tr ng-repeat="y in x.relatedProducts">
+                                                <td><button class="btn btn-outline-danger" ng-click="f.removeRelated(x.relatedProducts, $index)"><i class="fa fa-trash"></i></button></td>
+                                                <td>
+                                                    <select ng-model="y.sku" class="form-control">
+                                                        <option value="{{a.sku}}" ng-repeat="a in d.accessories.data">{{a.sku}} - {{a.title}}</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <button class="btn btn-warning" ng-click="f.addRelated(x)"><i class="fa fa-plus"></i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div class="text-right">
                                     <button ng-disabled="x.id==null" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
