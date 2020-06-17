@@ -83,6 +83,7 @@ public class Products : System.Web.Services.WebService {
         public List<NewProduct> styleProducts;
         public List<Dimension> distinctDimensions;
         public List<Colors.NewColor> distinctColors;
+        public List<Global.CodeTitle> distinctFireboxInserts;
         public List<Colors.NewColor> colors;
     }
 
@@ -311,6 +312,7 @@ public class Products : System.Web.Services.WebService {
                 //x.styleProducts = GetStyleProducts(x.style, lang);
                 x.distinctDimensions = GetDistinctDimensions(x.style);
                 x.distinctColors = GetDistinctColors(x.style, x.dimension);
+                x.distinctFireboxInserts = GetDistinctFireboxInserts(x.style);
                 x.colors = C.LoadData();
             }
             return JsonConvert.SerializeObject(x, Formatting.None);
@@ -335,6 +337,16 @@ public class Products : System.Web.Services.WebService {
         try {
             string sql = string.Format(@"{0} WHERE p.style = '{1}' AND p.color = '{2}' AND p.width = '{3}' AND p.height = '{4}' AND p.depth = '{5}'"
                                         , mainSql , style , color, dimension.width, dimension.height, dimension.depth);
+            return JsonConvert.SerializeObject(GetProductData(sql, lang), Formatting.None);
+        } catch(Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string GetVarFireboxInsertProduct(string style, string fireboxInsert, string lang) {
+        try {
+            string sql = string.Format(@"{0} WHERE p.style = '{1}' AND p.fireboxinsert = '{2}'", mainSql , style , fireboxInsert);
             return JsonConvert.SerializeObject(GetProductData(sql, lang), Formatting.None);
         } catch(Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -894,6 +906,30 @@ public class Products : System.Web.Services.WebService {
                         Colors.NewColor x = new Colors.NewColor();
                         x = C.GetData(G.ReadS(reader, 0));
                         xx.Add(x);
+                    }
+                }
+            }
+            connection.Close();
+        }
+        return xx;
+    }
+
+    public List<Global.CodeTitle> GetDistinctFireboxInserts(string style) {
+        List<Global.CodeTitle> xx = new List<Global.CodeTitle>();
+        Global.CodeTitle x = new Global.CodeTitle();
+        string sql = null;
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            sql = string.Format(@"SELECT DISTINCT fireboxinsert FROM products WHERE style = '{0}'"
+                                , style);
+            using (var command = new SQLiteCommand(sql, connection)) {
+                using (var reader = command.ExecuteReader()) {
+                    while (reader.Read()) {
+                        if (!string.IsNullOrEmpty(G.ReadS(reader, 0))) {
+                            x = new Global.CodeTitle();
+                            x.title = G.ReadS(reader, 0);
+                            xx.Add(x);
+                        }
                     }
                 }
             }

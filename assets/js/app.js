@@ -714,6 +714,16 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
+    $scope.getVarFireboxInsertProduct = (style, fireboxInsert) => {
+        debugger;
+        //var dimension_ = angular.copy(JSON.parse(angular.toJson(dimension)));
+        $scope.d.loading = true;
+        f.post('Products', 'GetVarFireboxInsertProduct', { style: style, fireboxInsert: fireboxInsert, lang: lang }).then((d) => {
+            get(d.sku);
+            $scope.d.loading = false;
+        });
+    }
+
     $scope.mainImgIdx = 0;
     $scope.selectImg = function (idx) {
         $scope.mainImgIdx = idx;

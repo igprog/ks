@@ -94,51 +94,21 @@
                                     </div>
                                     <div ng-if="d.record.fireboxInsert" class="pt-4">
                                         <label class="control-label">{{'insert' | translate}}: {{d.record.fireboxInsert}}</label>
+                                        <div>
+                                            <a ng-model="x" href="" class="btn btn-default m-2" ng-repeat="x in d.record.distinctFireboxInserts track by $index" title="{{x.title | translate}}" ng-click="getVarFireboxInsertProduct(d.record.style, x.title)">{{x.title | translate}}</a>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <!--<div class="product-page-options">
-                                    <div ng-if="d.record.dimension.width>0&&d.record.dimension.height>0&&d.record.dimension.depth>0">
-                                        <label class="control-label">{{'size'}}: {{d.record.dimension.width}}x{{d.record.dimension.height}}x{{d.record.dimension.depth}}</label>
-                                        <div>
-                                            <a ng-model="x" href="" class="btn btn-default m-2" ng-repeat="x in d.record.distinctDimensions track by $index" title="{{x.title | translate}}" ng-click="getVarDimProduct(d.record.style, x)">{{x.width}}x{{x.height}}x{{x.depth}}</a>
-                                        </div>
-                                        <select ng-model="d.record.dimension" class="form-control input-sm" ng-change="getVarDimProduct(d.record.style, d.record.dimension)">
-                                            <option value="{{x}}" ng-repeat="x in d.record.distinctDimensions track by $index">{{x.width}}x{{x.height}}x{{x.depth}}</option>
-                                        </select>
-                                    </div>
-                                    <div ng-if="d.record.color.code">
-                                        <label class="control-label">Color: <span ng-if="!d.showColorVar">{{d.record.color.title}}</span></label>
-                                        <div>
-                                            <button style="background-color:{{x.hex}};" class="color-filter-lg" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
-                                        </div>
-                                    </div>
-                                </div>-->
-
                                 <div class="product-page-cart">
                                     <div class="product-quantity">
                                         <input ng-model="d.record.qty" type="number" value="1" class="form-control input-sm" style="width:70px">
-                                        <!--<input id="product-quantity" type="text" value="1" readonly class="form-control input-sm">-->
                                     </div>
                                     <button class="btn btn-primary" type="submit" ng-click="addToCart(d.record)">Dodaj u košaricu</button>
                                 </div>
-                                <!--<div class="review">
-                                    <input type="range" value="4" step="0.25" id="backing4">
-                                    <div class="rateit" data-rateit-backingfld="#backing4" data-rateit-resetable="false" data-rateit-ispreset="true" data-rateit-min="0" data-rateit-max="5">
-                                    </div>
-                                    <a href="javascript:;">7 reviews</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:;">Write a review</a>
-                                </div>-->
                                 <div class="product-page-cart form-inline">
-                                    <!--<span starating></span>-->
-                                    <!--<span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star-empty"></span>-->
                                     <i class="fa fa-star text-success" ng-repeat="s in d.stars | limitTo: d.record.reviews.rating"></i>
                                     <i ng-if="d.record.reviews.rating % 1 != 0" class="fa fa-star-half-o text-success"></i>
                                     <a href="#reviews" class="pl-3" onclick="return false;" data-toggle="tab" ng-click="setActiveTab('reviews')">{{d.record.reviews.count}} {{reviewsTrans(d.record.reviews.count) | translate}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#reviews" onclick="return false;" ng-click="setActiveTab('reviews')" data-toggle="tab">{{'write a review' | translate}}</a>
-                                    <!--<a href="javascript:;" class="pl-3">7 reviews</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#/review">Write a review</a>-->
                                 </div>
                                 <ul class="social-icons">
                                     <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
