@@ -110,13 +110,14 @@
                                     <i ng-if="d.record.reviews.rating % 1 != 0" class="fa fa-star-half-o text-success"></i>
                                     <a href="#reviews" class="pl-3" onclick="return false;" data-toggle="tab" ng-click="setActiveTab('reviews')">{{d.record.reviews.count}} {{reviewsTrans(d.record.reviews.count) | translate}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#reviews" onclick="return false;" ng-click="setActiveTab('reviews')" data-toggle="tab">{{'write a review' | translate}}</a>
                                 </div>
-                                <ul class="social-icons">
+
+                                <!--<ul class="social-icons">
                                     <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
                                     <li><a class="twitter" data-original-title="twitter" href="javascript:;"></a></li>
                                     <li><a class="googleplus" data-original-title="googleplus" href="javascript:;"></a></li>
                                     <li><a class="evernote" data-original-title="evernote" href="javascript:;"></a></li>
                                     <li><a class="tumblr" data-original-title="tumblr" href="javascript:;"></a></li>
-                                </ul>
+                                </ul>-->
 
                                 <div ng-if="d.record.keyFeatures.length>0" class="pt-4">
                                     <label>{{'key features' | translate}}</label>
