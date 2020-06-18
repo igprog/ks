@@ -277,16 +277,21 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
     var load = () => {
-        debugger;
-        f.post(service, 'Load', {}).then((d) => {
+        f.post(service, 'Load', { isactive: false }).then((d) => {
             $scope.d.records = d;
         });
     }
     load();
 
+    var remove = (x) => {
+        if (confirm('Briši?')) {
+            f.post(service, 'Delete', { x: x }).then((d) => {
+                $scope.d.records = d;
+            });
+        }
+    }
+
     var upload = (x, idx) => {
-        //delete previous image from folder
-        debugger;
         var content = new FormData(document.getElementById('formUpload_' + idx));
         $http({
             url: '../UploadHandler.ashx',
@@ -294,11 +299,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             headers: { 'Content-Type': undefined },
             data: content,
         }).then(function (response) {
-            debugger;
-            //$scope.d.records[idx].img = response.data;
             x.img = response.data;
             save(x, idx)
-            //TODO save productImg to bd
         },
         function (response) {
             alert(response.data.d);
@@ -311,6 +313,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         save: (x) => {
             return save(x);
+        },
+        remove: (x) => {
+            return remove(x)
         },
         upload: (x, idx) => {
             return upload(x, idx);

@@ -383,7 +383,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         info: null,
         mainGallery: null,
         services: [],
-        opportunity: []
+        opportunity: [],
+        banners: []
     }
     $scope.d = data;
 
@@ -434,6 +435,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
     loadOpportunity('hr', null, 4);
+
+    var loadBanners = () => {
+        f.post('Banners', 'Load', {isactive: true}).then((d) => {
+            $scope.d.banners = d;
+        });
+    }
+    loadBanners();
 
 }])
 

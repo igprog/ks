@@ -143,6 +143,7 @@ public class DataBase {
         string sql = @"CREATE TABLE IF NOT EXISTS banners
                     (id VARCHAR(50) PRIMARY KEY,
                     img VARCHAR(50),
+                    isactive VARCHAR(50),
                     b_order INTEGER)";
         CreateTable(path, sql);
     }

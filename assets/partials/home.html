@@ -13,10 +13,11 @@
             <div ng-controller="CarouselDemoCtrl">
                 <div style="height:30%">
                     <carousel interval="myInterval">
-                        <slide ng-repeat="x in config.banners" active="slide.active">
+                        <slide ng-repeat="x in d.banners" active="slide.active">
                             <div style="margin:auto;">
                                 <div>
-                                    <img src="../upload/banner/{{x}}" style="float:left">
+                                    <img src="../upload/banners/{{x.img}}" style="float:left">
+                                    <!--<img src="../upload/banner/{{x}}" style="float:left">-->
                                 </div>
                             </div>
                         </slide>
