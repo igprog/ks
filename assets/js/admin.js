@@ -254,6 +254,71 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
 }])
 
+.controller('bannersCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
+    var service = 'Banners';
+
+    var data = {
+        loading: false,
+        records: null,
+        imgFolder: 'banners'
+    }
+    $scope.d = data;
+
+    var init = () => {
+        f.post(service, 'Init', {}).then((d) => {
+            $scope.d.records.push(d);
+        });
+    }
+
+    var save = (x) => {
+        f.post(service, 'Save', { x: x }).then((d) => {
+            $scope.d.records = d;
+        });
+    }
+
+    var load = () => {
+        debugger;
+        f.post(service, 'Load', {}).then((d) => {
+            $scope.d.records = d;
+        });
+    }
+    load();
+
+    var upload = (x, idx) => {
+        //delete previous image from folder
+        debugger;
+        var content = new FormData(document.getElementById('formUpload_' + idx));
+        $http({
+            url: '../UploadHandler.ashx',
+            method: 'POST',
+            headers: { 'Content-Type': undefined },
+            data: content,
+        }).then(function (response) {
+            debugger;
+            //$scope.d.records[idx].img = response.data;
+            x.img = response.data;
+            save(x, idx)
+            //TODO save productImg to bd
+        },
+        function (response) {
+            alert(response.data.d);
+        });
+    }
+
+    $scope.f = {
+        init: () => {
+            return init();
+        },
+        save: (x) => {
+            return save(x);
+        },
+        upload: (x, idx) => {
+            return upload(x, idx);
+        }
+    }
+
+}])
+
 .controller('productGroupsCtrl', ['$scope', '$http', 'f', '$sessionStorage', ($scope, $http, f, $sessionStorage) => {
     var service = 'ProductGroups';
     var adminType = $sessionStorage.adminType !== undefined ? $sessionStorage.adminType : 'admin';

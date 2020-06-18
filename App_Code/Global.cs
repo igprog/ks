@@ -45,6 +45,7 @@ namespace Igprog {
             public string review = "review";
             public string users = "users";
             public string orders = "orders";
+            public string banners = "banners";
             public string tran = "tran";
         }
 

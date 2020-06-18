@@ -139,6 +139,14 @@ public class DataBase {
         CreateTable(path, sql);
     }
 
+    public void Banners(string path) {
+        string sql = @"CREATE TABLE IF NOT EXISTS banners
+                    (id VARCHAR(50) PRIMARY KEY,
+                    img VARCHAR(50),
+                    b_order INTEGER)";
+        CreateTable(path, sql);
+    }
+
     public void Tran(string path) {
         string sql = @"CREATE TABLE IF NOT EXISTS tran
                     (id VARCHAR(50),
@@ -195,6 +203,9 @@ public class DataBase {
                 break;
             case "review":
                 Review(path);
+                break;
+            case "banners":
+                Banners(path);
                 break;
             case "tran":
                 Tran(path);

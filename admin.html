@@ -53,6 +53,9 @@
                     <a class="nav-link" href="" title="info" ng-click="toggleTpl('info')">Informacije</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('banners')">Baneri</a>
+                </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="grupe proizvoda" ng-click="toggleTpl('productGroups')">Grupe Proizvoda</a>
                 </li>
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
@@ -103,6 +106,12 @@
                     <a class="d-flex w-100 justify-content-start align-items-center text-dark">
                         <span class="fa fa-info-circle fa-fw mr-3"></span>
                         <span class="menu-collapsed">Informacije</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('banners')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-image  fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Baneri</span>
                     </a>
                 </li>
                 <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('productGroups')">
@@ -344,6 +353,68 @@
                     </div>
                 </div>
             </div>-->
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="banners">
+        <div ng-if="d.isLogin" ng-controller="bannersCtrl">
+            <h2 class="ml-3">Baneri</h2>
+            <div class="row">
+                <div ng-repeat="x in d.records track by $index" class="col-lg-12">
+                    <div class="card shadow m-3">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    Baner br. {{$index+1}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <img class="img-thumbnail" src="../upload/{{d.imgFolder}}/{{x.img}}" alt="{{x.img}}" style="height:80px">
+                            </div>
+                            <div class="form-group">
+                                <label>Redoslijed:</label>
+                                <input ng-model="x.order" type="number" class="form-control" >
+                            </div>
+                            <form id="formUpload_{{$index}}" ng-submit="f.upload(x, $index)" enctype="multipart/form-data" method="post">
+                                <input id="imgFolder" name="imgFolder" ng-model="d.imgFolder" type="text" hidden="hidden">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input ng-model="file" name="UploadedFile" id="UploadedFile" type="file" accept="image/*" class="form-control">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <button type="submit" class="btn btn-primary text-capitalize"><i class="fa fa-upload"></i> Upload</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button ng-click="f.init()" class="btn btn-outline-primary m-3"><i class="fa fa-plus"></i> Nova grupa</button>
+            </div>
+            <div></div>
+
+            <!--<div ng-if="x.id">
+                <label>Banner</label>
+                <div>
+                    <img class="img-thumbnail" src="../upload/{{d.imgFolder}}/{{x.img}}" alt="{{x.img}}" style="height:80px">
+                </div>
+                <form id="formUpload_{{x.id}}" ng-submit="f.upload(x, $index)" enctype="multipart/form-data" method="post">
+                    <input id="imgFolder" name="imgFolder" ng-model="d.imgFolder" type="text" hidden="hidden">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <input ng-model="file" name="UploadedFile" id="UploadedFile" type="file" accept="image/*" class="form-control">
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-primary text-capitalize"><i class="fa fa-upload"></i> Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>-->
+            <json-directive data="d" desc="'d'" debug="true"></json-directive>
         </div>
     </script>
 
