@@ -152,7 +152,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="country">{{'country' | translate}} <span class="require">*</span></label>
-                                            <select ng-model="d.order.user.billingDetails.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries" ng-change="setDeliveryAddress(d)"></select>
+                                            <select ng-model="d.order.user.billingDetails.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries track by x.code" ng-change="setDeliveryAddress(d)"></select>
                                         </div>
                                     </div>
                                     <hr>
@@ -167,7 +167,7 @@
                                                 <input ng-model="d.sameAsBillingAddress" type="checkbox" ng-change="setDeliveryAddress(d)"> {{'my delivery and billing address is the same' | translate}}.
                                             </label>
                                         </div>
-                                        <button class="btn btn-primary  pull-right" type="submit" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-address-content" id="button-payment-address">{{'continue' | translate}}</button>
+                                        <button class="btn btn-primary  pull-right" type="submit" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-address-content" id="button-payment-address" ng-click="setDeliveryAddress(d)">{{'continue' | translate}}</button>
                                         <!--<div class="checkbox pull-right">
                                             <label>
                                                 <input type="checkbox"> {{'i have read and agree to the' | translate}} <a title="Privacy Policy" href="">{{'privacy policy' | translate}}</a> &nbsp;&nbsp;&nbsp;
@@ -234,24 +234,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="country-dd">{{'country' | translate}} <span class="require">*</span></label>
-                                            <select ng-model="d.order.user.deliveryDetails.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries"></select>
-                                            <!--<select class="form-control input-sm" id="country-dd">
-                                                <option value=""> --- Please Select --- </option>
-                                                <option value="244">Aaland Islands</option>
-                                                <option value="1">Afghanistan</option>
-                                                <option value="2">Albania</option>
-                                            </select>-->
+                                            <select ng-model="d.order.user.deliveryDetails.country" class="form-control input-sm" ng-options="x.title for x in d.order.countries track by x.code"></select>
                                         </div>
-                                        <!--<div class="form-group">
-                                            <label for="region-state-dd">Region/State <span class="require">*</span></label>
-                                            <select class="form-control input-sm" id="region-state-dd">
-                                                <option value=""> --- Please Select --- </option>
-                                                <option value="3513">Aberdeen</option>
-                                                <option value="3514">Aberdeenshire</option>
-                                                <option value="3515">Anglesey</option>
-                                                <option value="3516">Angus</option>
-                                            </select>
-                                        </div>-->
                                     </div>
                                     <div class="col-md-12">
                                         <button class="btn btn-primary  pull-right" type="submit" id="button-shipping-address" data-toggle="collapse" data-parent="#checkout-page" data-target="#shipping-method-content" >{{'continue' | translate}}</button>
