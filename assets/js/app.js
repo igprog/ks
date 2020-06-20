@@ -641,10 +641,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         stars: [1, 2, 3, 4, 5],
         activeTab: 'description',
         showColorVar: false,
-        showReivewForm: true
+        showReivewForm: true,
+        info: null
     }
     $scope.d = data;
-
+    debugger;
     $rootScope.d.autoscroll = true;
 
     var loadProductGroups = () => {
@@ -678,6 +679,12 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
 
+    var loadInfo = (lang) => {
+        f.post('Info', 'Load', { lang: lang }).then((d) => {
+            $scope.d.info = d;
+        });
+    }
+
     var get = (sku) => {
         $scope.d.loading = true;
         f.post('Products', 'Get', { sku: sku, lang: 'hr' }).then((d) => {
@@ -693,7 +700,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
                     });
                 }
             }
-
+            loadInfo('hr');
             initReview(d.sku);
             loadBestSelling('hr', $scope.d.record.productGroup.code, 3);
             loadBestSellingAll('hr', null, 4);

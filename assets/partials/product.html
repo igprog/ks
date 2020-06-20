@@ -35,9 +35,9 @@
                                     <div ng-if="d.record.isnew" class="product-image-label type-2">
                                         <span>{{'new' | translate}}</span>
                                     </div>
-                                    <div ng-if="d.record.freeshipping" class="product-image-label type-4">
+                                    <!--<div ng-if="d.record.freeshipping" class="product-image-label type-4">
                                         <span class="fa fa-truck fa-2x"></span>
-                                    </div>
+                                    </div>-->
                                     <div ng-if="d.record.bestbuy" class="product-image-label type-5">
                                         <span class="fa fa-smile-o fa-2x"></span>
                                     </div>
@@ -71,31 +71,31 @@
                                             <em>kn<span>{{d.record.price.gross | number}}</span> kn</em>
                                         </span>
                                     </div>-->
-                                    <div ng-if="d.record.deliverydays&&d.record.stock>d.record.qty-1" class="availability">
-                                        <!--Availability: <strong>In Stock</strong>-->
+                                    <!--<div ng-if="d.record.deliverydays&&d.record.stock>d.record.qty-1" class="availability">
+                                        Availability: <strong>In Stock</strong>
                                         {{'delivery date' | translate}}: <strong>{{d.record.deliverydays}} <span ng-if="d.record.deliverydays==1">{{'day' | translate}}</span><span ng-if="d.record.deliverydays!=1">{{'days' | translate}}</span></strong>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <div class="description">
                                     <p>{{d.record.shortdesc}}</p>
                                 </div>
                                 <div class="pt-2 pb-5">
                                     <div ng-if="d.record.dimension.width>0&&d.record.dimension.height>0&&d.record.dimension.depth>0">
-                                        <label class="control-label">{{'size'}}: {{d.record.dimension.width}}x{{d.record.dimension.height}}x{{d.record.dimension.depth}}</label>
+                                        <label class="control-label">{{'size'}}: <!--{{d.record.dimension.width}}x{{d.record.dimension.height}}x{{d.record.dimension.depth}}--></label>
                                         <div>
-                                            <a ng-model="x" href="" class="btn btn-default m-2" ng-repeat="x in d.record.distinctDimensions track by $index" title="{{x.title | translate}}" ng-click="getVarDimProduct(d.record.style, x)">{{x.width}}x{{x.height}}x{{x.depth}}</a>
+                                            <a ng-model="x" href="" class="btn btn-default m-2" style="{{d.record.dimension.width===x.width&&d.record.dimension.height===x.height&&d.record.dimension.depth===x.depth?'border:2px solid black':''}}" ng-repeat="x in d.record.distinctDimensions track by $index" title="{{x.title | translate}}" ng-click="getVarDimProduct(d.record.style, x)">{{x.width}}x{{x.height}}x{{x.depth}}</a>
                                         </div>
                                     </div>
-                                    <div ng-if="d.record.color.code">
-                                        <label class="control-label">Color: <span ng-if="!d.showColorVar">{{d.record.color.title}}</span></label>
+                                    <div ng-if="d.record.color.code" class="pt-2">
+                                        <label class="control-label">{{'color' | translate}}: <!--<span ng-if="!d.showColorVar">{{d.record.color.title}}</span>--></label>
                                         <div>
-                                            <button style="background-color:{{x.hex}};" class="color-filter-lg" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
+                                            <button style="background-color:{{x.hex}};{{d.record.color.code===x.code?'height:50px;width:50px':''}}" class="color-filter-lg" ng-repeat="x in d.record.distinctColors" title="{{x.title | translate}}" ng-click="getVarColorProduct(d.record.style, x.code, d.record.dimension)"></button>
                                         </div>
                                     </div>
-                                    <div ng-if="d.record.fireboxInsert" class="pt-4">
-                                        <label class="control-label">{{'insert' | translate}}: {{d.record.fireboxInsert}}</label>
+                                    <div ng-if="d.record.fireboxInsert" class="pt-2">
+                                        <label class="control-label">{{'insert' | translate}}: <!--{{d.record.fireboxInsert}}--></label>
                                         <div>
-                                            <a ng-model="x" href="" class="btn btn-default m-2" ng-repeat="x in d.record.distinctFireboxInserts track by $index" title="{{x.title | translate}}" ng-click="getVarFireboxInsertProduct(d.record.style, x.title)">{{x.title | translate}}</a>
+                                            <a ng-model="x" href="" class="btn btn-default m-2" style="{{d.record.fireboxInsert===x.title?'border:2px solid black':''}}" ng-repeat="x in d.record.distinctFireboxInserts track by $index" title="{{x.title | translate}}" ng-click="getVarFireboxInsertProduct(d.record.style, x.title)">{{x.title | translate}}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -105,11 +105,25 @@
                                     </div>
                                     <button class="btn btn-primary" type="submit" ng-click="addToCart(d.record)">Dodaj u košaricu</button>
                                 </div>
+
                                 <div class="product-page-cart form-inline">
                                     <i class="fa fa-star text-success" ng-repeat="s in d.stars | limitTo: d.record.reviews.rating"></i>
                                     <i ng-if="d.record.reviews.rating % 1 != 0" class="fa fa-star-half-o text-success"></i>
                                     <a href="#reviews" class="pl-3" onclick="return false;" data-toggle="tab" ng-click="setActiveTab('reviews')">{{d.record.reviews.count}} {{reviewsTrans(d.record.reviews.count) | translate}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#reviews" onclick="return false;" ng-click="setActiveTab('reviews')" data-toggle="tab">{{'write a review' | translate}}</a>
                                 </div>
+
+                                <div>
+                                    <label>{{'questions about this product' | translate}}</label>
+                                    <img src="../assets/img/woman.jpg" class="img-responsive" style="width:80px; float:right" />
+                                    <p>{{'our fireplace experts are here to help. Contact Sarah for advice' | translate}}</p>
+                                    <ul class="list-unstyled list-inline">
+                                        <li ng-cloak><a href="tel:{{d.info.phone}}"><i class="fa fa-phone"></i><span>{{d.info.phone}}</span></a></li>
+                                        <li ng-cloak><a href="mailto:{{d.info.email}}"><i class="fa fa-envelope"></i><span>{{d.info.email}}</span></a></li>
+                                        <li ng-cloak><a href=""><i class="fa fa-comment-o"></i><span>{{'chat' | translate}}</span></a></li>
+                                    </ul>
+                                    <hr />
+                                </div>
+                                
 
                                 <!--<ul class="social-icons">
                                     <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
@@ -118,13 +132,35 @@
                                     <li><a class="evernote" data-original-title="evernote" href="javascript:;"></a></li>
                                     <li><a class="tumblr" data-original-title="tumblr" href="javascript:;"></a></li>
                                 </ul>-->
-
-                                <div ng-if="d.record.keyFeatures.length>0" class="pt-4">
-                                    <label>{{'key features' | translate}}</label>
-                                    <ul ng-repeat="x in d.record.keyFeatures">
-                                        <li>{{x.title}}</li>
-                                    </ul>
+                                <div class="row pt-2">
+                                    <div class="col-md-6">
+                                        <div ng-if="d.record.keyFeatures.length>0">
+                                            <label>{{'key features' | translate}}</label>
+                                            <ul ng-repeat="x in d.record.keyFeatures">
+                                                <li>{{x.title}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div ng-if="d.record.freeshipping" class="row pt-2">
+                                            <div class="col-2">
+                                                <i class="fa fa-truck fa-2x"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <label>{{'free shipping' | translate}}</label>
+                                            </div>
+                                        </div>
+                                        <div ng-if="d.record.deliverydays&&d.record.stock>d.record.qty-1" class="row pt-2">
+                                            <div class="col-2">
+                                                <i class="fa fa-calendar fa-2x"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <label>{{'delivery' | translate}}: {{d.record.deliverydays}} <span ng-if="d.record.deliverydays==1">{{'day' | translate}}</span><span ng-if="d.record.deliverydays!=1">{{'days' | translate}}</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                
                             </div>
                             <div class="product-page-content">
                                 <ul id="tab" class="nav nav-tabs">

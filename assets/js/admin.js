@@ -529,7 +529,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         fireboxInserts: [
             {
                 code: 1,
-                title: 'bioetanol'
+                title: 'bioethanol'
             },
             {
                 code: 2,

@@ -179,22 +179,10 @@
 
 
         Test
-
         <div ng-controller="CarouselDemoCtrl">
             <div style="height: auto">
                 <carousel interval="myInterval">
                     <slide ng-repeat="x in d.specialProductGroup" >
-                        <!--<div class="" style="width:600px;margin:auto;height:100px">
-                        <div>
-                            <img ng-src="{{slide.image}}" width="200px" style="float:left; padding:10px">
-                        </div>
-                        <div>
-                            <img ng-src="{{slides[getSecondIndex($index+1)].image}}" width="200px" style="float:left; padding:10px">
-                        </div>
-                        <div>
-                            <img ng-src="{{slides[getSecondIndex($index+2)].image}}" width="200px" style="float:left; padding:10px">
-                        </div>
-                    </div>-->
                         <div style="margin:auto;" class="row">
                             <div class="col-3">
                                 <img src="../upload/{{d.specialProductGroup[getSecondIndex($index)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index)].img}}" width="100px" style="float:left; padding:10px">
@@ -213,17 +201,6 @@
                                 <p>{{x.title}}</p>
                             </div>
                         </div>
-                        <!--<div class="row" style="width:600px;margin:auto;">
-                            <div class="col-sm-4">
-                                <img src="../upload/{{x.id}}/gallery/{{x.img}}" width="200px" style="float:left; padding:10px">
-                            </div>
-                            <div class="col-sm-4">
-                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index+1)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index+1)].img}}" width="200px" style="float:left; padding:10px">
-                            </div>
-                            <div class="col-sm-4">
-                                <img src="../upload/{{d.specialProductGroup[getSecondIndex($index+2)].id}}/gallery/{{d.specialProductGroup[getSecondIndex($index+2)].img}}" width="200px" style="float:left; padding:10px">
-                            </div>
-                        </div>-->
                     </slide>
                 </carousel>
             </div>
