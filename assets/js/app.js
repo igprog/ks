@@ -888,6 +888,21 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.confirm = (x) => {
+        /**** Validation *****/
+        if (!x.confirmTerms) { alert('prohvatite uvjete korištenja'); return false; }
+        if (x.user.billingDetails.firstName == '') { alert('ime je obavezno'); return false; }
+        if (x.user.billingDetails.lastName == '') { alert('prezime je obavezno'); return false; }
+        if (x.user.billingDetails.phone == '') { alert('telefon obavezno'); return false; }
+        if (x.user.billingDetails.city == '') { alert('grad je obavezan'); return false; }
+        if (x.user.billingDetails.postalCode == '') { alert('poštanski grad je obavezan'); return false; }
+        if (x.user.billingDetails.country == '') { alert('država je obavezna'); return false; }
+        if (x.user.deliveryDetails.firstName == '') { alert('ime je obavezno (podaci za dostavu)'); return false; }
+        if (x.user.deliveryDetails.lastName == '') { alert('prezime je obavezno (podaci za dostavu)'); return false; }
+        if (x.user.deliveryDetails.phone == '') { alert('telefon obavezno (podaci za dostavu)'); return false; }
+        if (x.user.deliveryDetails.city == '') { alert('grad je obavezan (podaci za dostavu)'); return false; }
+        if (x.user.deliveryDetails.postalCode == '') { alert('poštanski grad je obavezan (podaci za dostavu)'); return false; }
+        if (x.user.deliveryDetails.country == '') { alert('država je obavezna (podaci za dostavu)'); return false; }
+        /**** Validation *****/
         x.orderDate = f.setDateTime(new Date());
         f.post('Orders', 'Confirm', { x: x }).then((d) => {
             $scope.d.order = d;

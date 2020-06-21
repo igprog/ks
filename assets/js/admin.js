@@ -648,7 +648,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             data: content,
         }).then(function (response) {
             debugger;
-            x.dataSheet = response.data;
+            x.dataSheet.push(response.data);
+            //x.dataSheet[] = response.data;
             save(x, idx);
             //loadProductGallery(x);
         },
@@ -769,7 +770,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     };
 
     var setProductGroup = (x, pg, sg) => {
-        debugger;
         if (x.id === null) {
             x.productGroup = sg;
             f.post('Features', 'getProductFeatures', { productGroup: pg }).then((d) => {
@@ -792,11 +792,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
     var addKeyFeatures = (x) => {
-        debugger;
         x.push({code: null, title: null});
-        //f.post(service, 'Init', {}).then((d) => {
-        //    x.keyFeatures.push(d.keyFeatures);
-        //});
     }
 
     var removeKeyFeatures = (x, idx) => {
@@ -805,9 +801,16 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
     }
 
+    var deleteDataSheet = (x, file, idx) => {
+        if (confirm('Briši?')) {
+            x.dataSheet.splice(idx, 1);
+            f.post(service, 'DeleteDataSheet', { x: x, file: file }).then((d) => {
+            });
+        }
+    }
+
     $scope.f = {
         load: (productGroup, search) => {
-            debugger;
             return load(productGroup, search);
         },
         save: (x, idx) => {
@@ -851,7 +854,10 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         removeKeyFeatures: (x, idx) => {
             return removeKeyFeatures(x, idx);
-        }
+        },
+        deleteDataSheet: (x, file, idx) => {
+            return deleteDataSheet(x, file, idx);
+        },
     }
 }])
 

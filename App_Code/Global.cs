@@ -19,6 +19,8 @@ namespace Igprog {
         //public string products = "products";
         public DB db = new DB();
 
+        public string siteName = ConfigurationManager.AppSettings["siteName"];
+        public string siteUrl = ConfigurationManager.AppSettings["siteUrl"];
         public string myEmail = ConfigurationManager.AppSettings["myEmail"];
         public string myEmailName = ConfigurationManager.AppSettings["myEmailName"];
         public string myPassword = ConfigurationManager.AppSettings["myPassword"];

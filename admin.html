@@ -1048,9 +1048,12 @@
                                 <div class="pt-3">
                                     <hr />
                                     <label>Tehnička dokumentacija:</label>
-                                    <div class="card shadow m-3">
+                                    <div ng-if="ds" class="card shadow m-3" ng-repeat="ds in x.dataSheet">
                                         <div class="card-body">
-                                            <a href="../upload/{{x.id}}/{{dataSheetFolder}}/{{x.dataSheet}}" title="{{x.dataSheet}}">{{x.dataSheet}}</a>
+                                            <a href="../upload/{{x.id}}/{{dataSheetFolder}}/{{ds}}" title="{{ds}}">{{ds}}</a>
+                                            <div class="float-right">
+                                                <button ng-click="f.deleteDataSheet(x, ds, $index)" class="btn btn-outline-danger btn-circle" title="Briši"><i class="fa fa-trash-alt"></i></button>
+                                            </div>
                                         </div>
                                     </div>
                                     <form id="formUploadDataSheet_{{x.id}}" ng-submit="f.uploadDataSheet(x, $index)" enctype="multipart/form-data" method="post">

@@ -156,7 +156,7 @@
                             <a href="javascript:void(0);" class="top-cart-info-value">{{d.cart.cartPrice.grossWithDiscount | number}} kn</a>
                         </div>
                         <i class="fa fa-shopping-cart"></i>
-                        <div class="top-cart-content-wrapper">
+                        <div ng-if="d.cart.items.length>0" class="top-cart-content-wrapper">
                             <div class="top-cart-content">
                                 <ul class="scroller" style="height:250px">
                                     <li ng-repeat="x in d.cart.items track by $index">
@@ -201,7 +201,7 @@
                     <a href="javascript:void(0);" class="top-cart-info-value">{{d.cart.cartPrice.grossWithDiscount | number}} kn</a>
                 </div>
                 <i class="fa fa-shopping-cart"></i>
-                <div class="top-cart-content-wrapper">
+                <div ng-if="d.cart.items.length>0" class="top-cart-content-wrapper">
                     <div class="top-cart-content">
                         <ul class="scroller" style="height:250px">
                             <li ng-repeat="x in d.cart.items track by $index">

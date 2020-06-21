@@ -72,7 +72,7 @@ public class Products : System.Web.Services.WebService {
         public double power;
         public Colors.NewColor color; 
         public string energyClass;
-        public string dataSheet;
+        public List<string> dataSheet;
         public bool opportunity;
         public List<Global.CodeTitle> keyFeatures;
         public string fireboxInsert;
@@ -221,7 +221,7 @@ public class Products : System.Web.Services.WebService {
             x.color.hex = null;
             x.color.img = null;
             x.energyClass = null;
-            x.dataSheet = null;
+            x.dataSheet = new List<string>();
             x.opportunity = false;
             x.keyFeatures = new List<Global.CodeTitle>();
             x.fireboxInsert = null;
@@ -356,49 +356,7 @@ public class Products : System.Web.Services.WebService {
     [WebMethod]
     public string Save(NewProduct x) {
         try {
-            DB.CreateDataBase(G.db.products);
-            string sql = null;
-            string productFeatures = null;
-            if (x.features.Count > 0) {
-                var pf_ = new List<string>();
-                foreach (var pf in x.features) {
-                    pf_.Add(string.Format("{0}:{1}", pf.code, pf.val));
-                }
-                productFeatures = string.Join(";", pf_);
-            }
-            string relatedProducts = null;
-            if (x.relatedProducts.Count > 0) {
-                var rp_ = new List<string>();
-                foreach (var rp in x.relatedProducts) {
-                    rp_.Add(string.Format("{0}", rp.sku));
-                }
-                relatedProducts = string.Join(";", rp_);
-            }
-            string keyFeatures = null;
-            if (x.keyFeatures.Count > 0) {
-                var kf_ = new List<string>();
-                foreach (var kf in x.keyFeatures) {
-                    kf_.Add(string.Format("{0}", kf.title));
-                }
-                keyFeatures = string.Join(";", kf_);
-            }
-            x.discount.coeff = x.discount.perc / 100;
-            if (string.IsNullOrEmpty(x.id)) {
-                x.id = Guid.NewGuid().ToString();
-                sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
-            } else {
-                sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', discountfrom = '{11}', discountto = '{12}', stock = '{13}', isnew = '{14}', outlet = '{15}', bestselling = '{16}', isactive = '{17}', features = '{18}', deliverydays = '{19}', productorder = {20},
-                                    freeshipping = '{21}', bestbuy = '{22}', wifi = '{23}', relatedproducts = '{24}', width = '{25}', height = '{26}', depth = '{27}', power = '{28}', color = '{29}', energyclass = '{30}', datasheet = '{31}', opportunity = '{32}', keyfeatures = '{33}', fireboxinsert = '{34}' WHERE id = '{0}'"
-                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, x.dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
-            }
-            using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
-                connection.Open();
-                using (var command = new SQLiteCommand(sql, connection)) {
-                    command.ExecuteNonQuery();
-                }
-                connection.Close();
-            }
+            x = SaveData(x);
             return JsonConvert.SerializeObject(x.id, Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -438,6 +396,25 @@ public class Products : System.Web.Services.WebService {
                 }
             }
             //return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code, null), Formatting.None);
+            return JsonConvert.SerializeObject("OK", Formatting.None);
+        } catch (Exception e) {
+            return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    [WebMethod]
+    public string DeleteDataSheet(NewProduct x, string file) {
+        try {
+            string path = Server.MapPath(string.Format("~/upload/{0}/datasheet", x.id));
+            if (Directory.Exists(path)) {
+                string[] files = Directory.GetFiles(path);
+                foreach (string f in files) {
+                    if (Path.GetFileName(file) == file) {
+                        File.Delete(file);
+                        SaveData(x);
+                    }
+                }
+            }
             return JsonConvert.SerializeObject("OK", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -528,6 +505,64 @@ public class Products : System.Web.Services.WebService {
         xxx.totRecords = GetTotRecords(searchSql);
         xxx.responseTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 5);
         return xxx;
+    }
+
+    
+    public NewProduct SaveData(NewProduct x) {
+        DB.CreateDataBase(G.db.products);
+        string sql = null;
+        string productFeatures = null;
+        if (x.features.Count > 0) {
+            var pf_ = new List<string>();
+            foreach (var pf in x.features) {
+                pf_.Add(string.Format("{0}:{1}", pf.code, pf.val));
+            }
+            productFeatures = string.Join(";", pf_);
+        }
+        string relatedProducts = null;
+        if (x.relatedProducts.Count > 0) {
+            var rp_ = new List<string>();
+            foreach (var rp in x.relatedProducts) {
+                rp_.Add(string.Format("{0}", rp.sku));
+            }
+            relatedProducts = string.Join(";", rp_);
+        }
+        string keyFeatures = null;
+        if (x.keyFeatures.Count > 0) {
+            var kf_ = new List<string>();
+            foreach (var kf in x.keyFeatures) {
+                kf_.Add(string.Format("{0}", kf.title));
+            }
+            keyFeatures = string.Join(";", kf_);
+        }
+        string dataSheet = null;
+        if (x.dataSheet.Count > 0) {
+            var ds_ = new List<string>();
+            foreach (var ds in x.dataSheet) {
+                if (!string.IsNullOrEmpty(ds)) {
+                    ds_.Add(string.Format("{0}", ds));
+                }
+            }
+            dataSheet = string.Join(";", ds_);
+        }
+        x.discount.coeff = x.discount.perc / 100;
+        if (string.IsNullOrEmpty(x.id)) {
+            x.id = Guid.NewGuid().ToString();
+            sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
+                                , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
+        } else {
+            sql = string.Format(@"UPDATE products SET sku = '{1}', style = '{2}', productgroup = '{3}', title = '{4}', shortdesc = '{5}', longdesc = '{6}', brand = '{7}', img = '{8}', price = '{9}', discount = '{10}', discountfrom = '{11}', discountto = '{12}', stock = '{13}', isnew = '{14}', outlet = '{15}', bestselling = '{16}', isactive = '{17}', features = '{18}', deliverydays = '{19}', productorder = {20},
+                                    freeshipping = '{21}', bestbuy = '{22}', wifi = '{23}', relatedproducts = '{24}', width = '{25}', height = '{26}', depth = '{27}', power = '{28}', color = '{29}', energyclass = '{30}', datasheet = '{31}', opportunity = '{32}', keyfeatures = '{33}', fireboxinsert = '{34}' WHERE id = '{0}'"
+                                , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
+        }
+        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+            connection.Open();
+            using (var command = new SQLiteCommand(sql, connection)) {
+                command.ExecuteNonQuery();
+            }
+            connection.Close();
+        }
+        return x;
     }
 
     public int GetTotRecords(string searchSql) {
@@ -679,7 +714,7 @@ public class Products : System.Web.Services.WebService {
         x.power = G.ReadD(reader, 28);
         x.color = C.GetData(G.ReadS(reader, 29)); // new Colors.NewColor();
         x.energyClass = G.ReadS(reader, 30);
-        x.dataSheet = G.ReadS(reader, 31);
+        x.dataSheet = GetDataSheet(G.ReadS(reader, 31));
         x.opportunity = G.ReadB(reader, 32);
         x.keyFeatures = GetKeyFeatures(G.ReadS(reader, 33)); // new List<Global.CodeTitle>(); // G.ReadS(reader, 33); //TODO;
         x.fireboxInsert = G.ReadS(reader, 34);
@@ -951,6 +986,15 @@ public class Products : System.Web.Services.WebService {
                 xx.Add(x);
                 count++;
             }
+        }
+        return xx;
+    }
+
+    public List<string> GetDataSheet(string x) {
+        List<string> xx = new List<string>();
+        string[] list = x.Split(';');
+        foreach (var l in list) {
+            xx.Add(l);
         }
         return xx;
     }

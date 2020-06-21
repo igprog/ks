@@ -103,7 +103,7 @@
                                             <input ng-model="d.order.user.billingDetails.lastName" type="text" id="lastname" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="email">{{'email' | translate}} <span class="require">*</span></label>
+                                            <label for="email">{{'email' | translate}}</label>
                                             <input ng-model="d.order.user.billingDetails.email" type="text" id="email" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <div class="form-group">
@@ -135,7 +135,7 @@
                                             <input ng-model="d.order.user.pin" ng-disabled="d.order.user.userType==='natural'" type="text" id="company" class="form-control" >
                                         </div>
                                         <div class="form-group">
-                                            <label for="address1">{{'address' | translate}}</label>
+                                            <label for="address1">{{'address' | translate}} <span class="require">*</span></label>
                                             <input ng-model="d.order.user.billingDetails.address" type="text" id="address1" class="form-control" ng-change="setDeliveryAddress(d)">
                                         </div>
                                         <!--<div class="form-group">
@@ -199,7 +199,7 @@
                                             <input ng-model="d.order.user.deliveryDetails.lastName" type="text" id="lastname-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
-                                            <label for="email-dd">{{'email' | translate}} <span class="require">*</span></label>
+                                            <label for="email-dd">{{'email' | translate}}</label>
                                             <input ng-model="d.order.user.deliveryDetails.email" type="text" id="email-dd" class="form-control">
                                         </div>
                                         <div class="form-group">
@@ -217,7 +217,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="address1-dd">{{'address' | translate}}</label>
+                                            <label for="address1-dd">{{'address' | translate}} <span class="require">*</span></label>
                                             <input ng-model="d.order.user.deliveryDetails.address" type="text" id="address1-dd" class="form-control">
                                         </div>
                                         <!--<div class="form-group">
@@ -307,11 +307,11 @@
                                             <textarea id="delivery-payment-method" rows="8" class="form-control"></textarea>
                                         </div>-->
                                         <button class="btn btn-primary  pull-right" type="submit" id="button-payment-method" data-toggle="collapse" data-parent="#checkout-page" data-target="#confirm-content">{{'continue' | translate}}</button>
-                                        <div class="checkbox pull-right">
+                                        <!--<div class="checkbox pull-right">
                                             <label>
                                                 <input ng-model="d.order.confirmTerms" type="checkbox"> {{'i have read and agree to the' | translate}} <a title="{{'terms and conditions' | translate}}" href="javascript:;">{{'terms and conditions' | translate}} </a> &nbsp;&nbsp;&nbsp;
                                             </label>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                             </div>
@@ -346,7 +346,7 @@
                                                     <td class="checkout-description">
                                                         <h3><a href="" ng-click="get(x.product)">{{x.product.shortdesc}}</a></h3>
                                                         <p><strong>{{x.product.title}}</strong></p>
-                                                        <em ng-click="get(x.product)">{{'more info is here' | translate}}</em>
+                                                        <!--<em ng-click="get(x.product)">{{'more info is here' | translate}}</em>-->
                                                     </td>
                                                     <td class="checkout-model">{{x.product.sku}}</td>
                                                     <td class="checkout-quantity">{{x.product.qty}}</td>
@@ -375,9 +375,20 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="clearfix"></div>
-                                        <button class="btn btn-primary pull-right" type="submit" id="button-confirm" ng-click="confirm(d.order)">{{'confirm order' | translate}}</button>
-                                        <button type="button" class="btn btn-default pull-right margin-right-20"  ng-click="go('cart')">{{'cancel' | translate}}</button>
+                                        <div>
+                                            <div class="checkbox text-right">
+                                                <div class="clearfix"></div>
+                                                <label>
+                                                    <input ng-model="d.order.confirmTerms" type="checkbox"> {{'i have read and agree to the' | translate}} <a title="{{'terms and conditions' | translate}}" href="javascript:;">{{'terms and conditions' | translate}} </a> &nbsp;&nbsp;&nbsp;
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <div class="clearfix"></div>
+                                                <button class="btn btn-primary pull-right" type="submit" id="button-confirm" ng-click="confirm(d.order)">{{'confirm order' | translate}}</button>
+                                                <button type="button" class="btn btn-default pull-right margin-right-20" ng-click="go('cart')">{{'cancel' | translate}}</button>
+                                            </div>
+                                        </div>
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -388,9 +399,51 @@
                 </div>
                 <!-- END CONTENT -->
 
-                <div ng-if="d.order.response.isSuccess" class="col-md-12 col-sm-12">
-                    {{d.order.response.msg}}
-                    <pre>{{d.order.paymentDetails | json}}</pre>
+                
+                <div class="col-md-12 col-sm-12">
+
+                    <div ng-if="!d.order.response.isSuccess&&d.order.response.msg" class="alert alert-danger">
+                        <strong>{{d.order.response.msg}}</strong>
+                    </div>
+
+                    <div ng-if="d.order.response.isSuccess" class="card">
+                        <div class="card-body">
+                            <strong>{{d.order.response.msg}}</strong>
+                            <div>
+                                <p>Zahvaljujemo na Vašoj narudžbi.</p>
+                                <p>Detalji narudžbe:</p>
+                                <hr />
+                                <div>
+                                    <p>Broj narudžbe: </p>
+                                    <p>Proizvodi:</p>
+                                    <ul>
+                                        <li ng-repeat="x in d.order.cart.items track by $index">{{x.product.sku}}-{{x.product.title}}, {{x.product.qty}} kom, {{x.product.price.grossWithDiscount}} kn</li>
+                                    </ul>
+                                    <p>Cijena dostave: {{d.order.cart.cartPrice.delivery}} kn</p>
+                                    <p>PDV: {{d.order.cart.cartPrice.vat}} kn</p>
+                                    <p>Ukupno sa dostavom: {{d.order.cart.cartPrice.total}} kn</p>
+                                    <br />
+                                    <p>Podaci za uplatu:</p>
+                                    <hr />
+                                    <ul>
+                                        <li>IBAN: {{d.order.paymentDetails.iban}}</li>
+                                        <li>Banka: {{d.order.paymentDetails.iban}}</li>
+                                        <li>Primatelj: {{d.order.paymentDetails.iban}}</li>
+                                        <li>Model: HR00</li>
+                                        <li>Poziv na broj: {{d.order.orderNumber}}</li>
+                                        <li>Iznos: {{d.order.cart.cartPrice.total}}</li>
+                                        <li>Opis plaćanja: {{d.order.orderNumber}}</li>
+                                    </ul>
+                                </div>
+                                <hr />
+                                <p>Nakon primitka uplate ili potvrde o uplati krećemo u isporuku vaše narudžbe.</p>
+                                <p>Stojimo na raspolaganju za sve vaše upite.</p>
+                                <br />
+                                <p>Srdačan pozdrav.</p>
+                                <p>Vaš KaminStudio.hr</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>

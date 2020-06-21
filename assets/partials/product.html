@@ -166,7 +166,7 @@
                                 <ul id="tab" class="nav nav-tabs">
                                     <li class="{{d.activeTab==='description'?'active':''}}"><a href="#description" onclick="return false;" data-toggle="tab">{{'description' | translate}}</a></li>
                                     <li class="{{d.activeTab==='information'?'active':''}}"><a href="#information" onclick="return false;" data-toggle="tab">{{'specification' | translate}}</a></li>
-                                    <li ng-if="d.record.dataSheet" class="{{d.activeTab==='documentation'?'active':''}}"><a href="#documentation" onclick="return false;" data-toggle="tab">{{'technical documentation' | translate}}</a></li>
+                                    <li ng-if="d.record.dataSheet[0]" class="{{d.activeTab==='documentation'?'active':''}}"><a href="#documentation" onclick="return false;" data-toggle="tab">{{'technical documentation' | translate}}</a></li>
                                     <li class="{{d.activeTab==='reviews'?'active':''}}"><a href="#reviews" onclick="return false;" data-toggle="tab">{{'reviews' | translate}} ({{d.record.reviews.count}})</a></li>
                                     <!--<li class="{{d.tpl==='descTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('descTpl')">{{'description' | translate}}</a></li>
                                     <li class="{{d.tpl==='infoTpl'?'active':''}}"><a href="" data-toggle="tab" ng-click="toggleTpl('infoTpl')">{{'specification' | translate}}</a></li>
@@ -188,10 +188,16 @@
                                             </tr>
                                         </table>
                                     </div>
-                                    <div ng-if="d.record.dataSheet" id="documentation" class="tab-pane fade">
-                                        <div ng-if="d.record.dataSheet" class="card shadow m-3">
-                                            <div class="card-body">
-                                                <a href="../upload/{{d.record.id}}/datasheet/{{d.record.dataSheet}}" title="{{d.record.dataSheet}}"><i class="fa fa-file-text-o"></i> {{d.record.dataSheet}}</a>
+                                    <div ng-if="d.record.dataSheet.length>0" id="documentation" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div ng-if="x" class="card shadow m-3" ng-repeat="x in d.record.dataSheet">
+                                                    <a href="../upload/{{d.record.id}}/datasheet/{{x}}" title="{{x}}">
+                                                        <div class="card-body">
+                                                            <i class="fa fa-file-text-o"></i> {{x}}
+                                                        </div>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

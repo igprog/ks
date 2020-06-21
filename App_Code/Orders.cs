@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.IO;
 using System.Data.SQLite;
+using System.Text;
 using Igprog;
 
 /// <summary>
@@ -72,6 +73,7 @@ public class Orders : System.Web.Services.WebService {
     public class Response {
         public bool isSuccess;
         public string msg;
+        public string body;
     }
 
     #region WebMethods
@@ -168,21 +170,25 @@ public class Orders : System.Web.Services.WebService {
         }
         //TOOD:
         // Sent mail to customer and me
+        Info.NewInfo info = new Info().GetInfo("hr");
+        x.paymentDetails = info.paymentDetails;
+        string body = MailBody(x);
         if (1 == 0) {  // Test
             Mail m = new Mail();
             string subject = "Narudžba";
-            string body = string.Format("{0} Items: {1}", x.orderDate, SetItems(x.cart));
+            //string body = MailBody(x); // string.Format("{0} Items: {1}", x.orderDate, SetItems(x.cart));
             Mail.Response sendMail = m.SendMail(x.user.billingDetails.email, subject, body, null);
             // Send response
-            Info.NewInfo info = new Info().GetInfo("hr");
-            x.paymentDetails = info.paymentDetails;
+
 
             x.response.isSuccess = sendMail.isSent;
             x.response.msg = x.response.isSuccess ? "narudžba uspješno poslana" : sendMail.msg;
+            x.response.body = body;
         } else {
             //Test
             x.response.isSuccess = true;
             x.response.msg = x.response.isSuccess ? "narudžba uspješno poslana" : "error";
+            x.response.body = body;
         }
         
 
@@ -433,6 +439,71 @@ public class Orders : System.Web.Services.WebService {
             }
             connection.Close();
         }
+    }
+
+    private string MailBody(NewOrder x) {
+
+        StringBuilder sb = new StringBuilder();
+        foreach (var i in x.cart.items) {
+            sb.AppendLine(string.Format("<li>{0}-{1}, {2} kom, {3} kn</li>", i.product.sku, i.product.title, i.product.qty, i.product.price.grossWithDiscount));
+        }
+        string items = sb.ToString();
+
+       string str =  string.Format(@"
+<div>
+    <p>Narudžba - {0}</p>
+    <img src=""{1}/assets/img/logo/logo.png""  />
+    <br />
+    <br />
+    <p>Poštovani,</p>
+    <p>Zahvaljujemo na Vašoj narudžbi.</p>
+    <p>Detalji narudžbe:</p>
+    <hr />
+    <div>
+        <p>Broj narudžbe: {2}</p>
+        <p>Proizvodi:</p>
+        <ul>
+            {3}
+        </ul>
+            <p>Cijena dostave: {4} kn</p>
+            <p>PDV: {5} kn</p>
+            <p>Ukupno sa dostavom: {6} kn</p>
+        <br />
+        <p>Podaci za uplatu:</p>
+        <hr />
+        <ul>
+            <li>IBAN: {7}</li>
+            <li>Banka: {8}</li>
+            <li>Primatelj: {9}</li>
+            <li>Model: {10}</li>
+            <li>Poziv na broj: {11}</li>
+            <li>Iznos: {12}</li>
+            <li>Opis plaćanja: {13}</li>
+        </ul>
+    </div>
+    <hr />
+    <p>Nakon primitka uplate ili potvrde o uplati krećemo u isporuku vaše narudžbe.</p>
+    <p>Stojimo na raspolaganju za sve vaše upite.</p>
+    <br />
+    <p>Srdačan pozdrav.</p>
+    <p>Vaš {0}</p>
+</div>"
+        , G.siteName
+        , G.siteUrl
+        , x.orderNumber
+        , items
+        , x.cart.cartPrice.delivery
+        , x.cart.cartPrice.vat
+        , x.cart.cartPrice.total
+        , x.paymentDetails.iban
+        , x.paymentDetails.bank
+        , x.paymentDetails.recipient
+        , "HR00"
+        , x.orderNumber
+        , x.cart.cartPrice.total
+        , x.orderNumber
+        );
+        return str;
     }
     #endregion Methods
 
