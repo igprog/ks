@@ -148,6 +148,14 @@ public class DataBase {
         CreateTable(path, sql);
     }
 
+    public void Subscribe(string path) {
+        string sql = @"
+                CREATE TABLE IF NOT EXISTS subscribe
+                (id NVARCHAR(50),
+                email VARCHAR(50) PRIMARY KEY)";
+        CreateTable(path, sql);
+    }
+
     public void Tran(string path) {
         string sql = @"CREATE TABLE IF NOT EXISTS tran
                     (id VARCHAR(50),
@@ -157,6 +165,8 @@ public class DataBase {
                     lang NVARCHAR(50))";
         CreateTable(path, sql);
     }
+
+
 
     public void CreateDataBase(string table) {
             try {
@@ -207,6 +217,9 @@ public class DataBase {
                 break;
             case "banners":
                 Banners(path);
+                break;
+            case "subscribe":
+                Subscribe(path);
                 break;
             case "tran":
                 Tran(path);

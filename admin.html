@@ -85,6 +85,9 @@
                 <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
                     <a class="nav-link" href="" title="info" ng-click="toggleTpl('orderoptions')">Opcije narudžbe</a>
                 </li>
+                <li ng-if="d.isLogin" class="nav-item d-sm-block d-md-none">
+                    <a class="nav-link" href="" title="info" ng-click="toggleTpl('subscribers')">Pretplatnici</a>
+                </li>
                 <li ng-if="d.isLogin" class="nav-item">
                     <a class="nav-link" href="" title="odjava" ng-click="f.logout()"><i class="fa fa-sign-out-alt"></i> Odjava</a>
                 </li>
@@ -177,6 +180,12 @@
                     <a class="d-flex w-100 justify-content-start align-items-center text-dark">
                         <span class="fa fa-shopping-basket fa-fw mr-3"></span>
                         <span class="menu-collapsed">Opcije narudžbe</span>
+                    </a>
+                </li>
+                <li data-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action flex-column align-items-start" ng-click="toggleTpl('subscribers')">
+                    <a class="d-flex w-100 justify-content-start align-items-center text-dark">
+                        <span class="fa fa-paper-plane fa-fw mr-3"></span>
+                        <span class="menu-collapsed">Pretplatnici</span>
                     </a>
                 </li>
             </ul>
@@ -1352,6 +1361,29 @@
                             <button class="btn btn-primary pull-right" ng-click="save(d)"><i class="fa fa-floppy-o"></i> Spremi</button>
                         </div>
                     </div>
+                </div>
+            </div>
+            <json-directive data="d" desc="'d'" debug="config.debug"></json-directive>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="subscribers">
+        <div ng-if="d.isLogin" ng-controller="subscribersCtrl">
+            <div class="ml-3">
+                <h2>Pretplatnici</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>br.</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="x in d.records">
+                            <td>{{$index}}</td>
+                            <td>{{x.email}}</td>
+                            <td><button class="btn btn-danger" ng-click="f.remove(x)"><i class="fa fa-trash"></i></button></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <json-directive data="d" desc="'d'" debug="config.debug"></json-directive>

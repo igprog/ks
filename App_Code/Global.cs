@@ -48,6 +48,7 @@ namespace Igprog {
             public string users = "users";
             public string orders = "orders";
             public string banners = "banners";
+            public string subscribe = "subscribe";
             public string tran = "tran";
         }
 

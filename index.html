@@ -67,17 +67,6 @@
     <!--<link href="https://fonts.googleapis.com/css?family=Montserrat:300&display=swap" rel="stylesheet">-->
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
 
-    <style>
-        /*body {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-        }*/
-        /* Make the image fully responsive */
-        /*.carousel-inner img {
-            width: 100%;
-            height: 100%;
-        }*/
-    </style>
 </head>
 <!-- Body BEGIN -->
 <body class="ecommerce">
@@ -88,8 +77,8 @@
                 <!-- BEGIN TOP BAR LEFT PART -->
                 <div class="col-md-4 additional-shop-info">
                     <ul class="list-unstyled list-inline">
-                        <li ng-cloak><a href="tel:{{d.info.phone}}"><i class="fa fa-phone"></i><span>{{d.info.phone}}</span></a></li>
-                        <li ng-cloak><a href="mailto:{{d.info.email}}"><i class="fa fa-envelope"></i><span>{{d.info.email}}</span></a></li>
+                        <li ng-cloak><a href="tel:{{d.info.phone}}" title="{{'phone' | translate}}"><i class="fa fa-phone"></i><span>{{d.info.phone}}</span></a></li>
+                        <li ng-cloak><a href="mailto:{{d.info.email}}" title="{{'email' | translate}}"><i class="fa fa-envelope"></i><span>{{d.info.email}}</span></a></li>
                         <!-- BEGIN CURRENCIES -->
                         <!--<li class="shop-currencies">
                             <a href="javascript:void(0);">€</a>
@@ -115,14 +104,10 @@
                 <!-- BEGIN TOP BAR MENU -->
                 <div class="col-md-8 additional-nav hidden-xs">
                     <ul ng-cloak class="list-unstyled list-inline pull-right">
-                        <li><a href="" ng-click="go('about')">{{'about us' | translate}}</a></li>
-                        <li><a href="" ng-click="go('shops')">Prodajna mjesta</a></li>
-                        <li><a href="" ng-click="go('support')">Korisnička podrška</a></li>
-                        <li><a href="" ng-click="go('contact')">{{'contact' | translate}}</a></li>
-                        <!--<li><a href="shop-account.html">My Account</a></li>
-                        <li><a href="shop-wishlist.html">My Wishlist</a></li>
-                        <li><a href="shop-checkout.html">Checkout</a></li>
-                        <li><a href="page-login.html">Log In</a></li>-->
+                        <li><a href="" ng-click="go('about')" title="{{'about us' | translate}}">{{'about us' | translate}}</a></li>
+                        <li><a href="" ng-click="go('shops')" title="{{'selling spots' | translate}}">{{'selling spots' | translate}}</a></li>
+                        <li><a href="" ng-click="go('support')" title="{{'user support' | translate}}">{{'user support' | translate}}</a></li>
+                        <li><a href="" ng-click="go('contact')" title="{{'contact' | translate}}">{{'contact' | translate}}</a></li>
                     </ul>
                 </div>
                 <!-- END TOP BAR MENU -->
@@ -135,15 +120,15 @@
         <div class="container">
             <div class="row hidden-xs hidden-sm">
                 <div class="col-sm-3">
-                    <a class="site-logo" href="index.html"><img src="assets/img/logo/logo.png" alt="metronic shop ui"></a>
+                    <a class="site-logo" href="index.html" title="{{'home page' | translate}}"><img src="assets/img/logo/logo.png" alt="metronic shop ui"></a>
                 </div>
                 <div class="col-sm-6">
                     <div class="search-box" style="margin: 25px 0 0 30px;">
                         <form id="search_form_1">
                             <div class="input-group">
-                                <input ng-model="d.search" type="text" placeholder="Pretraži..." class="form-control">
+                                <input ng-model="d.search" type="text" placeholder="{{'search' | translate}}..." class="form-control">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit" form="search_form_1" ng-click="search(d.search)">Pretraži</button>
+                                    <button class="btn btn-primary" type="submit" form="search_form_1" ng-click="search(d.search)">{{'search' | translate}}</button>
                                 </span>
                             </div>
                         </form>
@@ -152,7 +137,7 @@
                 <div class="col-sm-3">
                     <div class="top-cart-block">
                         <div class="top-cart-info">
-                            <a href="javascript:void(0);" class="top-cart-info-count">{{d.cart.items.length}} items</a>
+                            <a href="javascript:void(0);" class="top-cart-info-count">{{d.cart.items.length}} {{'items' | translate}}</a>
                             <a href="javascript:void(0);" class="top-cart-info-value">{{d.cart.cartPrice.grossWithDiscount | number}} kn</a>
                         </div>
                         <i class="fa fa-shopping-cart"></i>
@@ -168,8 +153,8 @@
                                     </li>
                                 </ul>
                                 <div class="text-right">
-                                    <a href="" class="btn btn-default" ng-click="go('cart')">View Cart</a>
-                                    <a href="" class="btn btn-primary" ng-click="go('checkout')">Checkout</a>
+                                    <a href="" class="btn btn-default" ng-click="go('cart')">{{'view cart' | translate}}</a>
+                                    <a href="" class="btn btn-primary" ng-click="go('checkout')">{{'checkout' | translate}}</a>
                                 </div>
                             </div>
                         </div>
@@ -177,15 +162,15 @@
                 </div>
             </div>
             <div class="visible-xs visible-sm">
-                <a class="site-logo" href="index.html"><img src="assets/img/logo/logo.png" alt="metronic shop ui"></a>
+                <a class="site-logo" href="index.html" title="{{'home page' | translate}}"><img src="assets/img/logo/logo.png" alt="metronic shop ui"></a>
                 <a href="javascript:void(0);" style="float:left; margin-top:25px" class="search-btn visible-sm visible-xs"><i class="fa fa-search fa-2x"></i></a>
                 <a href="javascript:void(0);" class="mobi-toggler"><i class="fa fa-bars"></i></a>
                 <div class="search-box">
                     <form id="search_form_1">
                         <div class="input-group">
-                            <input ng-model="d.search" type="text" placeholder="Pretraži..." class="form-control">
+                            <input ng-model="d.search" type="text" placeholder="{{'search' | translate}}..." class="form-control">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit" form="search_form_1" ng-click="search(d.search)">Pretraži</button>
+                                <button class="btn btn-primary" type="submit" form="search_form_1" ng-click="search(d.search)">{{'search' | translate}}</button>
                             </span>
                         </div>
                     </form>
@@ -197,7 +182,7 @@
             <!-- BEGIN CART -->
             <div class="top-cart-block visible-xs visible-sm">
                 <div class="top-cart-info">
-                    <a href="javascript:void(0);" class="top-cart-info-count">{{d.cart.items.length}} items</a>
+                    <a href="javascript:void(0);" class="top-cart-info-count">{{d.cart.items.length}} {{'items' | translate}}</a>
                     <a href="javascript:void(0);" class="top-cart-info-value">{{d.cart.cartPrice.grossWithDiscount | number}} kn</a>
                 </div>
                 <i class="fa fa-shopping-cart"></i>
@@ -213,8 +198,8 @@
                             </li>
                         </ul>
                         <div class="text-right">
-                            <a href="" class="btn btn-default" ng-click="go('cart')">View Cart</a>
-                            <a href="" class="btn btn-primary" ng-click="go('checkout')">Checkout</a>
+                            <a href="" class="btn btn-default" ng-click="go('cart')">{{'view cart' | translate}}</a>
+                            <a href="" class="btn btn-primary" ng-click="go('checkout')">{{'checkout' | translate}}</a>
                         </div>
                     </div>
                 </div>
@@ -233,17 +218,17 @@
                                 <div class="header-navigation-content">
                                     <div class="row">
                                         <div class="col-md-3 col-sm-4 col-xs-6" ng-repeat="y in x.subGroups track by $index">
-                                            <div class="product-item">
+                                            <div class="product-item h-100">
                                                 <div class="pi-img-wrapper">
-                                                    <a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)"><img src="../upload/{{d.imgFolder}}/{{y.img}}" class="img-responsive" alt="{{y.img}}"></a>
+                                                    <a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)" title="{{y.title}}"><img src="../upload/{{d.imgFolder}}/{{y.img}}" class="img-responsive" alt="{{y.img}}"></a>
                                                 </div>
-                                                <h3><a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></h3>
+                                                <h3><a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)" title="{{y.title}}">{{y.title}}</a></h3>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </li>
-                            <li class="visible-xs" ng-repeat="y in x.subGroups track by $index"><a href="" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
+                            <li class="visible-xs" ng-repeat="y in x.subGroups track by $index"><a href="" title="{{y.title}}" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
                         </ul>
                     </li>
                     <!-- BEGIN TOP SEARCH -->
@@ -278,29 +263,6 @@
             <div class="text-center">
                 <a href="" ng-click="brand(x, x)" ng-repeat="x in config.brands"><img src="assets/img/brands/{{x}}.jpg" alt="{{x}}" title="{{x}}" style="width: 140px; display:inline" class="img-responsive"></a>
             </div>
-            <div class="owl-carousel owl-carousel6-brands">
-                
-                <!--<a href="" ng-click="brand('aflamo', 'aflamo')"><img src="assets/img/brands/aflamo.jpg" alt="aflamo" title="aflamo" ></a>
-                <a href="" ng-click="brand('aflamo', 'aflamo')"><img src="assets/img/brands/aflamo.jpg" alt="aflamo" title="aflamo"></a>
-                <a href="" ng-click="brand('dimplex', 'dimplex')"><img src="assets/img/brands/dimplex.png" alt="dimplex" title="dimplex" ></a>
-                <a href="" ng-click="brand('glamm', 'glamm')"><img src="assets/img/brands/glamm.png" alt="glamm" title="glamm" ></a>
-                <a href="" ng-click="brand('jotul', 'jotul')"><img src="assets/img/brands/jotul.png" alt="jotul" title="jotul" ></a>
-                <a href="" ng-click="brand('scan', 'scan')"><img src="assets/img/brands/scan.png" alt="scan" title="scan" ></a>-->
-            </div>
-            <!--<div class="owl-carousel owl-carousel6-brands">
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/canon.jpg" alt="canon" title="canon"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/esprit.jpg" alt="esprit" title="esprit"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/gap.jpg" alt="gap" title="gap"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/next.jpg" alt="next" title="next"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/puma.jpg" alt="puma" title="puma"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/zara.jpg" alt="zara" title="zara"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/canon.jpg" alt="canon" title="canon"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/esprit.jpg" alt="esprit" title="esprit"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/gap.jpg" alt="gap" title="gap"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/next.jpg" alt="next" title="next"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/puma.jpg" alt="puma" title="puma"></a>
-                <a href="shop-product-list.html"><img src="assets/pages/img/brands/zara.jpg" alt="zara" title="zara"></a>
-            </div>-->
         </div>
     </div>
     <!-- END BRANDS -->
@@ -309,27 +271,27 @@
     <div class="steps-block steps-block-red">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 steps-block-col">
+                <div class="col-md-6 steps-block-col">
                     <i class="fa fa-truck"></i>
                     <div>
-                        <h2>Free shipping</h2>
-                        <em>Express delivery withing 3 days</em>
+                        <h2>{{'free shipping' | translate}}</h2>
+                        <em>{{'express delivery withing 3 days' | translate}}</em>
                     </div>
                     <span>&nbsp;</span>
                 </div>
-                <div class="col-md-4 steps-block-col">
+                <!--<div class="col-md-4 steps-block-col">
                     <i class="fa fa-gift"></i>
                     <div>
                         <h2>Daily Gifts</h2>
                         <em>3 Gifts daily for lucky customers</em>
                     </div>
                     <span>&nbsp;</span>
-                </div>
-                <div class="col-md-4 steps-block-col">
+                </div>-->
+                <div class="col-md-6 steps-block-col">
                     <i class="fa fa-phone"></i>
                     <div>
-                        <h2>477 505 8877</h2>
-                        <em>24/7 customer care available</em>
+                        <h2><a href="tel:{{d.info.phone}}" class="text-white" title="{{'phone' | translate}}">{{d.info.phone}}</a></h2>
+                        <em>24/7 {{'customer care available' | translate}}</em>
                     </div>
                 </div>
             </div>
@@ -351,16 +313,12 @@
                 <div class="col-md-3 col-sm-6 pre-footer-col">
                     <h2>{{'informations' | translate}}</h2>
                     <ul class="list-unstyled">
-                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('about')">{{'about us' | translate}}</a></li>
-                        <li><i class="fa fa-angle-right"></i> <a href="">{{'delivery Information' | translate}}</a></li>
-                        <!--<li><i class="fa fa-angle-right"></i> <a href="javascript:;">Customer Service</a></li>
-                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Order Tracking</a></li>
-                        <li><i class="fa fa-angle-right"></i> <a href="javascript:;">Shipping &amp; Returns</a></li>-->
-                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('contact')">{{'contact us' | translate}}</a></li>
-                        <!--<li><i class="fa fa-angle-right"></i> <a href="javascript:;">Careers</a></li>-->
-                        <li><i class="fa fa-angle-right"></i> <a href="">{{'payment methods' | translate}}</a></li>
-                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('shops')">Prodajna mjesta</a></li>
-                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('support')">Korisnička podrška</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('about')" title="{{'about us' | translate}}">{{'about us' | translate}}</a></li>
+                        <!--<li><i class="fa fa-angle-right"></i> <a href="" title="{{'delivery Information' | translate}}">{{'delivery Information' | translate}}</a></li>-->
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('contact')" title="{{'contact us' | translate}}">{{'contact us' | translate}}</a></li>
+                        <!--<li><i class="fa fa-angle-right"></i> <a href="" title="{{'payment methods' | translate}}">{{'payment methods' | translate}}</a></li>-->
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('shops')" title="{{'selling spots' | translate}}">{{'selling spots' | translate}}</a></li>
+                        <li><i class="fa fa-angle-right"></i> <a href="" ng-click="go('support')" title="{{'user support' | translate}}">{{'user support' | translate}}</a></li>
                     </ul>
                 </div>
                 <!-- END INFO BLOCK -->
@@ -389,7 +347,7 @@
                         {{d.info.company}}<br>
                         {{d.info.address}}<br>
                         {{d.info.country}}<br>
-                        {{'phone' | translate}}: {{d.info.phone}}<br>
+                        {{'phone' | translate}}: <a href="tel:{{d.info.phone}}" title="{{'phone' | translate}}">{{d.info.phone}}</a><br>
                         {{'email' | translate}}: <a href="mailto:{{d.info.email}}">{{d.info.email}}</a><br>
                         <!--Skype: <a href="skype:metronic">metronic</a>-->
                     </address>
@@ -400,7 +358,7 @@
             <div class="row">
                 <!-- BEGIN SOCIAL ICONS -->
                 <div class="col-md-6 col-sm-6">
-                    <ul class="social-icons">
+                    <!--<ul class="social-icons">
                         <li><a class="rss" data-original-title="rss" href="javascript:;"></a></li>
                         <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
                         <li><a class="twitter" data-original-title="twitter" href="javascript:;"></a></li>
@@ -409,21 +367,21 @@
                         <li><a class="youtube" data-original-title="youtube" href="javascript:;"></a></li>
                         <li><a class="vimeo" data-original-title="vimeo" href="javascript:;"></a></li>
                         <li><a class="skype" data-original-title="skype" href="javascript:;"></a></li>
-                    </ul>
+                    </ul>-->
                 </div>
                 <!-- END SOCIAL ICONS -->
                 <!-- BEGIN NEWLETTER -->
                 <div class="col-md-6 col-sm-6">
                     <div class="pre-footer-subscribe-box pull-right">
-                        <h2>Newsletter</h2>
-                        <form action="#">
+                        <h2>{{'newsletter' | translate}}</h2>
+                        <div>
                             <div class="input-group">
-                                <input type="text" placeholder="youremail@mail.com" class="form-control">
+                                <input ng-model="d.subscribe.email" type="text" placeholder="{{'youremail@mail.com' | translate}}" class="form-control">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit">Subscribe</button>
+                                    <button class="btn btn-primary" ng-click="subscribe(d.subscribe)">{{'subscribe' | translate}}</button>
                                 </span>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
                 <!-- END NEWLETTER -->
@@ -461,7 +419,7 @@
     </div>
     <!-- END FOOTER -->
     <!-- BEGIN fast view of a product -->
-    <div id="product-pop-up" style="display: none; width: 700px;">
+    <!--<div id="product-pop-up" style="display: none; width: 700px;">
         <div class="product-page product-pop-up">
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-3">
@@ -517,7 +475,7 @@
                 <div class="sticker sticker-sale"></div>
             </div>
         </div>
-    </div>
+    </div>-->
     <!-- END fast view of a product -->
     <!-- Load javascripts at bottom, this will reduce page load time -->
     <!-- BEGIN CORE PLUGINS (REQUIRED FOR ALL PAGES) -->

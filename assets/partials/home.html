@@ -2,14 +2,6 @@
     <!-- BEGIN SLIDER -->
     <div class="page-slider margin-bottom-35">
         <div id="carousel-example-generic" class="carousel slide carousel-slider">
-
-            <!--<ol class="carousel-indicators">
-                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="3"></li>
-            </ol>-->
-
             <div ng-controller="CarouselDemoCtrl">
                 <div style="height:30%">
                     <carousel interval="myInterval">
@@ -17,48 +9,17 @@
                             <div style="margin:auto;">
                                 <div>
                                     <img src="../upload/banners/{{x.img}}" style="float:left">
-                                    <!--<img src="../upload/banner/{{x}}" style="float:left">-->
                                 </div>
                             </div>
                         </slide>
                     </carousel>
                 </div>
             </div>
-
-            <!--<div class="carousel-inner" role="listbox">
-                <div class="item carousel-item-four active">
-                    <div class="container">
-                        <div class="carousel-position-four text-center">
-                            <h2 class="margin-bottom-20 animate-delay carousel-title-v3 border-bottom-title text-uppercase" data-animation="animated fadeInDown">
-                                KAMIN STUDIO <br /><span class="color-red-v2">MJESTO PRAVOG IZBORA</span><br />
-                            </h2>
-                            <p class="carousel-subtitle-v2 text-dark" data-animation="animated fadeInUp">
-                                Vodeći proizvođači grijačih tijela na jednom mjestu
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-
-            <!--<a class="left carousel-control carousel-control-shop" href="#carousel-example-generic" role="button" data-slide="prev">
-                <i class="fa fa-angle-left" aria-hidden="true"></i>
-            </a>
-            <a class="right carousel-control carousel-control-shop" href="#carousel-example-generic" role="button" data-slide="next">
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </a>-->
         </div>
     </div>
     <!-- END SLIDER -->
-    <!--<div class="banner">
-        <div class="container-fluid">
-            <div class="text-center" style="padding-top:20vh" ng-click="go('shop')">
-                <h1><span>KAMIN STUDION</span></h1>
-                <h2>MJESTO PRAVOG <span>IZBORA</span></h2>
-            </div>
-        </div>
-    </div>-->
 
-    <loading-directive loadingtitle="'Učitavanje...'" value="d.loading" size="5"></loading-directive>
+    <loading-directive loadingtitle="'loading'" value="d.loading" size="5"></loading-directive>
 
 
     <div class="container-fluid text-center pt-3" onclick="closeNav()">
@@ -128,48 +89,18 @@
             </div>
         </div>
 
-
-        <!--<div class="container pt-5">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="banner-wrapper mb-30">
-                        <a href="" ng-click="goType('bestselling')"><img src="assets/img/banner/jotul-peci-i-kamini.jpg" class="img-responsive" style="display:inline-block" alt="image"></a>
-                        <div class="banner-content">
-                            <h2>NAJPRODAVANIJI PROIZVODI</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="banner-wrapper mb-30">
-                        <a href="" ng-click="goType('isnew')"><img src="assets/img/banner/scan-noviteti.jpg" class="img-responsive" style="display:inline-block" alt="image"></a>
-                        <div class="banner-content">
-                            <h2>NOVITETI</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="banner-wrapper mb-30">
-                        <a href="" ng-click="goCategory('XARALYNELEKTRICN', 'elekrticni-kamini', 'xaralyn-elektricni-kamini')"><img src="assets/img/banner/atra-otvoreni-kamini.jpg" class="img-responsive" style="display:inline-block" alt="image"></a>
-                        <div class="banner-content">
-                            <h2>KAMINI BEZ DIMNJAKA</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
-
         <div class="product-area pb-190 p-5">
             <div class="container text-center">
                 <div class="question-area">
-                    <h4>IMATE PITANJA? </h4>
-                    <p>Nazovite nas na broj 091 2828 911 ili pošaljite poruku i dogovorite besplatno savjetovanje našeg stručnjaka u Vašem domu!</p>
+                    <h4>{{'you have questions' | translate}}? </h4>
+                    <!--<p>{{'call us on' | translate}} {{d.info.phone}} ili pošaljite poruku i dogovorite besplatno savjetovanje našeg stručnjaka u Vašem domu!</p>-->
+                    <p>{{'call us on' | translate}} {{d.info.phone}} {{'or send a message and arrange a free consultation with our expert in your home' | translate}}!</p>
                     <div class="question-contact">
                         <div class="question-icon">
                             <i class="icofont icofont-phone"></i>
                         </div>
                         <div class="question-content-number">
-                            <h6> 091/2828 911; 091/1599 181</h6>
+                            <h6> {{d.info.phone}}</h6>
                         </div>
                     </div>
                 </div>
@@ -222,37 +153,6 @@
                 }
             });
         </script>
-
-        <!--<div ng-controller="CarouselDemoCtrl">
-            <div style="height: 305px">
-                <carousel interval="myInterval">
-                    <slide ng-repeat="slide in slides" active="slide.active">
-                        <div class="" style="width:600px;margin:auto;height:100px">
-                        <div>
-                            <img ng-src="{{slide.image}}" width="200px" style="float:left; padding:10px">
-                        </div>
-                        <div>
-                            <img ng-src="{{slides[getSecondIndex($index+1)].image}}" width="200px" style="float:left; padding:10px">
-                        </div>
-                        <div>
-                            <img ng-src="{{slides[getSecondIndex($index+2)].image}}" width="200px" style="float:left; padding:10px">
-                        </div>
-                    </div>
-                        <div class="row" style="width:600px;margin:auto;">
-                            <div class="col-sm-4">
-                                <img ng-src="{{slide.image}}" width="200px" style="float:left; padding:10px">
-                            </div>
-                            <div class="col-sm-4">
-                                <img ng-src="{{slides[getSecondIndex($index+1)].image}}" width="200px" style="float:left; padding:10px">
-                            </div>
-                            <div class="col-sm-4">
-                                <img ng-src="{{slides[getSecondIndex($index+2)].image}}" width="200px" style="float:left; padding:10px">
-                            </div>
-                        </div>
-                    </slide>
-                </carousel>
-            </div>
-        </div>-->
 
     </div>
     <json-directive data="d" desc="'(d)'" debug="true"></json-directive>

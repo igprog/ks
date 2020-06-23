@@ -1,7 +1,0 @@
-﻿<div>
-    <div class="row">
-        <div ng-repeat="x in data.gallery" class="col-sm-3 p-1">
-            <img src="../upload/{{data.id}}/gallery/{{x}}" class="img-fluid zoom-in m-1" title="{{'zoom' | translate}}" ng-click="openPopup(data, $index)" />
-        </div>
-    </div>
-</div>

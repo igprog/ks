@@ -151,7 +151,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         lastReviews: null,
         stars: [1, 2, 3, 4, 5],
         imgFolder: 'productgroups',
-        autoscroll: true
+        autoscroll: true,
+        subscribe: null
     }
     $rootScope.d = data;
 
@@ -369,6 +370,19 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.tick = d.getTime();
     }
     getTime();
+
+    var initSubscribe = () => {
+        f.post('Subscribe', 'Init', {}).then((d) => {
+            $scope.d.subscribe = d;
+        });
+    }
+    initSubscribe();
+
+    $scope.subscribe = (x) => {
+        if (x.email === null) { return false; }
+        f.post('Subscribe', 'Save', { x: x }).then((d) => {
+        });
+    }
 
 }])
 
@@ -870,10 +884,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $rootScope.d.autoscroll = true;
 
     var init = (x) => {
-        debugger;
         var method = $rootScope.config.debug ? 'InitTest' : 'Init';
         f.post('Orders', method, { cart: x }).then((d) => {
-            debugger;
             $scope.d.order = d;
         });
     }
@@ -927,10 +939,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.order.user.deliveryDetails = angular.copy(x.order.user.billingDetails);
         }
     }
-
-    //$scope.toggle = (x) => {
-    //    $scope.d.tpl = x;
-    //}
 
 }])
 

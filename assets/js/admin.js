@@ -533,7 +533,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             },
             {
                 code: 2,
-                title: 'elektric'
+                title: 'electric'
             }
         ]
     }
@@ -1080,8 +1080,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
 }])
 
-
-
 .controller('uploadCtrl', ['$scope', '$http', 'f', ($scope, $http, f) => {
     var service = 'Info';
 
@@ -1179,6 +1177,41 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 
 }])
+
+.controller('subscribersCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
+        var service = 'Subscribe';
+        var data = {
+            loading: false,
+            records: []
+        }
+        $scope.d = data;
+
+        var load = () => {
+            $scope.d.loading = true;
+            f.post(service, 'Load', {}).then((d) => {
+                $scope.d.records = d;
+                $scope.d.loading = false;
+            });
+        }
+        load();
+
+        var remove = (x) => {
+            if (confirm('Briši?')) {
+                f.post(service, 'Delete', { x: x }).then((d) => {
+                    $scope.d.records = d;
+                });
+            }
+        }
+
+        $scope.f = {
+            load: () => {
+                return load();
+            },
+            remove: (x) => {
+                return remove(x);
+            }
+        }
+    }])
 
 /********** Directives **********/
 //.directive('reservationDirective', () => {
