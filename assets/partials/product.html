@@ -27,32 +27,35 @@
                     <div class="product-page">
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
-                                <div class="product-main-image">
-                                    <img src="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}" alt="{{x}}" class="img-responsive" data-BigImgsrc="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}">
-                                    <div ng-if="d.record.outlet" class="product-image-label type-1">
-                                        <span>-{{d.record.discount.perc}}%</span>
+                                <loading-directive val="d.loading" size="5" loadingtitle="'loading'"></loading-directive>
+                                <div ng-if="!d.loading">
+                                    <div class="product-main-image">
+                                        <img src="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}" alt="{{x}}" class="img-responsive" data-BigImgsrc="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}">
+                                        <div ng-if="d.record.outlet" class="product-image-label type-1">
+                                            <span>-{{d.record.discount.perc}}%</span>
+                                        </div>
+                                        <div ng-if="d.record.isnew" class="product-image-label type-2">
+                                            <span>{{'new' | translate}}</span>
+                                        </div>
+                                        <!--<div ng-if="d.record.freeshipping" class="product-image-label type-4">
+                                            <span class="fa fa-truck fa-2x"></span>
+                                        </div>-->
+                                        <div ng-if="d.record.bestbuy" class="product-image-label type-5">
+                                            <span class="fa fa-smile-o fa-2x"></span>
+                                        </div>
+                                        <div ng-if="d.record.wifi" class="product-image-label type-6">
+                                            <span class="fa fa-wifi fa-2x"></span>
+                                        </div>
+                                        <div ng-if="d.record.energyClass" class="product-image-label type-7">
+                                            <span>{{d.record.energyClass}}</span>
+                                        </div>
+                                        <!--<div class="product-image-label {{sticker(d.record).style}}">
+                                            <span>{{sticker(d.record).title}}</span>
+                                        </div>-->
                                     </div>
-                                    <div ng-if="d.record.isnew" class="product-image-label type-2">
-                                        <span>{{'new' | translate}}</span>
+                                    <div class="product-other-images">
+                                        <a href="" ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
                                     </div>
-                                    <!--<div ng-if="d.record.freeshipping" class="product-image-label type-4">
-                                        <span class="fa fa-truck fa-2x"></span>
-                                    </div>-->
-                                    <div ng-if="d.record.bestbuy" class="product-image-label type-5">
-                                        <span class="fa fa-smile-o fa-2x"></span>
-                                    </div>
-                                    <div ng-if="d.record.wifi" class="product-image-label type-6">
-                                        <span class="fa fa-wifi fa-2x"></span>
-                                    </div>
-                                    <div ng-if="d.record.energyClass" class="product-image-label type-7">
-                                        <span>{{d.record.energyClass}}</span>
-                                    </div>
-                                    <!--<div class="product-image-label {{sticker(d.record).style}}">
-                                        <span>{{sticker(d.record).title}}</span>
-                                    </div>-->
-                                </div>
-                                <div class="product-other-images">
-                                    <a href="" ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 pl-5">

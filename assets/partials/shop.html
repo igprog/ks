@@ -151,7 +151,7 @@
                         <!-- END PRODUCT LIST -->
                         <!-- BEGIN PAGINATOR -->
                         <div class="row">
-                            <div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to {{toPage()}} of {{d.totRecords}} total</div>
+                            <div class="col-md-4 col-sm-4 items-info text-lowercase">{{'items' | translate}} {{1 + (d.filters.page-1)*d.filters.show.val}} {{'to' | translate}} {{toPage()}} {{'of' | translate}} {{d.totRecords}} {{'total' | translate}}</div>
 
                             <!--<div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to <span ng-if="d.records.length>d.filters.show.val">{{d.filters.show.val*d.filters.page}}</span><span ng-if="d.records.length<=d.filters.show.val">{{d.records.length}}</span> of {{d.totRecords}} total</div>-->
                             <!--<div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to {{d.totRecords>d.filters.show.val?d.filters.show.val:d.totRecords}} of {{d.totRecords}} total</div>-->
