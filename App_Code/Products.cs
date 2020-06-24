@@ -872,7 +872,7 @@ public class Products : System.Web.Services.WebService {
         x.ratingL.title = "rating (Lowest)";
         x.ratingL.val = false;
         s.sortTypes = x;
-        s.val = "nameAZ";
+        s.val = "ratingH";
         return s;
     }
 

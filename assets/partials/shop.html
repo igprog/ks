@@ -93,15 +93,15 @@
                         <div class="col-md-10 col-sm-10">
                             <div class="pull-right">
                                 <label class="control-label">{{'show' | translate}}:</label>
-                                <select ng-model="d.filters.show.val" class="form-control input-sm" ng-change="sortBy(d.filters, slider)">
+                                <select ng-model="d.filters.show.val" class="form-control input-sm" ng-options="x for x in d.filters.show.values track by x" ng-change="filter(d.filters, slider)"></select>
+                                <!--<select ng-model="d.filters.show.val" class="form-control input-sm" ng-change="sortBy(d.filters, slider)">
                                     <option value="{{x}}" ng-repeat="x in d.filters.show.values" >{{x}}</option>
-                                </select>
+                                </select>-->
                             </div>
                             <div class="pull-right">
                                 <label class="control-label">{{'sort by' | translate}}:</label>
                                 <select ng-model="d.filters.sortBy.val" class="form-control input-sm" ng-change="filter(d.filters, slider)">
                                     <option value="{{x.code}}" ng-repeat="x in d.filters.sortBy.sortTypes">{{x.title | translate}}</option>
-                                    <!--<option value="{{x.code}}" ng-selected="x.code===d.filters.sortBy.val?true:false" ng-repeat="x in d.filters.sortBy.sortTypes">{{x.title | translate}}</option>-->
                                 </select>
                             </div>
                         </div>

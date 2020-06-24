@@ -95,7 +95,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             return yr + '-' + mo + '-' + day;
         },
         setDateTime: (x) => {
-            debugger;
             var day = x.getDate();
             day = day < 10 ? '0' + day : day;
             var mo = x.getMonth();
@@ -166,40 +165,34 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.goCategory = (pg_code, productgroup, subgroup) => {
         $state.go('category', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
+        /***** Hide menu on mobile after click *****/
+        $(".pg-mobile").on("click", function () {
+            $(".header-navigation").hide();
+        });
+        /***** Hide menu on mobile after click *****/
+
+        //location.reload();
         //$rootScope.d.autoscroll = false;
     }
 
     $rootScope.search = (search) => {
-        debugger;
         $state.go('search', { search: search });
     }
 
     $scope.brand = (brand_code, brand_seo) => {
-        debugger;
         $state.go('brand', { brand_code: brand_code, brand: brand_seo });
     }
 
     $scope.goType = (type) => {
-        debugger;
         $state.go('type', { type: type });
     }
 
-    //$scope.home = () => {
-    //    $state.go('home');
-    //}
-
-    //$scope.go = (x, param) => {
-    //    $state.go(x, { name: param });
-    //}
     $scope.go = (x) => {
-        //$rootScope.d.autoscroll = true;
         $state.go(x);
     }
     $state.go('home');
 
     $scope.get = (x) => {
-        debugger;
-        //$rootScope.d.autoscroll = true;
         $state.go('product', { title_seo: x.title_seo, sku: x.sku });
     }
 
@@ -413,14 +406,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadProductGroups();
 
-    //var loadBestSelling = (lang, pg, limit) => {
-    //    $scope.d.loading = true;
-    //    f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'bestselling', limit: limit }).then((d) => {
-    //        $scope.d.bestselling = d;
-    //        $scope.d.loading = false;
-    //    });
-    //}
-    //loadBestSelling('hr', null, 4);
     var loadBestBuy = (lang, pg, limit) => {
         f.post('Products', 'LoadProductType', { lang: lang, productGroup: pg, type: 'bestbuy', limit: limit }).then((d) => {
             $scope.d.bestbuy = d;
@@ -429,7 +414,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     loadBestBuy('hr', null, 4);
 
     var loadSpecialProductGroup = (lang, pg) => {
-        debugger;
         f.post('Products', 'Load', { lang: 'hr', productGroup: pg, brand: null, search: null, type: null, isDistinctStyle: true }).then((d) => {
             $scope.d.specialProductGroup = d.data;
         });
@@ -461,6 +445,8 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 .controller('shopCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams) {
 
+    window.scrollTo(0, 0);
+
     $scope.slider = {
         minValue: 0,
         maxValue: 0,
@@ -490,11 +476,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         autoscroll: true,
         parentProductGroup: null
     }
-    debugger;
     $scope.d = data;
 
-    $rootScope.d.autoscroll = true;
-    //$scope.d.search = $scope.search_;
+    $rootScope.d.autoscroll = false;
 
     var loadProductGroups = () => {
         f.post('ProductGroups', 'Load', {}).then((d) => {
@@ -539,13 +523,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
         var search = param.search !== undefined ? param.search : null;
         var type = param.type !== undefined ? param.type : null;
-        //$scope.d.filters.price.min = slider.minValue;
-        //$scope.d.filters.price.max = slider.maxValue;
-        debugger;
-        
+
         filters.price.minVal = slider.minValue;
         filters.price.maxVal = slider.maxValue;
-        //$stateParams.filters = filters;
         $sessionStorage.filters = filters;
         $scope.d.loading = true;
         f.post('Products', 'Filter', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, filters: filters}).then((d) => {
@@ -557,26 +537,20 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.search = (search) => {
-        debugger;
-        //$scope.d.search = search;
         $rootScope.search(search);
-        //$state.go('search', { search: search });
     }
 
     var setTotPages = () => {
         $scope.d.totPages = Math.ceil($scope.d.totRecords / $scope.d.filters.show.val);
         $scope.d.pages = [];
         for (var i = 1; i <= $scope.d.totPages; i++) {
-            debugger;
             $scope.d.pages.push(i);
         }
     }
 
     $scope.setCurrPage = (x) => {
-        debugger;
         if (x <= 0 || x > $scope.d.totPages) { return false; }
         $scope.d.filters.page = x;
-        //$scope.filter($scope.d.filters, $scope.slider);
     }
 
     $scope.filterColor = (filters, slider, x) => {
@@ -601,7 +575,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.slider.options.ceil = $sessionStorage.filters.price.max;
         }
     }
-    debugger;
     if ($scope.d.filters && $sessionStorage.pg_code === $stateParams.pg_code) {
         $scope.filter($scope.d.filters, $scope.slider);
     } else {
@@ -616,10 +589,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadBestSelling('hr', $stateParams.pg_code, 3);
 
-    //$scope.sticker = (x) => {
-    //    return f.sticker(x);
-    //}
-
     $scope.showFilters = () => {
         $scope.d.isShowFilters = !$scope.d.isShowFilters;
     }
@@ -631,12 +600,10 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.toPage = () => {
         if ($scope.d.records.length > $scope.d.filters.show.val) {
-            debugger;
             var rest = ($scope.d.filters.show.val * $scope.d.filters.page) % $scope.d.records.length;
             var rest_ = rest < $scope.d.filters.show.val ? rest : 0;
             return ($scope.d.filters.show.val * $scope.d.filters.page) - rest_;
         } else {
-            //if ($scope.d.filters.show.val * $scope.filters.page)
             return $scope.d.records.length;
         }
     }
@@ -659,8 +626,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         info: null
     }
     $scope.d = data;
-    debugger;
-    $rootScope.d.autoscroll = true;
+    $rootScope.d.autoscroll = false;
 
     var loadProductGroups = () => {
         $scope.d.loading = true;
@@ -703,11 +669,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $scope.d.loading = true;
         f.post('Products', 'Get', { sku: sku, lang: 'hr' }).then((d) => {
             $scope.d.record = d;
-            debugger;
             if (d.styleProducts !== null) {
                 if (d.styleProducts.length > 0) {
                     angular.forEach(d.styleProducts, function (val, key) {
-                        //val.color !== null && val.color !== x.color ? true : false;
                         if (val.color !== null && val.color !== d.color) {
                             $scope.d.showColorVar = true;
                         }
@@ -724,8 +688,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     get($stateParams.sku);
 
     $scope.getVarDimProduct = (style, dimension) => {
-        //var dimension_ = angular.copy(JSON.parse(dimension));
-        debugger;
         $scope.d.loading = true;
         f.post('Products', 'GetVarDimProduct', { style: style, dimension: dimension, lang: lang }).then((d) => {
             get(d.sku);
@@ -734,7 +696,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.getVarColorProduct = (style, color, dimension) => {
-        debugger;
         var dimension_ = angular.copy(JSON.parse(angular.toJson(dimension)));
         $scope.d.loading = true;
         f.post('Products', 'GetVarColorProduct', { style: style, color: color, dimension: dimension_, lang: lang }).then((d) => {
@@ -744,8 +705,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.getVarFireboxInsertProduct = (style, fireboxInsert) => {
-        debugger;
-        //var dimension_ = angular.copy(JSON.parse(angular.toJson(dimension)));
         $scope.d.loading = true;
         f.post('Products', 'GetVarFireboxInsertProduct', { style: style, fireboxInsert: fireboxInsert, lang: lang }).then((d) => {
             get(d.sku);
@@ -757,14 +716,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $scope.selectImg = function (idx) {
         $scope.mainImgIdx = idx;
     }
-
-    //$scope.sticker = (x) => {
-    //    return f.sticker(x);
-    //}
-
-    //$scope.toggleTpl = (x) => {
-    //    $scope.d.tpl = x;
-    //}
 
     /**** Review & Rating *****/
     $scope.getRate = function (rate) {
@@ -818,7 +769,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $rootScope.d.autoscroll = true;
 
-    debugger;
     if (localStorage.cart != undefined && localStorage.cart != 'undefined' && localStorage.cart != '') {
         $rootScope.d.cart = JSON.parse(localStorage.cart);
         $scope.d.cart = $rootScope.d.cart;
@@ -831,15 +781,12 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.calcItemPrice = (x, idx) => {
         f.post('Cart', 'CalcItemPrice', { item: x.items[idx] }).then((d) => {
-            debugger;
             $scope.d.cart.items[idx] = d;
             $scope.calcTotPrice(x);
-            //localStorage.cart = JSON.stringify($scope.d.cart);
         });
     }
 
     $scope.calcTotPrice = (x) => {
-        debugger;
         f.post('Cart', 'CalcTotPrice', { cart: x }).then((d) => {
             $scope.d.cart = d;
             $rootScope.d.cart = d;
@@ -848,9 +795,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.removeItem = function (x, idx) {
-        debugger;
         $scope.d.cart.items.splice(idx, 1);
-        //$rootScope.d.cart.items.splice(idx, 1);
         $scope.calcTotPrice($scope.d.cart);
     }
 

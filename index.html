@@ -210,7 +210,7 @@
             <div class="header-navigation">
                 <ul>
                     <li class="dropdown dropdown100 nav-catalogue" ng-repeat="x in d.productGroups track by $index">
-                        <a href="" ng-click="goCategory(x.code, x.title_seo, null)">
+                        <a href="" ng-click="goCategory(x.code, x.title_seo, null)" title="{{x.title}}">
                             {{x.title}} <i class="fa fa-angle-down dropdown-toggle pull-right visible-xs" data-toggle="dropdown"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -228,7 +228,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="visible-xs" ng-repeat="y in x.subGroups track by $index"><a href="" title="{{y.title}}" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
+                            <li class="visible-xs" ng-repeat="y in x.subGroups track by $index"><a href="" class="pg-mobile" title="{{y.title}}" ng-click="goCategory(y.code, x.title_seo, y.title_seo)">{{y.title}}</a></li>
                         </ul>
                     </li>
                     <!-- BEGIN TOP SEARCH -->
