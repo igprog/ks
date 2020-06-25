@@ -1,24 +1,42 @@
-﻿<div class="owl-carousel owl-carousel5 owl-theme owl-loaded">
+﻿<slick ng-if="dataLoaded" init-onload="false" data="dataLoaded" slides-to-show="{{show}}" dots="{{showdots}}" settings="slickConfig">
+    <div ng-repeat="x in data">
+        <div class="product-item h-100">
+            <div class="pi-img-wrapper">
+                <a href="" title="{{x.title}}" ng-click="get(x)">
+                    <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
+                    <div>
+                        <!--<a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">{{'zoom' | translate}}</a>
+                        <a href="" class="btn btn-default" ng-click="get(x)">{{'view' | translate}}</a>-->
+                    </div>
+                </a>
+            </div>
+            <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
+            <div class="pi-price">{{x.price.grossWithDiscount | number}} kn</div>
+            <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">{{'add to cart' | translate}}</a>
+            <!--<div class="sticker sticker-sale"></div>-->
+            <div class="product-image-label {{sticker(x).style}}">
+                <span>{{sticker(x).title}}</span>
+            </div>
+        </div>
+    </div>
+</slick>
+
+<!--<div class="owl-carousel owl-carousel5 owl-theme owl-loaded">
     <div class="row">
         <div class="col-md-3" ng-repeat="x in data">
             <div class="product-item h-100">
                 <div class="pi-img-wrapper">
                     <a href="" title="{{x.title}}" ng-click="get(x)">
                         <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
-                        <div>
-                            <!--<a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">{{'zoom' | translate}}</a>
-                        <a href="" class="btn btn-default" ng-click="get(x)">{{'view' | translate}}</a>-->
-                        </div>
                     </a>
                 </div>
                 <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
                 <div class="pi-price">{{x.price.grossWithDiscount | number}} kn</div>
                 <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">{{'add to cart' | translate}}</a>
-                <!--<div class="sticker sticker-sale"></div>-->
                 <div class="product-image-label {{sticker(x).style}}">
                     <span>{{sticker(x).title}}</span>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div>-->

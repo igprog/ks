@@ -2,7 +2,7 @@
 app.js
 (c) 2020 IG PROG, www.igprog.hr
 */
-angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSlider', 'ui.bootstrap'])
+angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSlider', 'ui.bootstrap', 'slick'])
 .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$translateProvider', '$translatePartialLoaderProvider', ($stateProvider, $urlRouterProvider, $httpProvider, $translateProvider, $translatePartialLoaderProvider) => {
 
     $stateProvider
@@ -379,7 +379,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 }])
 
-.controller('homeCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$stateParams', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $stateParams) {
+.controller('homeCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$stateParams', '$timeout', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $stateParams, $timeout) {
 
     var data = {
         loading: false,
@@ -411,7 +411,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.bestbuy = d;
         });
     }
-    loadBestBuy('hr', null, 4);
+    loadBestBuy('hr', null, 10);
 
     var loadSpecialProductGroup = (lang, pg) => {
         f.post('Products', 'Load', { lang: 'hr', productGroup: pg, brand: null, search: null, type: null, isDistinctStyle: true }).then((d) => {
@@ -432,7 +432,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $scope.d.opportunity = d;
         });
     }
-    loadOpportunity('hr', null, 4);
+    loadOpportunity('hr', null, 10);
 
     var loadBanners = () => {
         f.post('Banners', 'Load', {isactive: true}).then((d) => {
@@ -440,6 +440,34 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         });
     }
     loadBanners();
+
+    //Slick
+    //$scope.slickConfig = {};
+    //$scope.items = [];
+    //$timeout(function () {
+
+    //    $scope.slickConfig = {
+    //        enabled: true,
+    //        autoplay: true,
+    //        infinite: true,
+    //        draggable: true,
+    //        autoplayspeed: 1000,
+    //        variablewidth: true,
+    //        centermode: true,
+    //        arrows: false,
+    //        method: {},
+    //        event: {
+    //            beforechange: function (event, slick, currentslide, nextslide) {
+    //            },
+    //            afterchange: function (event, slick, currentslide, nextslide) {
+    //            }
+    //        }
+    //    };
+
+
+    //    $scope.dataLoaded = true;
+
+    //}, 2000);
 
 }])
 
@@ -1137,13 +1165,39 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     return {
         restrict: 'E',
         scope: {
-            data: '='
+            data: '=',
+            show: '=',
+            showdots: '='
         },
         templateUrl: '../assets/partials/directive/specialproducts.html',
         controller: 'specialproductsCtrl'
     };
 })
-.controller('specialproductsCtrl', ['$scope', 'f', '$rootScope', '$state', ($scope, f, $rootScope, $state) => {
+.controller('specialproductsCtrl', ['$scope', 'f', '$rootScope', '$state', '$timeout', ($scope, f, $rootScope, $state, $timeout) => {
+    $scope.slickConfig = {};
+
+
+    $timeout(function () {
+        $scope.slickConfig = {
+            enabled: true,
+            autoplay: true,
+            infinite: true,
+            draggable: true,
+            autoplayspeed: 1000,
+            variablewidth: true,
+            centermode: true,
+            arrows: false,
+            method: {},
+            event: {
+                beforechange: function (event, slick, currentslide, nextslide) {
+                },
+                afterchange: function (event, slick, currentslide, nextslide) {
+                }
+            }
+        };
+        $scope.dataLoaded = true;
+    }, 2000);
+
     $scope.get = (x) => {
         $state.go('product', { title_seo: x.title_seo, sku: x.sku });
     }
@@ -1154,7 +1208,47 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             localStorage.cart = JSON.stringify(d);
         });
     }
+
+
 }])
+
+//.directive('carouselDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            data: '='
+//        },
+//        templateUrl: '../assets/partials/directive/carousel.html',
+//        controller: 'carouselCtrl'
+//    };
+//})
+//.controller('carouselCtrl', ['$scope', '$timeout', ($scope, $timeout) => {
+//    $scope.slickConfig = {};
+//    $scope.items = [];
+//    $timeout(function () {
+//        $scope.slickConfig = {
+//            enabled: true,
+//            autoplay: true,
+//            infinite: true,
+//            draggable: true,
+//            autoplayspeed: 1000,
+//            variablewidth: true,
+//            centermode: true,
+//            arrows: false,
+//            method: {},
+//            event: {
+//                beforechange: function (event, slick, currentslide, nextslide) {
+//                },
+//                afterchange: function (event, slick, currentslide, nextslide) {
+//                }
+//            }
+//        };
+
+//        debugger;
+//        $scope.dataLoaded = true;
+
+//    }, 3000);
+//}])
 
 
 //.directive('detailsDirective', () => {

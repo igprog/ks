@@ -29,12 +29,17 @@
         </div>
         <!-- BEGIN SALE PRODUCT & NEW ARRIVALS -->
         <div ng-if="d.bestbuy.length>0" class="bg-light pt-5">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row margin-bottom-40">
                     <!-- BEGIN SALE PRODUCT -->
                     <div class="col-md-12 sale-product">
                         <h2>{{'best buy' | translate}}</h2>
-                        <specialproducts-directive data="d.bestbuy"></specialproducts-directive>
+                        <div class="hidden-xs">
+                            <specialproducts-directive data="d.bestbuy" show="6"></specialproducts-directive>
+                        </div>
+                        <div class="visible-xs">
+                            <specialproducts-directive data="d.bestbuy" show="1" showdots="true"></specialproducts-directive>
+                        </div>
                     </div>
                     <!-- END SALE PRODUCT -->
                 </div>
@@ -44,12 +49,17 @@
 
         <!-- BEGIN Op -->
         <div ng-if="d.bestbuy.length>0" class="bg-light pt-5">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row margin-bottom-40">
                     <!-- BEGIN SALE PRODUCT -->
                     <div class="col-md-12 sale-product">
                         <h2>{{'opportunity' | translate}}</h2>
-                        <specialproducts-directive data="d.opportunity"></specialproducts-directive>
+                        <div class="hidden-xs">
+                            <specialproducts-directive data="d.opportunity" show="6"></specialproducts-directive>
+                        </div>
+                        <div class="visible-xs">
+                            <specialproducts-directive data="d.opportunity" show="1" showdots="true"></specialproducts-directive>
+                        </div>
                     </div>
                     <!-- END SALE PRODUCT -->
                 </div>
@@ -57,13 +67,19 @@
         </div>
         <!-- END SALE PRODUCT & NEW ARRIVALS -->
 
-        <div ng-if="d.specialProductGroup.length>0" class="pt-5">
-            <div class="container">
+        <div ng-if="d.specialProductGroup.length>0" class="bg-light pt-5">
+            <div class="container-fluid">
                 <div class="row margin-bottom-40">
                     <!-- BEGIN SPECIAL PRODUCT GROUP -->
                     <div class="col-md-12 sale-product">
                         <h2>{{'best selling' | translate}}</h2>
-                        <specialproducts-directive data="d.specialProductGroup"></specialproducts-directive>
+                        <div class="hidden-xs">
+                            <specialproducts-directive data="d.specialProductGroup" show="6"></specialproducts-directive>
+                        </div>
+                        <div class="visible-xs">
+                            <specialproducts-directive data="d.specialProductGroup" show="1" showdots="true"></specialproducts-directive>
+                        </div>
+                        
 
                         <!--<div id="myCarousel" class="carousel slide">
                             <div class="carousel-inner">
@@ -108,6 +124,26 @@
         </div>
 
 
+        <!--Test
+        <carousel-directive data="d.specialProductGroup"></carousel-directive>-->
+
+        <!--<slick ng-if="dataLoaded" init-onload="false" data="dataLoaded" slides-to-show="5" dots="false" settings="slickConfig">
+            <div ng-repeat="x in d.specialProductGroup">
+                <span>
+                    <img src="../upload/{{x.id}}/gallery/{{x.img}}" style="float:left; padding:10px" class="img-responsive" alt="{{x.title}}">
+                </span>
+                <span>{{ x.title }}</span>
+            </div>
+        </slick>-->
+
+        <!--<slick ng-if="dataLoaded" init-onload="false" data="dataLoaded" slides-to-show="3" dots="true">
+            <div ng-repeat="item in items">
+                <span>
+                    <img ng-src="{{ item.imgSrc }}" alt="{{ item.label}}" />
+                </span>
+                <span>{{ item.label }}</span>
+            </div>
+        </slick>-->
 
         <!--Test
         <div ng-controller="CarouselDemoCtrl">
