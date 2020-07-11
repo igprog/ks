@@ -30,7 +30,8 @@
                                 <loading-directive val="d.loading" size="5" loadingtitle="'loading'"></loading-directive>
                                 <div ng-if="!d.loading">
                                     <div class="product-main-image">
-                                        <img src="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}" alt="{{x}}" class="img-responsive" data-BigImgsrc="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}">
+                                        <zoom src="{{getMainImg(mainImgIdx)}}" frame="example1" img="image1" zoomlvl="2"></zoom>
+                                        <!--<img src="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}" alt="{{x}}" class="img-responsive" data-BigImgsrc="../upload/{{d.record.id}}/gallery/{{d.record.gallery[mainImgIdx]}}">-->
                                         <div ng-if="d.record.outlet" class="product-image-label type-1">
                                             <span>-{{d.record.discount.perc}}%</span>
                                         </div>
@@ -54,7 +55,7 @@
                                         </div>-->
                                     </div>
                                     <div class="product-other-images">
-                                        <a href="" ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="Berry Lace Dress" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
+                                        <a href="" ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="{{x}}" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>
                                     </div>
                                 </div>
                             </div>

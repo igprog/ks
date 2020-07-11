@@ -606,3 +606,25 @@ legend.fieldset-border {
 .header .mobi-toggler:hover {
     background-color: #D8D8D8 !important;
 }
+
+/***** Image Pan Zoom *****/
+.zoomPanFrame {
+	display:inline-block;
+	margin-left: auto;
+    margin-right: auto ;
+	overflow: hidden;
+	border-style: solid;
+    border-width: 5px;
+    border-color:#ECF0F1;
+    border-radius: 0.5em;
+    cursor:all-scroll;
+}
+
+.zoomPanImage {
+	width: 25em;
+	display: block;
+	transition: transform .5s ease-out;
+	transform: scale(1);
+	transform-origin: 0 0 0px;
+}
+/***** Image Pan Zoom *****/
