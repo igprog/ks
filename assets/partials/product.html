@@ -53,6 +53,14 @@
                                         <!--<div class="product-image-label {{sticker(d.record).style}}">
                                             <span>{{sticker(d.record).title}}</span>
                                         </div>-->
+                                        <div ng-if="d.record.gallery.length>1">
+                                            <div class="product-image-label prev-img">
+                                                <a href="" title="{{'previous' | translate}}" ng-click="selectImg(mainImgIdx-1)"><i class="fa fa-caret-left fa-5x"></i></a>
+                                            </div>
+                                            <div class="product-image-label next-img">
+                                                <a href="" title="{{'next' | translate}}" ng-click="selectImg(mainImgIdx+1)"><i class="fa fa-caret-right fa-5x"></i></a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="product-other-images">
                                         <a href="" ng-repeat="x in d.record.gallery" ng-click="selectImg($index)" class="fancybox-button" rel="photos-lib"><img alt="{{x}}" src="../upload/{{d.record.id}}/gallery/{{x}}"></a>

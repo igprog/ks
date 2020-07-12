@@ -627,4 +627,10 @@ legend.fieldset-border {
 	transform: scale(1);
 	transform-origin: 0 0 0px;
 }
+.product-image-label.prev-img {
+    left: 7px; top: 25%; width: 40px; height: 40px; margin-left: 10px;
+}
+.product-image-label.next-img {
+    right: 0px; top: 25%; width: 40px; height: 40px; margin-right: 10px;
+}
 /***** Image Pan Zoom *****/

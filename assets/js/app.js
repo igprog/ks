@@ -742,6 +742,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.mainImgIdx = 0;
     $scope.selectImg = function (idx) {
+        if (idx < 0 || idx >= $scope.d.record.gallery.length) { return false; }
         $scope.mainImgIdx = idx;
     }
 
