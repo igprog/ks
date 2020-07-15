@@ -512,13 +512,16 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     }
 }])
 
-.controller('productsCtrl', ['$scope', '$http', 'f', '$mdDialog', ($scope, $http, f, $mdDialog) => {
+.controller('productsCtrl', ['$scope', '$http', 'f', '$sessionStorage', '$mdDialog', ($scope, $http, f, $sessionStorage, $mdDialog) => {
     var service = 'Products';
+    var adminType = $sessionStorage.adminType !== undefined ? $sessionStorage.adminType : 'admin';
+
     var data = {
         loading: false,
         productGroups: [],
         brands: [],
         records: [],
+        adminType: adminType,
         currProduct: null,
         currProductGroup: null,
         productGroupId: null,
@@ -773,7 +776,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         if (x.id === null) {
             x.productGroup = sg;
             f.post('Features', 'getProductFeatures', { productGroup: pg }).then((d) => {
-                debugger;
                 x.features = d;
             });
         }
@@ -807,6 +809,12 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             f.post(service, 'DeleteDataSheet', { x: x, file: file }).then((d) => {
             });
         }
+    }
+
+    var importProductsCsv = () => {
+        f.post(service, 'ImportProductsCsv', {}).then((d) => {
+            alert(d);
+        });
     }
 
     $scope.f = {
@@ -857,6 +865,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         },
         deleteDataSheet: (x, file, idx) => {
             return deleteDataSheet(x, file, idx);
+        },
+        importProductsCsv: () => {
+            return importProductsCsv();
         },
     }
 }])

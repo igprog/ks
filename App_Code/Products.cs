@@ -12,6 +12,8 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
 using Igprog;
 
 /// <summary>
@@ -420,6 +422,97 @@ public class Products : System.Web.Services.WebService {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
     }
+
+    [WebMethod]
+    public string ImportProductsCsv() {
+        int row = 0;
+        try {
+            DB.CreateDataBase(G.db.products);
+            string path = Server.MapPath("~/upload/csv/products.csv");
+            List<NewProduct> xx = new List<NewProduct>();
+            using (var reader = new StreamReader(path, Encoding.Default)) {
+                
+                while (!reader.EndOfStream) {
+                    var line = reader.ReadLine();
+                    if (row > 0) {
+                        var val = line.Split(';');
+                        if (!string.IsNullOrEmpty(val[0])) {
+                            NewProduct x = new NewProduct();
+                            x.id = Guid.NewGuid().ToString();
+                            x.sku = val[0];
+                            x.style = string.IsNullOrEmpty(val[1]) ? x.sku : val[1];
+                            x.productGroup = new ProductGroups.NewProductGroup();
+                            x.productGroup.code = GetProductGroupCode(val[2]);
+                            x.title = val[3];
+                            x.shortdesc = val[4];
+                            x.longdesc = val[5];
+                            x.brand = new Brands.NewBrands();
+                            x.brand.code = GetBrandCode(val[6]);
+                            x.price = new Price();
+                            //Regex.Replace(s, "[^0-9]", "");
+                            x.price.gross = Convert.ToDouble(val[7]);
+                            x.discount = new Discount();
+                            x.discount.coeff = GetVal(val[8]);
+                            x.stock = string.IsNullOrEmpty(val[9]) ? 1000 : Convert.ToInt32(GetVal(val[9]));
+                            x.isnew = IsTrue(val[10]);
+                            x.outlet = IsTrue(val[11]);
+                            x.bestselling = IsTrue(val[12]);
+                            x.deliverydays = Regex.Replace(val[13], "[^0-9.-]", "");
+                            x.freeshipping = IsTrue(val[15]);
+                            x.bestbuy = IsTrue(val[16]);
+                            x.wifi = IsTrue(val[17]);
+                            x.dimension = new Dimension();
+                            x.dimension.width = GetVal(val[18]);
+                            x.dimension.height = GetVal(val[19]);
+                            x.dimension.depth = GetVal(val[20]);
+                            x.power = GetVal(val[21]);
+                            x.color = new Colors.NewColor();
+                            x.color.code = ColorName(val[22]);
+                            xx.Add(x);
+                        }
+                    }
+                    row++;
+                }
+            }
+            if (1 == 1) {
+                string sql = null;
+                int count = 0;
+                using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+                    connection.Open();
+                    using (var command = new SQLiteCommand()) {
+                        command.Connection = connection;
+                        using (SQLiteTransaction transaction = connection.BeginTransaction()) {
+                            foreach (NewProduct x in xx) {
+
+                                //sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
+                                //, x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
+
+                                sql = string.Format(@"INSERT OR REPLACE INTO PRODUCTS (id, sku, style, productgroup, title, shortdesc, longdesc, brand, img, price, discount, discountfrom, discountto, stock, isnew, outlet, bestselling, isactive, features, deliverydays, productorder,
+                                freeshipping, bestbuy, wifi, relatedproducts, width, height, depth, power, color, energyclass, datasheet, opportunity, keyfeatures, fireboxinsert)
+                                                     VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
+                                                    , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, null, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, null, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, null, x.opportunity, null, x.fireboxInsert);
+                                if (count == 0) {
+                                    command.CommandText = sql;
+                                    command.Transaction = transaction;
+                                    command.ExecuteNonQuery();
+                                }
+                                count++;
+                                }
+
+                            transaction.Commit();
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            
+
+            return JsonConvert.SerializeObject("Spremljeno", Formatting.Indented);
+        } catch (Exception e) {
+            var test = row;
+            return JsonConvert.SerializeObject(e.Message, Formatting.Indented);
+        }
+    }
     #endregion WebMethod
 
     #region Methods
@@ -753,20 +846,23 @@ public class Products : System.Web.Services.WebService {
 
     private Discount GetDiscount(double productDiscount, string pFrom, string pTo, double pgDiscount, string pgFrom, string pgTo) {
         Discount x = new Discount();
-        DateTime today = DateTime.Now;
         if (productDiscount > 0) {
-            x.coeff = productDiscount;
-            x.from = pFrom;
-            x.to = pTo;
-        } else {
-            x.coeff = pgDiscount;
-            x.from = pgFrom;
-            x.to = pgTo;
-        }
-        x.perc = Math.Round(x.coeff * 100, 1);
-        if (!string.IsNullOrEmpty(x.from) && (!string.IsNullOrEmpty(x.to))) {
-            if (today >= Convert.ToDateTime(x.from) && today <= Convert.ToDateTime(x.to)) {
-                x.isValid = true;
+            DateTime today = DateTime.Now;
+            if (productDiscount > 0) {
+                x.coeff = productDiscount;
+                x.from = pFrom;
+                x.to = pTo;
+            } else {
+                x.coeff = pgDiscount;
+                x.from = pgFrom;
+                x.to = pgTo;
+            }
+            x.perc = Math.Round(x.coeff * 100, 1);
+            if (!string.IsNullOrEmpty(x.from) && (!string.IsNullOrEmpty(x.to))) {
+                if (today >= Convert.ToDateTime(x.from) && today <= Convert.ToDateTime(x.to))
+                {
+                    x.isValid = true;
+                }
             }
         }
         return x;
@@ -998,6 +1094,74 @@ public class Products : System.Web.Services.WebService {
         }
         return xx;
     }
+
+    /***** Import CSV file *****/
+    private string GetProductGroupCode(string title) {
+        /***** Import CSV file *****/
+        string code = null;
+        switch (title.ToLower().Trim()) {
+            case "mill uljni radijatori":
+                code = "MILLULJNIRADIJAT";
+                break;
+            case "mill norveški radijatori":
+                code = "MILLNORVESKIRADI";
+                break;
+            case "mill konvektori":
+                code = "MILLKONVEKTORI";
+                break;
+            case "mill dodaci":
+                code = "MILLDODACI";
+                break;
+            case "inserti":
+                code = "INSERTI";
+                break;
+            default:
+                code = null;
+                break;
+        }
+        return code;
+    }
+
+    private string GetBrandCode(string title) {
+        string code = null;
+        switch (title.ToLower().Trim()) {
+            case "mill":
+                code = "MILL";
+                break;
+            case "dimplex":
+                code = "DIMPLEX";
+                break;
+            default:
+                code = null;
+                break;
+        }
+        return code;
+    }
+
+    private bool IsTrue(string x) {
+        return x.ToLower().Trim() == "da" ? true : false;
+    }
+
+    private string ColorName(string title) {
+        string code = null;
+        switch (title.ToLower().Trim()) {
+            case "bijela":
+                code = "white";
+                break;
+            case "crna":
+                code = "black";
+                break;
+            default:
+                code = null;
+                break;
+        }
+        return code;
+    }
+
+    private double GetVal(string x) {
+        return !string.IsNullOrEmpty(x) ? Convert.ToDouble(x) : 0;
+    }
+    /***** Import CSV file *****/
     #endregion Methods
 
 }
