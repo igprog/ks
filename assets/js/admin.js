@@ -538,7 +538,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 code: 2,
                 title: 'electric'
             }
-        ]
+        ],
+        limit: 100
     }
     $scope.d = data;
 
@@ -552,7 +553,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
         $scope.d.currProductGroup = productGroup;
         $scope.d.loading = true;
-        f.post(service, 'Load', { lang: 'hr', productGroup: pg_code, brand: null, search: search, type: null, isDistinctStyle: false }).then((d) => {
+        f.post(service, 'Load', { lang: 'hr', productGroup: pg_code, brand: null, search: search, type: null, isDistinctStyle: false, limit: data.limit }).then((d) => {
             $scope.d.records = d.data;
             $scope.d.responseTime = d.responseTime;
             $scope.d.loading = false;
@@ -576,7 +577,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     loadBrands();
 
     var loadAccessories = () => {
-        f.post(service, 'Load', { lang: 'hr', productGroup: 'accessories', brand: null, search: null, type: null, isDistinctStyle: false }).then((d) => {
+        f.post(service, 'Load', { lang: 'hr', productGroup: 'accessories', brand: null, search: null, type: null, isDistinctStyle: false, limit: data.limit }).then((d) => {
             $scope.d.accessories = d;
         });
     }

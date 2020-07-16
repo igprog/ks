@@ -243,9 +243,9 @@ public class Products : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public string Load(string lang, string productGroup, string brand, string search, string type, bool isDistinctStyle) {
+    public string Load(string lang, string productGroup, string brand, string search, string type, bool isDistinctStyle, int? limit) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, isDistinctStyle), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, isDistinctStyle, limit), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -376,7 +376,7 @@ public class Products : System.Web.Services.WebService {
                 }
                 connection.Close();
             }
-            return JsonConvert.SerializeObject(LoadData(null, null, null, null, null, true), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(null, null, null, null, null, true, 100), Formatting.None);
             //return JsonConvert.SerializeObject("Proizvod izbrisan", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
@@ -516,7 +516,7 @@ public class Products : System.Web.Services.WebService {
     #endregion WebMethod
 
     #region Methods
-    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type, bool isDistinctStyle) {
+    public ProductsData LoadData(string lang, string productGroup, string brand, string search, string type, bool isDistinctStyle, int? limit) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
@@ -530,7 +530,7 @@ public class Products : System.Web.Services.WebService {
         string sql = string.Format(@"{0} {1} {2}"
                    , mainSql
                    , searchSql
-                   , string.Format("ORDER BY p.productorder DESC LIMIT {0}", defalutLimit));
+                   , string.Format("ORDER BY p.productorder DESC LIMIT {0}", limit != null ? limit : defalutLimit));
 
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);

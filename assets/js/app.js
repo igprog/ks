@@ -414,7 +414,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     loadBestBuy('hr', null, 10);
 
     var loadSpecialProductGroup = (lang, pg) => {
-        f.post('Products', 'Load', { lang: 'hr', productGroup: pg, brand: null, search: null, type: null, isDistinctStyle: true }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg, brand: null, search: null, type: null, isDistinctStyle: true, limit: null }).then((d) => {
             $scope.d.specialProductGroup = d.data;
         });
     }
@@ -524,7 +524,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var type = param.type !== undefined ? param.type : null;
 
         $scope.d.loading = true;
-        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, isDistinctStyle: true }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, isDistinctStyle: true, limit: null }).then((d) => {
             $scope.d.records = d.data;
             //$scope.d.priceRange = d.priceRange;
             $scope.d.filters = d.filters;
