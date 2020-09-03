@@ -426,6 +426,8 @@ public class Products : System.Web.Services.WebService {
     [WebMethod]
     public string ImportProductsCsv() {
         int row = 0;
+        int count = 0;
+        string sql = null;
         try {
             DB.CreateDataBase(G.db.products);
             string path = Server.MapPath("~/upload/csv/products.csv");
@@ -443,7 +445,7 @@ public class Products : System.Web.Services.WebService {
                             x.style = string.IsNullOrEmpty(val[1]) ? x.sku : val[1];
                             x.productGroup = new ProductGroups.NewProductGroup();
                             x.productGroup.code = GetProductGroupCode(val[2]);
-                            x.title = val[3];
+                            x.title = val[3].Replace("'", "");
                             x.shortdesc = val[4];
                             x.longdesc = val[5];
                             x.brand = new Brands.NewBrands();
@@ -475,8 +477,6 @@ public class Products : System.Web.Services.WebService {
                 }
             }
             if (1 == 1) {
-                string sql = null;
-                int count = 0;
                 using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
                     connection.Open();
                     using (var command = new SQLiteCommand()) {
@@ -491,13 +491,13 @@ public class Products : System.Web.Services.WebService {
                                 freeshipping, bestbuy, wifi, relatedproducts, width, height, depth, power, color, energyclass, datasheet, opportunity, keyfeatures, fireboxinsert)
                                                      VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
                                                     , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, null, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, null, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, null, x.opportunity, null, x.fireboxInsert);
-                                if (count == 0) {
+                                //if (count == 0) {
                                     command.CommandText = sql;
                                     command.Transaction = transaction;
                                     command.ExecuteNonQuery();
-                                }
+                                //}
                                 count++;
-                                }
+                            }
 
                             transaction.Commit();
                         }
@@ -510,6 +510,8 @@ public class Products : System.Web.Services.WebService {
             return JsonConvert.SerializeObject("Spremljeno", Formatting.Indented);
         } catch (Exception e) {
             var test = row;
+            var test1 = count;
+            var test2 = sql;
             return JsonConvert.SerializeObject(e.Message, Formatting.Indented);
         }
     }

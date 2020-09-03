@@ -115,8 +115,6 @@ public class Colors : System.Web.Services.WebService {
         x.val = new NewColor();
         List<NewColor> xx = new List<NewColor>();
         if (products.Count > 0) {
-            //x.data = products.Select(a => a.color).Distinct().ToList();
-            //x.data = products.Select(a => a.color).Where(a => a.code != null).Distinct().ToList();
             List<NewColor> cc = new List<NewColor>();
             NewColor c = new NewColor();
             foreach (var p in products) {
@@ -125,7 +123,7 @@ public class Colors : System.Web.Services.WebService {
                     if (cc.Count == 0) {
                         cc.Add(p.color);
                     } else {
-                        if (!cc.Contains(p.color)) {
+                        if (!cc.Any(a => a.code == p.color.code && a.hex == p.color.hex)) {
                             cc.Add(p.color);
                             break;
                         }

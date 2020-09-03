@@ -472,7 +472,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 }])
 
 .controller('shopCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams) {
-
     window.scrollTo(0, 0);
 
     $scope.slider = {
@@ -517,7 +516,13 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var load = (param) => {
         if ($sessionStorage.filters !== undefined) { $sessionStorage.filters = null; };
-        var pg_code = param.pg_code !== undefined ? param.pg_code : null
+        var pg_code = param.pg_code !== undefined ? param.pg_code : null;
+        debugger;
+        if ($sessionStorage.pg_code !== undefined) {
+            if ($sessionStorage.pg_code !== null && pg_code === null) {
+                pg_code = $sessionStorage.pg_code;
+            }
+        }
         $sessionStorage.pg_code = pg_code;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
         var search = param.search !== undefined ? param.search : null;
@@ -1047,8 +1052,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 }])
 
 .controller('CarouselDemoCtrl', ['$scope', function ($scope) {
-        
-
     $scope.myInterval = 5000;
     var slides = $scope.slides = [];
     $scope.addSlide = function () {
