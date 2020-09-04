@@ -1126,6 +1126,21 @@ public class Products : System.Web.Services.WebService {
             case "inserti":
                 code = "INSERTI";
                 break;
+            case "ugradbeni kamini":
+                code = "UGRADBENIEL";
+                break;
+            case "ugradbeni kamini/zidni kamin":
+                code = "UGRADBENIZIDNIEL";
+                break;
+            case "zidni kamin":
+                code = "ZIDNIEL";
+                break;
+            case "samostojeći kamini":
+                code = "SAMOSTOJECIEL";
+                break;
+            case "dimplex dodaci":
+                code = "DIMPLEXDODACI";
+                break;
             default:
                 code = null;
                 break;
