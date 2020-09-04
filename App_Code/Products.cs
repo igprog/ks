@@ -529,18 +529,27 @@ public class Products : System.Web.Services.WebService {
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
                    , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type)));
 
-        string sql = string.Format(@"{0} {1} {2}"
-                   , mainSql
-                   , searchSql
-                   , string.Format("ORDER BY p.productorder DESC LIMIT {0}", limit != null ? limit : defalutLimit));
+        //string sql = string.Format(@"{0} {1} {2}"
+        //           , mainSql
+        //           , searchSql
+        //           , string.Format("ORDER BY p.productorder DESC LIMIT {0}", limit != null ? limit : defalutLimit));
+        string sql = string.Format(@"{0} {1} ORDER BY p.productorder DESC", mainSql, searchSql);
 
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
         xxx.filters = LoadFilters(xxx);
         if (isDistinctStyle) {
+            //List<NewProduct> distinstStyle = (from x in xxx.data
+            //                                  select x).GroupBy(n => new { n.style })
+            //                           .Select(g => g.FirstOrDefault())
+            //                           .ToList();
+            int limit_ = 0;
+            if (limit == null) {
+                limit_ = defalutLimit;
+            }
             List<NewProduct> distinstStyle = (from x in xxx.data
                                               select x).GroupBy(n => new { n.style })
-                                       .Select(g => g.FirstOrDefault())
+                                       .Select(g => g.FirstOrDefault()).Take(limit_)
                                        .ToList();
             xxx.data = distinstStyle;
         }

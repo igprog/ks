@@ -517,7 +517,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     var load = (param) => {
         if ($sessionStorage.filters !== undefined) { $sessionStorage.filters = null; };
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
-        debugger;
         if ($sessionStorage.pg_code !== undefined) {
             if ($sessionStorage.pg_code !== null && pg_code === null) {
                 pg_code = $sessionStorage.pg_code;
@@ -551,6 +550,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.filter = (filters, slider) => {
+        filters.page = 1;
         var param = $stateParams;
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
@@ -752,7 +752,15 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.getMainImg = (mainImgIdx) => {
-        return '../upload/' + $scope.d.record.id + '/gallery/' + $scope.d.record.gallery[mainImgIdx];
+        if ($scope.d.record.length == 0) {
+            return false;
+        } else {
+            if ($scope.d.record.gallery == null) {
+                return false;
+            } else {
+                return '../upload/' + $scope.d.record.id + '/gallery/' + $scope.d.record.gallery[mainImgIdx];
+            }
+        }
     }
 
     /**** Review & Rating *****/
