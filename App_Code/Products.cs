@@ -29,7 +29,7 @@ public class Products : System.Web.Services.WebService {
     Features F = new Features();
     ProductGroups PG = new ProductGroups();
     Colors C = new Colors();
-    int defalutLimit = 12;
+    int defaultLimit = 12;
     string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.discountfrom, p.discountto, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder,
                             p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet, p.opportunity, p.keyfeatures, p.fireboxinsert,
                             pg.title, b.title, pg.discount, pg.discountfrom, pg.discountto
@@ -529,30 +529,21 @@ public class Products : System.Web.Services.WebService {
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
                    , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type)));
 
-        //string sql = string.Format(@"{0} {1} {2}"
-        //           , mainSql
-        //           , searchSql
-        //           , string.Format("ORDER BY p.productorder DESC LIMIT {0}", limit != null ? limit : defalutLimit));
         string sql = string.Format(@"{0} {1} ORDER BY p.productorder DESC", mainSql, searchSql);
 
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
         xxx.filters = LoadFilters(xxx);
         if (isDistinctStyle) {
-            //List<NewProduct> distinstStyle = (from x in xxx.data
-            //                                  select x).GroupBy(n => new { n.style })
-            //                           .Select(g => g.FirstOrDefault())
-            //                           .ToList();
-            int limit_ = 0;
-            if (limit == null) {
-                limit_ = defalutLimit;
-            }
             List<NewProduct> distinstStyle = (from x in xxx.data
                                               select x).GroupBy(n => new { n.style })
-                                       .Select(g => g.FirstOrDefault()).Take(limit_)
+                                       .Select(g => g.FirstOrDefault()).Take(Convert.ToInt32(limit) > 0 ? Convert.ToInt32(limit) : defaultLimit)
                                        .ToList();
             xxx.data = distinstStyle;
+        } else if (Convert.ToInt32(limit) > 0) {
+            xxx.data = xxx.data.Take(Convert.ToInt32(limit)).ToList();
         }
+
         xxx.totRecords = GetTotRecords(searchSql);
         xxx.parentProductGroup = PG.GetParentGroupData(productGroup);
         xxx.responseTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 5);
@@ -940,7 +931,7 @@ public class Products : System.Web.Services.WebService {
         x.sortBy = InitSortBy();
         x.show = new Show();
         x.show.values = new int[] { 6, 12, 24, 48 };
-        x.show.val = defalutLimit;
+        x.show.val = defaultLimit;
         x.page = 1;
         x.color = C.GetDistinctColors(xxx.data);
         x.opportunity = new FilterItem();

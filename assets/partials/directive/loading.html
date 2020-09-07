@@ -1,4 +1,4 @@
 ﻿<div ng-show="val==true" class="text-center">
-    <i ng-show="size>0" class="fa fa-spinner fa-spin fa-{{size}}x"></i><i ng-show="size==null" class="fas fa-spinner fa-spin"></i> 
+    <i ng-show="size>0" class="fa fa-spinner fa-spin fa-{{size==null?1:size}}x"></i> 
     <div>{{loadingtitle | translate}}</div>
 </div>

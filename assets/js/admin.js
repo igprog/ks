@@ -515,6 +515,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 .controller('productsCtrl', ['$scope', '$http', 'f', '$sessionStorage', '$mdDialog', ($scope, $http, f, $sessionStorage, $mdDialog) => {
     var service = 'Products';
     var adminType = $sessionStorage.adminType !== undefined ? $sessionStorage.adminType : 'admin';
+    var defaultLimit = 20;
 
     var data = {
         loading: false,
@@ -539,7 +540,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 title: 'electric'
             }
         ],
-        limit: 100
+        limit: defaultLimit
     }
     $scope.d = data;
 
@@ -557,7 +558,15 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             $scope.d.records = d.data;
             $scope.d.responseTime = d.responseTime;
             $scope.d.loading = false;
+            data.limit = defaultLimit;
         });
+    }
+
+    var loadAll = () => {
+        data.limit = null;
+        var productGroup = $scope.d.productGroup !== undefined ? $scope.d.productGroup : null;
+        var search = $scope.d.search !== undefined ? $scope.d.search : null;
+        load($scope.d.currProductGroup, search);
     }
 
     var loadProductGroups = () => {
@@ -821,6 +830,9 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     $scope.f = {
         load: (productGroup, search) => {
             return load(productGroup, search);
+        },
+        loadAll: () => {
+            return loadAll();
         },
         save: (x, idx) => {
             return save(x, idx)
@@ -1287,15 +1299,27 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     return {
         restrict: 'E',
         scope: {
-            btntitle: '=',
             loadingtitle: '=',
-            value: '=',
-            pdf: '=',
+            val: '=',
             size: '='
         },
         templateUrl: './assets/partials/directive/loading.html'
     };
 })
+
+//.directive('loadingDirective', () => {
+//    return {
+//        restrict: 'E',
+//        scope: {
+//            btntitle: '=',
+//            loadingtitle: '=',
+//            value: '=',
+//            pdf: '=',
+//            size: '='
+//        },
+//        templateUrl: './assets/partials/directive/loading.html'
+//    };
+//})
 
 .directive('jsonDirective', () => {
     return {
