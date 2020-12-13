@@ -135,7 +135,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 }])
 
-.controller('appCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$translatePartialLoader', '$state', '$localStorage', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $translatePartialLoader, $state, $localStorage) {
+.controller('appCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$translatePartialLoader', '$state', '$localStorage', '$stateParams', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $translatePartialLoader, $state, $localStorage, $stateParams) {
 
     var data = {
         loading: false,
@@ -176,6 +176,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $rootScope.search = (search) => {
+        debugger;
+        $stateParams.pg_code = null;
+        $stateParams.productgroup = null;
+        $stateParams.subgroup = null;
+        $sessionStorage.pg_code = null;
         $state.go('search', { search: search });
     }
 
@@ -515,6 +520,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     loadProductGroups();
 
     var load = (param) => {
+        debugger;
         if ($sessionStorage.filters !== undefined) { $sessionStorage.filters = null; };
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         if ($sessionStorage.pg_code !== undefined) {
@@ -570,6 +576,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.search = (search) => {
+        debugger;
+        //$stateParams.pg_code = null;
+        //$stateParams.productgroup = null;
+        //$stateParams.subgroup = null;
+        //$sessionStorage.pg_code = null;
         $rootScope.search(search);
     }
 

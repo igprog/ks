@@ -71,7 +71,8 @@ public class Products : System.Web.Services.WebService {
         public string relatedProductsStr;
         public List<NewProduct> relatedProducts;
         public Dimension dimension;
-        public double power;
+        //public double power;
+        public string power;
         public Colors.NewColor color; 
         public string energyClass;
         public List<string> dataSheet;
@@ -216,7 +217,7 @@ public class Products : System.Web.Services.WebService {
             //x.width = 0;
             //x.height = 0;
             //x.depth = 0;
-            x.power = 0;
+            x.power = null;
             x.color = new Colors.NewColor();
             x.color.code = null;
             x.color.title = null;
@@ -428,15 +429,15 @@ public class Products : System.Web.Services.WebService {
         int row = 0;
         int count = 0;
         string sql = null;
+        string priceFix = null;
         try {
             DB.CreateDataBase(G.db.products);
             string path = Server.MapPath("~/upload/csv/products.csv");
             List<NewProduct> xx = new List<NewProduct>();
             using (var reader = new StreamReader(path, Encoding.Default)) {
-                
                 while (!reader.EndOfStream) {
                     var line = reader.ReadLine();
-                    if (row > 0) {
+                    if (row > 1) {
                         var val = line.Split(';');
                         if (!string.IsNullOrEmpty(val[0])) {
                             NewProduct x = new NewProduct();
@@ -451,8 +452,15 @@ public class Products : System.Web.Services.WebService {
                             x.brand = new Brands.NewBrands();
                             x.brand.code = GetBrandCode(val[6]);
                             x.price = new Price();
-                            //Regex.Replace(s, "[^0-9]", "");
-                            x.price.gross = Convert.ToDouble(val[7]);
+
+                            /**** Fix price format: 1.125.15 kn****/
+                            priceFix = val[7].Replace("kn", "").Trim();
+                            if (priceFix.Count(a => a == '.') > 1) {
+                                var regex = new Regex(Regex.Escape("."));
+                                priceFix = regex.Replace(priceFix, "", 1);
+                            }
+
+                            x.price.gross = Convert.ToDouble(priceFix);
                             x.discount = new Discount();
                             x.discount.coeff = GetVal(val[8]);
                             x.stock = string.IsNullOrEmpty(val[9]) ? 1000 : Convert.ToInt32(GetVal(val[9]));
@@ -467,7 +475,7 @@ public class Products : System.Web.Services.WebService {
                             x.dimension.width = GetVal(val[18]);
                             x.dimension.height = GetVal(val[19]);
                             x.dimension.depth = GetVal(val[20]);
-                            x.power = GetVal(val[21]);
+                            x.power = val[21];
                             x.color = new Colors.NewColor();
                             x.color.code = ColorName(val[22]);
                             xx.Add(x);
@@ -806,7 +814,7 @@ public class Products : System.Web.Services.WebService {
         x.dimension.width = G.ReadD(reader, 25);
         x.dimension.height = G.ReadD(reader, 26);
         x.dimension.depth = G.ReadD(reader, 27);
-        x.power = G.ReadD(reader, 28);
+        x.power = G.ReadS(reader, 28);
         x.color = C.GetData(G.ReadS(reader, 29)); // new Colors.NewColor();
         x.energyClass = G.ReadS(reader, 30);
         x.dataSheet = GetDataSheet(G.ReadS(reader, 31));
