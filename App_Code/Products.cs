@@ -447,8 +447,8 @@ public class Products : System.Web.Services.WebService {
                             x.productGroup = new ProductGroups.NewProductGroup();
                             x.productGroup.code = GetProductGroupCode(val[2]);
                             x.title = val[3].Replace("'", "");
-                            x.shortdesc = val[4];
-                            x.longdesc = val[5];
+                            x.shortdesc =  ToHtml(val[4]);
+                            x.longdesc = ToHtml(val[5]);
                             x.brand = new Brands.NewBrands();
                             x.brand.code = GetBrandCode(val[6]);
                             x.price = new Price();
@@ -530,7 +530,10 @@ public class Products : System.Web.Services.WebService {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
-        string[] productGroup_ = productGroup.Split(';');
+        string[] productGroup_ = null;
+        if (!string.IsNullOrEmpty(productGroup)) {
+            productGroup_ = productGroup.Split(';');
+        }
 
         string searchSql = string.Format(@"{0} {1} {2} {3} {4}"
                    , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
@@ -1196,6 +1199,10 @@ public class Products : System.Web.Services.WebService {
 
     private double GetVal(string x) {
         return !string.IsNullOrEmpty(x) ? Convert.ToDouble(x) : 0;
+    }
+
+    private string ToHtml(string x) {
+        return x.Replace("m?", "m<sup>2</sup>");
     }
     /***** Import CSV file *****/
     #endregion Methods

@@ -89,7 +89,7 @@
                                     </div>-->
                                 </div>
                                 <div class="description">
-                                    <p>{{d.record.shortdesc}}</p>
+                                    <p ng-bind-html="d.record.shortdesc"></p>
                                 </div>
                                 <div class="pt-2 pb-5">
                                     <div ng-if="d.record.dimension.width>0&&d.record.dimension.height>0&&d.record.dimension.depth>0">
@@ -187,7 +187,7 @@
                                 <div id="tabContent" class="tab-content">
                                     <!--<ng-include src="d.tpl"></ng-include>-->
                                     <div id="description" class="tab-pane fade in active">
-                                        <p>{{d.record.longdesc}}</p>
+                                        <p ng-bind-html="d.record.longdesc"></p>
                                     </div>
                                     <div id="information" class="tab-pane fade">
                                         <table class="datasheet">
@@ -353,7 +353,7 @@
 </div>
 
 <script id="descTpl" type="text/ng-template">
-    <p>{{d.record.longdesc}}</p>
+    <p ng-bind-html="d.record.longdesc"></p>
 </script>
 <script id="infoTpl" type="text/ng-template">
     <table class="datasheet">

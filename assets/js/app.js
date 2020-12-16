@@ -2,7 +2,7 @@
 app.js
 (c) 2020 IG PROG, www.igprog.hr
 */
-angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSlider', 'ui.bootstrap', 'slick'])
+angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSlider', 'ui.bootstrap', 'slick', 'ngSanitize'])
 .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$translateProvider', '$translatePartialLoaderProvider', ($stateProvider, $urlRouterProvider, $httpProvider, $translateProvider, $translatePartialLoaderProvider) => {
 
     $stateProvider
