@@ -28,14 +28,14 @@ h1 {
 Fix link outlines after click
 ***/
 a {
-	color: #E02222;
+	color: #dd1f26;
 }
 a, a:focus, a:hover, a:active {
 	outline: 0;
  	text-decoration: none;
 }
 a:hover {
-	color: #E02222;
+	color: #dd1f26;
 	text-decoration: underline;
 }
 
@@ -267,7 +267,7 @@ textarea.form-control:focus {
 }
 
 .color-red {
-	color: #E84D1C;
+	color: #dd1f26;
 }
 
 /***
@@ -338,7 +338,7 @@ Pre-Header and pre-header elements
 	color: #616b76;
 }
 .pre-header a:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
 .pre-header a:focus {
 	text-decoration: none;
@@ -367,7 +367,7 @@ Pre-Header and pre-header elements
 	margin-right: 0;
 }
 .shop-currencies a.current {
-	color: #E02222;
+	color: #dd1f26;
 }
 
 /* langs block */
@@ -390,7 +390,7 @@ Pre-Header and pre-header elements
 	width: 100px;
 	display: none;
 	margin-top: 12px;
-	border-top: solid 2px #ea4c1d;
+	border-top: solid 2px #dd1f26;
 	box-shadow: 5px 5px rgba(91, 91, 91, 0.2);
 	position: relative;
 	transition: opacity .3s ease-in-out;
@@ -406,7 +406,7 @@ Pre-Header and pre-header elements
 	content: " "; 
 	display: block; 
 	position: absolute;
-	border-bottom: 8px solid #e6400c;
+	border-bottom: 8px solid #dd1f26;
 	border-right: 8px solid transparent;
 	border-left: 8px solid transparent;
 }
@@ -576,7 +576,7 @@ body.page-header-fixed {
   content: " "; 
   display: block !important; 
   position: absolute;
-  border-bottom: 8px solid #e6400c;
+  border-bottom: 8px solid #dd1f26;
   border-right: 8px solid transparent;
   border-left: 8px solid transparent;
 }
@@ -587,7 +587,7 @@ body.page-header-fixed {
 	display: none !important;
 }
 .header-navigation .dropdown-menu > li:first-child {
-	border-top: solid 2px #ea4c1d;
+	border-top: solid 2px #dd1f26;
 }
 .header-navigation .dropdown-menu li {
   padding: 0;
@@ -608,7 +608,7 @@ body.page-header-fixed {
 .header-navigation .dropdown-menu > li.active > a,
 .header-navigation .header-navigation-content .header-navigation-col li > a:hover,
 .header-navigation .header-navigation-content .header-navigation-col li.active > a {
-  background: #e6400c;
+  background: #dd1f26;
   color: #fff;
 }
 .dropdown-submenu > a:after {
@@ -670,7 +670,7 @@ body.page-header-fixed {
 .header-navigation .dropdown-menu .header-navigation-content-ext li > a:hover,
 .header-navigation .dropdown-menu .header-navigation-content-ext li.active > a {
   background: #fff;
-  color: #e6400c;
+  color: #dd1f26;
 }
 
 /* n-level submenu */
@@ -727,7 +727,7 @@ body.page-header-fixed {
 	display: none;
 	background: #fcfafb;
 	position: absolute;
-	border-top: solid 2px #ea4c1d;
+	border-top: solid 2px #dd1f26;
 	box-shadow: 5px 5px rgba(91, 91, 91, 0.2);
 	width: 274px;
 	margin-top: 0;
@@ -742,7 +742,7 @@ body.page-header-fixed {
 	content: " "; 
 	display: block; 
 	position: absolute;
-	border-bottom: 8px solid #e6400c;
+	border-bottom: 8px solid #dd1f26;
 	border-right: 8px solid transparent;
 	border-left: 8px solid transparent;
 }
@@ -873,7 +873,7 @@ Sidebar
 	color: #3E4D5C;
 }
 .sidebar a:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
  .sidebar-menu a {
 	display: block;
@@ -892,7 +892,7 @@ Sidebar
     color: #3E4D5C;
 }
 .sidebar .dropdown.open .dropdown-toggle:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
 .sidebar .dropup.open > .dropdown-toggle, .dropdown.open > .dropdown-toggle {
     border-color: none !important;
@@ -950,7 +950,7 @@ Sidebar
 }
 .sidebar-menu .dropdown-menu li > a:hover, .sidebar-menu .dropdown-menu li > a:focus, .sidebar-menu li.active > a, .sidebar-menu li.active > a:hover {
 	background: none !important;
-	color: #E02222;
+	color: #dd1f26;
 }
 .sidebar .dropdown-menu > li > a .fa-angle-down {
 	position: absolute;
@@ -1127,7 +1127,7 @@ steps block and steps block elements
 	margin: 0 -9px 17px;
 }
 .title-wrapper h1 span {
-	color: #e6400c;
+	color: #dd1f26;
 }
 .title-wrapper em {
 	font-size: 20px;
@@ -1158,7 +1158,7 @@ steps block and steps block elements
 	color: #5f6d7b;
 }
 .breadcrumb > .active {
-	color: #e6400c;
+	color: #dd1f26;
 }
 
 /* paginations */
@@ -1206,10 +1206,10 @@ steps block and steps block elements
 }
 .content-page a:hover, 
 .sidebar2 a:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
 .content-page .link, .content-page .link:hover, .content-page .link:active {
-	color: #E02222;
+	color: #dd1f26;
 }
 .content-page h2, 
 .content-page h3, 
@@ -1261,7 +1261,7 @@ steps block and steps block elements
 	line-height: 128px;
 	font-size: 128px;
 	font-weight: 300;
-	color: #E02222;
+	color: #dd1f26;
 	text-align: right;
 }
 .page-404 .details {
@@ -1285,7 +1285,7 @@ steps block and steps block elements
 	line-height: 128px;
 	font-size: 128px;
 	font-weight: 300;
-	color: #E02222;
+	color: #dd1f26;
 	text-align: right;
 }
 .page-500 .details {
@@ -1304,7 +1304,7 @@ div.content-form-page {
 	color: #767F88;
 }
 .content-form-page a:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
 .form-without-legend {
 	padding-top: 25px;
@@ -1368,7 +1368,7 @@ div.content-form-page .checkbox-list {
 }
 .form-info h2 em {
 	font-style: normal;
-	color: #e6400c;
+	color: #dd1f26;
 }
 .form-info p {
 	margin: 0 0 20px;
@@ -1376,7 +1376,7 @@ div.content-form-page .checkbox-list {
 
 
 .nav-tabs {
-	border-color: #e6400c;
+	border-color: #dd1f26;
 	padding-bottom: 1px;
 	font-size: 14px;
 	margin-bottom: 0;
@@ -1389,7 +1389,7 @@ div.content-form-page .checkbox-list {
 	border: none !important;
 }
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-	background: #e6400c;
+	background: #dd1f26;
 	color: #fff;
 	padding: 5px 15px 4px;
 }
@@ -1409,7 +1409,7 @@ div.content-form-page .checkbox-list {
 }
 .content-search h1 em {
 	font-style: normal;
-	color: #e6400c;
+	color: #dd1f26;
 }
 .content-search form {
 	margin: 0;
@@ -1568,7 +1568,7 @@ Pre-Footer and pre-footer elements
 	border: solid 2px #9ca5ae;
 }
 .pre-footer .photo-stream img:hover {
-	border-color: #E84D1C;
+	border-color: #dd1f26;
     transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
@@ -1691,7 +1691,7 @@ Pre-Footer and pre-footer elements
   margin: 5px 0 0;
 }
 .footer .powered > a {
-  color: #e6400c;
+  color: #dd1f26;
   text-decoration: none;
 }
 .footer .powered > a:hover {
@@ -2093,7 +2093,7 @@ Demo Utils
   background: none;
 }
 .quote-v1 a.btn-transparent:hover {
-  background: #E02222;
+  background: #dd1f26;
   color: #fff;
   transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -2119,7 +2119,7 @@ Demo Utils
 	color: #3e4d5c;
 }
 .recent-work h2 a:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
 .recent-work-item {
 	padding-left: 10px;
@@ -2177,7 +2177,7 @@ Demo Utils
     -webkit-transition: all 0.6s ease;	
 }
 .recent-work .recent-work-item .fa:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
 .recent-work .recent-work-item .fa-link {
 	left: -100px;
@@ -2290,7 +2290,7 @@ Demo Utils
 	color: #3e4d5c;
 }
 .our-clients h2 a:hover {
-	color: #E02222;
+	color: #dd1f26;
 }
 .our-clients .client-item {
 	background: #f8f8f8;
@@ -2381,7 +2381,7 @@ Demo Utils
   line-height:40px;
 }
 .front-team h3 strong {
-  color: #E02222;
+  color: #dd1f26;
   font-size: 20px;
   font-weight: 400; 
 }
@@ -2523,7 +2523,7 @@ Demo Utils
   display: inline-block;
 }
 .blog-info li i {
-  color: #E84D1C;
+  color: #dd1f26;
 }
 
 .blog-posts .pagination li {
@@ -2533,7 +2533,7 @@ Demo Utils
 
 .blog-posts .more,
 .blog-sidebar .more {
-	color: #E84D1C;
+	color: #dd1f26;
 }
 
 /* Blog Sidebar */
@@ -2548,7 +2548,7 @@ Demo Utils
   padding: 0;
 }
 .recent-news h3 a {
-	color: #E84D1C;
+	color: #dd1f26;
 }
 .recent-news-inner{
 	padding: 0;
@@ -2568,7 +2568,7 @@ Demo Utils
   border: solid 1px #eee;
 }
 .blog-photo-stream li img:hover {
-  border-color: #E84D1C;
+  border-color: #dd1f26;
   box-shadow: 0 0 1px #fff;
   transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
@@ -2594,14 +2594,14 @@ Demo Utils
 }
 .blog-tags li a:hover {
   color: #fff;
-  background: #E84D1C;
+  background: #dd1f26;
   text-decoration: none;
 }
 .blog-tags li a:hover i {
   color: #fff;
 }
 .blog-tags li i {
-  color: #E84D1C;
+  color: #dd1f26;
   margin-right: 5px;
   display: inline-block;
 }
@@ -2620,7 +2620,7 @@ Demo Utils
   border-bottom: 12px solid transparent;  
 }
 .blog-tags li a:hover:after { 
-  border-left-color: #E84D1C;
+  border-left-color: #dd1f26;
 }
 
 .blog-talks .tab-content {
@@ -2646,7 +2646,7 @@ Demo Utils
 .sidebar-categories li > a:hover,
 .sidebar-categories li.active > a,
 .sidebar-categories li.active:hover > a {
-  color: #E84D1C;
+  color: #dd1f26;
 }
 .sidebar-categories li a:before {
     content: "";
@@ -2667,7 +2667,7 @@ Demo Utils
 }
 .blog-item blockquote {
   margin: 20px 40px 18px;
-  border-color: #E84D1C;
+  border-color: #dd1f26;
 }
 .blog-item .blog-info {
   margin: 20px 0;
@@ -2714,7 +2714,7 @@ Demo Utils
     position: absolute;
 }
 .blog-item h4.media-heading span a {
-    color: #E84D1C;
+    color: #dd1f26;
 }
 
 .mix-block .tab-content .col-md-3 {
@@ -2760,7 +2760,7 @@ Demo Utils
 	padding: 15px 20px 33px;
 }
 .front-steps-wrapper .front-step1 {
-	background: #E84D1C;
+	background: #dd1f26;
 }
 .front-steps-wrapper .front-step2 {
 	background: #7c858e;
@@ -2854,15 +2854,15 @@ Demo Utils
   border: 3px solid #eee;
 }
 .pricing-active {
-  border: 3px solid #E84D1C;
+  border: 3px solid #dd1f26;
   margin-top: -10px;
   box-shadow: 7px 7px rgba(232, 77, 22, 0.2);
 }
 .pricing:hover {
-  border: 3px solid #E84D1C;
+  border: 3px solid #dd1f26;
 }
 .pricing:hover h4 {
-  color: #E84D1C;
+  color: #dd1f26;
 }
 .pricing-head {
   text-align: center;
@@ -2884,7 +2884,7 @@ Demo Utils
   color: #fafafa;
   padding: 12px 0;
   font-size: 27px;
-  background: #E84D1C;
+  background: #dd1f26;
   border-bottom: none;
 }
 .pricing-head h4 {
@@ -2896,7 +2896,7 @@ Demo Utils
   border-bottom: solid 1px #f5f9e7;
 }
 .pricing-head-active h4 {
-  color: #E84D1C;
+  color: #dd1f26;
 }
 .pricing-head h4 i {
   top: -8px;
@@ -2920,7 +2920,7 @@ Demo Utils
 }
 .pricing-content li i {
   top: 2px;
-  color: #E84D1C;
+  color: #dd1f26;
   font-size: 16px;
   margin-right: 5px;
   position: relative;

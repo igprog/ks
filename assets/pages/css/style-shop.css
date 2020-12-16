@@ -420,8 +420,8 @@ Header and header elements
 }
 .product-item .add2cart:hover {
 	color: #fff !important;
-	background: #E84D1C !important;
-	border-color: #E84D1C;
+	background: #dd1f26 !important;
+	border-color: #dd1f26;
 }
 
 .shop-index-carousel {
@@ -743,7 +743,7 @@ div.radio.disabled span.checked, div.radio.disabled.active span.checked {
 	margin: 0;
 }
 .compare-item strong {
-	color: #E84D1C;
+	color: #dd1f26;
     font-size: 21px;
     font-weight: normal;
 }
@@ -872,7 +872,7 @@ div.radio.disabled span.checked, div.radio.disabled.active span.checked {
 }
 .sidebar-products .price {
 	margin-left: 80px;
-    color: #E84D1C;
+    color: #dd1f26;
     font: 16px 'PT Sans Narrow', sans-serif;
 }
 

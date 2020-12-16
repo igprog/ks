@@ -35,17 +35,17 @@
                                         <div ng-if="d.record.outlet" class="product-image-label type-1">
                                             <span>-{{d.record.discount.perc}}%</span>
                                         </div>
-                                        <div ng-if="d.record.isnew" class="product-image-label type-2">
+                                        <div ng-if="d.record.isnew"  class="product-image-label type-2">
                                             <span>{{'new' | translate}}</span>
                                         </div>
                                         <!--<div ng-if="d.record.freeshipping" class="product-image-label type-4">
                                             <span class="fa fa-truck fa-2x"></span>
                                         </div>-->
                                         <div ng-if="d.record.bestbuy" class="product-image-label type-5">
-                                            <span class="fa fa-smile-o fa-2x"></span>
+                                            <span class="fa fa-smile-o fa-2x" title="{{'bestbuy' | translate}}"></span>
                                         </div>
                                         <div ng-if="d.record.wifi" class="product-image-label type-6">
-                                            <span class="fa fa-wifi fa-2x"></span>
+                                            <span class="fa fa-wifi fa-2x" title="{{'wifi' | translate}}"></span>
                                         </div>
                                         <div ng-if="d.record.energyClass" class="product-image-label type-7">
                                             <span>{{d.record.energyClass}}</span>

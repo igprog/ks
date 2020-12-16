@@ -530,12 +530,23 @@ public class Products : System.Web.Services.WebService {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
         DB.CreateDataBase(G.db.products);
+        string[] productGroup_ = productGroup.Split(';');
+
         string searchSql = string.Format(@"{0} {1} {2} {3} {4}"
                    , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
-                   , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
+                   , string.IsNullOrEmpty(productGroup) ? "" :
+                            productGroup.Split(';').Length == 2 ? string.Format("((LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}') AND (LOWER(p.productGroup) = '{1}' OR LOWER(pg.parent) = '{1}'))", productGroup_[0].ToLower(), productGroup_[1].ToLower()) : 
+                            string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("LOWER(p.brand) = '{0}'", brand.ToLower()) : string.Format("AND p.brand = '{0}'", brand))
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
                    , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type)));
+
+        //string searchSql = string.Format(@"{0} {1} {2} {3} {4}"
+        //           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
+        //           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
+        //           , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("LOWER(p.brand) = '{0}'", brand.ToLower()) : string.Format("AND p.brand = '{0}'", brand))
+        //           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
+        //           , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type)));
 
         string sql = string.Format(@"{0} {1} ORDER BY p.productorder DESC", mainSql, searchSql);
 
