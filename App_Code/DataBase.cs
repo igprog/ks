@@ -166,7 +166,15 @@ public class DataBase {
         CreateTable(path, sql);
     }
 
-
+    public void Images(string path) {
+        string sql = @"CREATE TABLE IF NOT EXISTS images
+                    (id VARCHAR(50),
+                    productId VARCHAR(50),
+                    fileName NVARCHAR(200),
+                    isMain VARCHAR(50),
+                    imageOrder INTEGER(50))";
+        CreateTable(path, sql);
+    }
 
     public void CreateDataBase(string table) {
             try {
@@ -223,6 +231,9 @@ public class DataBase {
                 break;
             case "tran":
                 Tran(path);
+                break;
+            case "images":
+                Images(path);
                 break;
             default:
                 break;

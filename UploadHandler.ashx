@@ -3,9 +3,9 @@
 using System;
 using System.Web;
 using System.IO;
-
 using System.Linq;
 using System.Configuration;
+using Igprog;
 
 public class UploadHandler : IHttpHandler {
 
@@ -42,8 +42,6 @@ public class UploadHandler : IHttpHandler {
                     if (imgFolder == "datasheet") {
                         fname = context.Server.MapPath(string.Format("~/upload/{0}/{1}/{2}", imgId, imgFolder, file.FileName));
                     }
-
-
                 }
 
                 if (!string.IsNullOrEmpty(file.FileName)) {
@@ -51,6 +49,17 @@ public class UploadHandler : IHttpHandler {
                     string versionPath = null;
                     if (string.IsNullOrEmpty(imgFolder)) {
                         folderPath = context.Server.MapPath(string.Format("~/upload/{0}/gallery", imgId));
+
+                        /***** save Img to DB *****/
+                        Products.Images img = new Products.Images();
+                        img.productId = imgId;
+                        img.fileName = file.FileName;
+                        img.isMain = false;
+                        img.imageOrder = 0;
+                        Products P = new Products();
+                        P.SaveImage(img);
+                        /***** save Img to DB *****/
+
                     } else {
                         folderPath = context.Server.MapPath(string.Format("~/upload/{0}", imgFolder));
                         versionPath = context.Server.MapPath(string.Format("~/upload/{0}/version.txt", imgFolder));
@@ -71,13 +80,38 @@ public class UploadHandler : IHttpHandler {
                         Directory.CreateDirectory(folderPath);
                     }
                     if (CheckGalleryLimit(folderPath)) {
-                        file.SaveAs(fname);
+                        //file.SaveAs(fname);
+                        /***** Compress Image *****/
+                        Global G = new Global();
+                        int fileLength = file.ContentLength;
+                        string folderPath_temp = context.Server.MapPath("~/upload/temp");
+                        string fname_temp = context.Server.MapPath(string.Format("~/upload/temp/{0}", file.FileName));
+                        string folderThumbPath = context.Server.MapPath(string.Format("~/upload/{0}/gallery/thumb", imgId));
+                        if (!Directory.Exists(folderPath_temp)) {
+                            Directory.CreateDirectory(folderPath_temp);
+                        }
+                        if (!Directory.Exists(folderThumbPath)) {
+                            Directory.CreateDirectory(folderThumbPath);
+                        }
+                        file.SaveAs(fname_temp);
+                        if (fileLength <= G.KBToByte(150)) {
+                            file.SaveAs(fname);
+                            G.CompressImage(fname_temp, file.FileName, folderThumbPath, G.CompressionParam(fileLength, true));
+                        } else {
+                            G.CompressImage(fname_temp, file.FileName, folderPath, G.CompressionParam(fileLength, false));
+                            G.CompressImage(fname_temp, file.FileName, folderThumbPath, G.CompressionParam(fileLength, true));
+                        }
+                        if (Directory.Exists(folderPath_temp)) {
+                            Directory.Delete(folderPath_temp, true);
+                        }
+                        /***** Compress Image *****/
+
                         //***** TODO: save version.txt  *****
                         //if (!string.IsNullOrEmpty(versionPath)) {
                         //    File.WriteAllText(versionPath, DateTime.Now.Ticks.ToString());
                         //}
 
-                        context.Response.Write(file.FileName);
+                        context.Response.Write(string.Format("{0}?v={1}", file.FileName, DateTime.Now.Ticks));
                     } else {
                         context.Response.Write("product limit exceeded");  //TODO
                     }

@@ -389,19 +389,41 @@ public class Products : System.Web.Services.WebService {
         try {
             string img_ = img.Contains('?') ? img.Split('?')[0] : img;
             string path = Server.MapPath(string.Format("~/upload/{0}/gallery", x.id));
-            if (Directory.Exists(path)) {
-                string[] gallery = Directory.GetFiles(path);
-                foreach (string file in gallery) {
-                    if (Path.GetFileName(file) == img_) {
-                        File.Delete(file);
-                        RemoveMainImg(x.id, img_);
-                    }
+            DeleteImgFile(x.id, img_, path);
+
+            /***** delete thumb *****/
+            path = Server.MapPath(string.Format("~/upload/{0}/gallery/thumb", x.id));
+            DeleteImgFile(x.id, img_, path);
+            /***** delete thumb *****/
+
+            /***** delete from DB *****/
+            //TODO
+
+            string sql = string.Format("DELETE FROM images WHERE fileName = '{0}' AND productId = '{1}'", img_, x.id);
+            using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+                connection.Open();
+                using (var command = new SQLiteCommand(sql, connection)) {
+                    command.ExecuteNonQuery();
                 }
             }
+            /***** delete from DB *****/
+
             //return JsonConvert.SerializeObject(LoadData(null, false, x.productGroup.code, x.brand.code, null), Formatting.None);
             return JsonConvert.SerializeObject("OK", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
+        }
+    }
+
+    private void DeleteImgFile(string id, string img_, string path) {
+        if (Directory.Exists(path)) {
+            string[] gallery = Directory.GetFiles(path);
+            foreach (string file in gallery) {
+                if (Path.GetFileName(file) == img_) {
+                    File.Delete(file);
+                    RemoveMainImg(id, img_);
+                }
+            }
         }
     }
 
@@ -438,6 +460,10 @@ public class Products : System.Web.Services.WebService {
                 while (!reader.EndOfStream) {
                     var line = reader.ReadLine();
                     if (row > 1) {
+                        //if (row == 2)
+                        //{
+                        //    string test = null;
+                        //}
                         var val = line.Split(';');
                         if (!string.IsNullOrEmpty(val[0])) {
                             NewProduct x = new NewProduct();
@@ -445,39 +471,40 @@ public class Products : System.Web.Services.WebService {
                             x.sku = val[0];
                             x.style = string.IsNullOrEmpty(val[1]) ? x.sku : val[1];
                             x.productGroup = new ProductGroups.NewProductGroup();
-                            x.productGroup.code = GetProductGroupCode(val[2]);
-                            x.title = val[3].Replace("'", "");
-                            x.shortdesc =  ToHtml(val[4]);
-                            x.longdesc = ToHtml(val[5]);
+                            x.productGroup.code = GetProductGroupCode(val[3], val[2]);
+                            x.title = val[4].Replace("'", "");
+                            x.shortdesc =  ToHtml(val[5]);
+                            x.longdesc = ToHtml(val[6]);
                             x.brand = new Brands.NewBrands();
-                            x.brand.code = GetBrandCode(val[6]);
+                            x.brand.code = GetBrandCode(val[7]);
                             x.price = new Price();
 
                             /**** Fix price format: 1.125.15 kn****/
-                            priceFix = val[7].Replace("kn", "").Trim();
+                            priceFix = val[8].Replace("kn", "").Trim();
                             if (priceFix.Count(a => a == '.') > 1) {
                                 var regex = new Regex(Regex.Escape("."));
                                 priceFix = regex.Replace(priceFix, "", 1);
                             }
 
-                            x.price.gross = Convert.ToDouble(priceFix);
+                            x.price.gross = string.IsNullOrEmpty(priceFix) ? 0 : Convert.ToDouble(priceFix);
                             x.discount = new Discount();
-                            x.discount.coeff = GetVal(val[8]);
-                            x.stock = string.IsNullOrEmpty(val[9]) ? 1000 : Convert.ToInt32(GetVal(val[9]));
-                            x.isnew = IsTrue(val[10]);
-                            x.outlet = IsTrue(val[11]);
-                            x.bestselling = IsTrue(val[12]);
-                            x.deliverydays = Regex.Replace(val[13], "[^0-9.-]", "");
-                            x.freeshipping = IsTrue(val[15]);
-                            x.bestbuy = IsTrue(val[16]);
-                            x.wifi = IsTrue(val[17]);
+                            x.discount.coeff = GetVal(val[9]);
+                            x.stock = string.IsNullOrEmpty(val[10]) ? 1000 : Convert.ToInt32(GetVal(val[10]));
+                            x.isnew = IsTrue(val[11]);
+                            x.outlet = IsTrue(val[12]);
+                            x.bestselling = IsTrue(val[13]);
+                            x.deliverydays = Regex.Replace(val[14], "[^0-9.-]", "");
+                            x.productorder = Convert.ToInt32(GetVal(val[15]));
+                            x.freeshipping = IsTrue(val[16]);
+                            x.bestbuy = IsTrue(val[17]);
+                            x.wifi = IsTrue(val[18]);
                             x.dimension = new Dimension();
-                            x.dimension.width = GetVal(val[18]);
-                            x.dimension.height = GetVal(val[19]);
-                            x.dimension.depth = GetVal(val[20]);
-                            x.power = val[21];
+                            x.dimension.width = GetVal(val[19]);
+                            x.dimension.height = GetVal(val[20]);
+                            x.dimension.depth = GetVal(val[21]);
+                            x.power = val[22];
                             x.color = new Colors.NewColor();
-                            x.color.code = ColorName(val[22]);
+                            x.color.code = ColorName(val[23]);
                             xx.Add(x);
                         }
                     }
@@ -1120,10 +1147,10 @@ public class Products : System.Web.Services.WebService {
     }
 
     /***** Import CSV file *****/
-    private string GetProductGroupCode(string title) {
+    private string GetProductGroupCode(string pg, string parentGroup) {
         /***** Import CSV file *****/
         string code = null;
-        switch (title.ToLower().Trim()) {
+        switch (pg.ToLower().Trim()) {
             case "mill uljni radijatori":
                 code = "MILLULJNIRADIJAT";
                 break;
@@ -1145,7 +1172,10 @@ public class Products : System.Web.Services.WebService {
             case "ugradbeni kamini/zidni kamin":
                 code = "UGRADBENIZIDNIEL";
                 break;
-            case "zidni kamin":
+            case "ugradbeni kamini/inserti":
+                code = "UGRADBENIKAMINIINSERTI";
+                break;
+            case "zidni kamini":
                 code = "ZIDNIEL";
                 break;
             case "samostojeći kamini":
@@ -1205,6 +1235,39 @@ public class Products : System.Web.Services.WebService {
         return x.Replace("m?", "m<sup>2</sup>");
     }
     /***** Import CSV file *****/
+
+
+    /***** Images *****/
+    public class Images {
+        public string id;
+        public string productId;
+        public string fileName;
+        public bool isMain;
+        public int imageOrder;
+    }
+
+    public void SaveImage(Images x) {
+        if (!string.IsNullOrEmpty(x.productId)) {
+            DB.CreateDataBase(G.db.images);
+            string sql = null;
+            if (string.IsNullOrEmpty(x.id)) {
+                x.id = Guid.NewGuid().ToString();
+                sql = string.Format(@"INSERT INTO images VALUES('{0}', '{1}', '{2}', '{3}', {4})"
+                                    , x.id, x.productId, x.fileName, x.isMain, x.imageOrder);
+            } else {
+                sql = string.Format(@"UPDATE images SET productId = '{1}', fileName = '{2}', isMain = '{3}', imageOrder = {4}, WHERE id = '{0}'"
+                                    , x.id, x.productId, x.fileName, x.isMain, x.imageOrder);
+            }
+            using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+                connection.Open();
+                using (var command = new SQLiteCommand(sql, connection)) {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+    }
+    /***** Images *****/
+
     #endregion Methods
 
 }
