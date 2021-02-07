@@ -1,6 +1,6 @@
 ﻿/*!
 app.js
-(c) 2019-2020 IG PROG, www.igprog.hr
+(c) 2019-2021 IG PROG, www.igprog.hr
 */
 angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 .config(['$httpProvider', '$translateProvider', '$translatePartialLoaderProvider', ($httpProvider, $translateProvider, $translatePartialLoaderProvider) => {
@@ -624,19 +624,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         }
     }
 
-    //var get = (sku, idx) => {
-    //    if (sku === null) {
-    //        //newProduct();
-    //    } else {
-    //        f.post(service, 'Get', { sku: sku, lang: 'hr' }).then((d) => {
-    //            $scope.d.records[idx] = d;
-    //            debugger;
-    //            $scope.d.records[idx].discount.from = new Date(d.discount.from);
-    //            $scope.d.records[idx].discount.to = new Date(d.discount.to);
-    //        });
-    //    }
-    //}
-
     var upload = (x, idx) => {
         var content = new FormData(document.getElementById('formUpload_' + x.id));
         $http({
@@ -698,8 +685,10 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
     var remove = (x) => {
         if (confirm('Briši proizvod ' + x.title + ' ?')) {
+            $scope.d.loading = true;
             f.post(service, 'Delete', { x: x }).then((d) => {
                 $scope.d.records = d.data;
+                $scope.d.loading = false;
             });
         }
     }

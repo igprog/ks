@@ -820,17 +820,23 @@
             </div>
             <loading-directive loadingtitle="'Učitavanje...'" val="d.loading" size="5"></loading-directive>
             <div ng-if="d.records.length>0&&!d.loading" ng-repeat="x in d.records track by $index" class="card shadow m-3">
-                <div class="card-header" data-toggle="collapse" data-target="#p_{{$index}}" ng-click="f.get(x.sku, $index)">
-                    <div ng-if="x!==null" class="mt-2">
-                        <img ng-if="x.img" class="img-thumbnail" src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}" style="height:80px">
-                        <span class="ml-2"><strong>SKU: {{x.sku}}; Model: {{x.style}}</strong><label class="ml-2">{{x.title}}</label></span><br />
+
+                <div class="card-header">
+                    <div ng-if="x!==null">
+                        <a href="" ng-disabled="x.id==null" ng-click="f.remove(x)" class="close" title="briši">&times;</a>
+                        <div class="mt-2">
+                            <img ng-if="x.img" class="img-thumbnail" src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}" style="height:80px">
+                            <span class="ml-2"><strong>SKU: {{x.sku}}; Model: {{x.style}}</strong><label class="ml-2">{{x.title}}</label></span><br />
+                        </div>
                     </div>
-                    <div ng-if="x.id===null">
-                        Uredi proizvod
+                    <div data-toggle="collapse" data-target="#p_{{$index}}" ng-click="f.get(x.sku, $index)">
+                        <div ng-if="x.id===null">
+                            Uredi proizvod
+                        </div>
+                        <a href="" class="float-right">
+                            Detalji <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
+                        </a>
                     </div>
-                    <span class="float-right">
-                        Detalji <i class="fa fa-angle-down" style="color:#808080" aria-hidden="true"></i>
-                    </span>
                 </div>
                 <div id="p_{{$index}}" class="card-body collapse">
                     <div class="row">
@@ -1028,7 +1034,7 @@
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <button ng-disabled="x.id==null" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>
+                                    <!--<button ng-disabled="x.id==null" ng-click="f.remove(x)" class="btn btn-outline-danger pull-right"><i class="fa fa-trash-alt"></i> Briši</button>-->
                                     <button ng-click="f.save(x, $index)" type="submit" class="btn btn-outline-success"><i class="fa fa-save"></i> Spremi</button>
                                 </div>
                             </div>
