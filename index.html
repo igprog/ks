@@ -149,7 +149,7 @@
                                     <li ng-repeat="x in d.cart.items track by $index">
                                         <a href=""><img src="../upload/{{x.product.id}}/gallery/{{x.product.img}}" alt="Rolex Classic Watch" width="37" height="34"></a>
                                         <span class="cart-content-count">x {{x.product.qty}}</span>
-                                        <strong><a href="shop-item.html">{{x.product.title}}</a></strong>
+                                        <strong><a href="" ng-click="get(x.product)">{{x.product.title}}</a></strong>
                                         <em>{{x.price.grossWithDiscount | number}} kn</em>
                                         <a href="" class="del-goods" ng-click="removeCartItem(x, $index)">&nbsp;</a>
                                     </li>
@@ -270,7 +270,7 @@
     <!-- END BRANDS -->
 
     <!-- BEGIN STEPS -->
-    <div class="steps-block steps-block-red">
+    <div class="steps-block steps-block-red" ng-cloak>
         <div class="container">
             <div class="row">
                 <div class="col-md-6 steps-block-col">

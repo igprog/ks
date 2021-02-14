@@ -18,17 +18,11 @@
                             <div class="pt-2">
                                 <pg-directive pg="d.productGroups" record="null"></pg-directive>
                             </div>
-                            <!--<h3>Availability</h3>
-                            <div class="checkbox-list">
-                                <label><input type="checkbox"> Not Available (3)</label>
-                                <label><input type="checkbox"> In Stock (26)</label>
-                            </div>-->
                             <h3>{{'filters' | translate}}</h3>
                             <div class="checkbox-list" ng-cloak>
                                 <label><input ng-model="d.filters.isnew.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.isnew.title | translate}} ({{d.filters.isnew.tot}})</label>
                                 <label><input ng-model="d.filters.outlet.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.outlet.title | translate}} ({{d.filters.outlet.tot}})</label>
                                 <label><input ng-model="d.filters.bestselling.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.bestselling.title | translate}} ({{d.filters.bestselling.tot}})</label>
-                                <!--<label><input ng-model="d.filters.freeshipping.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.freeshipping.title | translate}} ({{d.filters.freeshipping.tot}})</label>-->
                                 <label><input ng-model="d.filters.bestbuy.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.bestbuy.title | translate}} ({{d.filters.bestbuy.tot}})</label>
                                 <label><input ng-model="d.filters.wifi.val" type="checkbox" ng-click="filter(d.filters, slider)"> {{d.filters.wifi.title | translate}} ({{d.filters.wifi.tot}})</label>
                             </div>
@@ -48,16 +42,13 @@
                                 <button style="background-color:{{x.hex}};" class="color-filter {{x.code===d.filters.color.val.code?'active':''}}" ng-repeat="x in d.filters.color.data track by $index" title="{{x.title | translate}}" ng-click="filterColor(d.filters, slider, x)"></button>
                                 <a ng-if="d.showAllColorBtn" href="" title="{{'all colors' | translate}}" ng-click="clearfilterColor(d.filters, slider, d.filters.color.val)">{{'all colors' | translate}}</a>
                             </div>
-                            <!--<select ng-model="d.filters.color.val" ng-change="filter(d.filters, slider)">
-                                <option value="{{x.code}}" ng-repeat="x in d.filters.color.data track by $index">{{x.title}} - {{x.code}}</option>
-                            </select>-->
                         </div>
                         <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix hidden-xs">
                             <h2>{{'best selling' | translate}}</h2>
                             <div class="item" ng-repeat="x in d.bestselling track by $index">
                                 <a href=""><img src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}"></a>
                                 <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                <div class="price">{{x.price.grossWithDiscount}} kn</div>
+                                <div class="price">{{x.price.grossWithDiscount | currency : ''}} kn</div>
                             </div>
                         </div>
                     </div>
@@ -73,16 +64,6 @@
                             <div class="col-md-6">
                                 <h1 ng-if="d.search">{{'search results for' | translate}} <em>{{d.search}}</em></h1>
                             </div>
-                            <!--<div class="col-md-6">
-                                <form id="search_form">
-                                    <div class="input-group">
-                                        <input ng-model="d.search" type="text" placeholder="Pretraži..." class="form-control">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="submit" form="search_form" ng-click="search(d.search)">Pretraži</button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>-->
                         </div>
                     </div>
                     <div class="row list-view-sorting clearfix">
@@ -94,9 +75,6 @@
                             <div class="pull-right">
                                 <label class="control-label">{{'show' | translate}}:</label>
                                 <select ng-model="d.filters.show.val" class="form-control input-sm" ng-options="x for x in d.filters.show.values track by x" ng-change="filter(d.filters, slider)"></select>
-                                <!--<select ng-model="d.filters.show.val" class="form-control input-sm" ng-change="sortBy(d.filters, slider)">
-                                    <option value="{{x}}" ng-repeat="x in d.filters.show.values" >{{x}}</option>
-                                </select>-->
                             </div>
                             <div class="pull-right">
                                 <label class="control-label">{{'sort by' | translate}}:</label>
@@ -112,16 +90,11 @@
                         <!-- BEGIN PRODUCT LIST -->
                         <div class="row product-list">
                             <!-- PRODUCT ITEM START -->
-                            <div ng-if="$index>=(d.filters.show.val*d.filters.page)-d.filters.show.val&&$index<d.filters.show.val*d.filters.page" class="col-md-4 col-sm-6 col-xs-6" ng-repeat="x in d.records track by $index">
+                            <div class="col-md-4 col-sm-6 col-xs-6" ng-repeat="x in d.records track by $index">
                                 <div class="product-item">
                                     <div class="pi-img-wrapper">
                                         <a href="" ng-click="get(x)" title="{{x.title}}">
                                             <img src="../upload/{{x.id}}/gallery/{{x.img}}" class="img-responsive" alt="{{x.title}}">
-                                            <div>
-                                                <!--<a href="../upload/{{x.id}}/gallery/{{x.img}}" class="btn btn-default fancybox-button">Zoom</a>-->
-                                                <!--<a href="" class="btn btn-default fancybox-fast-view">View</a>-->
-                                                <!--<a href="" class="btn btn-default" ng-click="get(x)">View</a>-->
-                                            </div>
                                         </a>
                                     </div>
                                     <div ng-if="x.outlet" class="product-image-label type-1">
@@ -139,49 +112,25 @@
                                     <div ng-if="x.wifi" class="product-image-label type-6">
                                         <span class="fa fa-wifi fa-2x"></span>
                                     </div>
-                                    <!--<div class="product-image-label {{sticker(x).style}}">
-                                        <span>{{sticker(x).title}}</span>
-                                    </div>-->
                                     <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                                    <div class="pi-price">{{x.price.grossWithDiscount}} kn</div>
+                                    </
+                                    <div class="pi-price">{{x.price.grossWithDiscount | currency : ''}} kn</div>
                                     <a href="" class="btn btn-default add2cart" ng-click="addToCart(x)">{{'add to cart' | translate}}</a>
                                 </div>
                             </div>
                         </div>
                         <!-- END PRODUCT LIST -->
                         <!-- BEGIN PAGINATOR -->
-                        <div class="row">
+                        <div class="row pt-4">
                             <div class="col-md-4 col-sm-4 items-info text-lowercase">{{'items' | translate}} {{1 + (d.filters.page-1)*d.filters.show.val}} {{'to' | translate}} {{toPage()}} {{'of' | translate}} {{d.totRecords}} {{'total' | translate}}</div>
-
-                            <!--<div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to <span ng-if="d.records.length>d.filters.show.val">{{d.filters.show.val*d.filters.page}}</span><span ng-if="d.records.length<=d.filters.show.val">{{d.records.length}}</span> of {{d.totRecords}} total</div>-->
-                            <!--<div class="col-md-4 col-sm-4 items-info">Items {{1 + (d.filters.page-1)*d.filters.show.val}} to {{d.totRecords>d.filters.show.val?d.filters.show.val:d.totRecords}} of {{d.totRecords}} total</div>-->
                             <div class="col-md-8 col-sm-8">
                                 <ul class="pagination pull-right">
-                                    <li><a href="" ng-click="setCurrPage(d.filters.page-1)">&laquo;</a></li>
-                                    <li ng-repeat="x in d.pages" ng-click="setCurrPage(x)"><span ng-if="x===d.filters.page">{{x}}</span><a ng-if="x!==d.filters.page" href="">{{x}}</a></li>
-                                    <li><a href="" ng-click="setCurrPage(d.filters.page+1)">&raquo;</a></li>
+                                    <li><a href="" ng-click="setCurrPage(d.filters.page-1, slider)">&laquo;</a></li>
+                                    <li ng-repeat="x in d.pages" ng-click="setCurrPage(x, slider)"><span ng-if="x===d.filters.page">{{x}}</span><a ng-if="x!==d.filters.page" href="">{{x}}</a></li>
+                                    <li><a href="" ng-click="setCurrPage(d.filters.page+1, slider)">&raquo;</a></li>
                                 </ul>
-                                <!--<ul class="pagination pull-right">
-                                    <li><a href="" ng-click="setCurrPage(d.filters.page-1)">&laquo;</a></li>
-                                    <li ng-repeat="x in d.pages" ng-click="setCurrPage(x)"><span ng-if="x===d.filters.page">{{x}}</span><a ng-if="x!==d.filters.page" href="">{{x}}</a></li>
-                                    <li><a href="" ng-click="setCurrPage(d.filters.page+1)">&raquo;</a></li>
-                                </ul>-->
                             </div>
                         </div>
-                        <!--<div class="row">
-                            <div class="col-md-4 col-sm-4 items-info">Items 1 to {{d.totRecords>d.filters.show.val?d.filters.show.val:d.totRecords}} of {{d.totRecords}} total</div>
-                            <div class="col-md-8 col-sm-8">
-                                <ul class="pagination pull-right">
-                                    <li><a href="javascript:;">&laquo;</a></li>
-                                    <li><a href="javascript:;">1</a></li>
-                                    <li><span>2</span></li>
-                                    <li><a href="javascript:;">3</a></li>
-                                    <li><a href="javascript:;">4</a></li>
-                                    <li><a href="javascript:;">5</a></li>
-                                    <li><a href="javascript:;">&raquo;</a></li>
-                                </ul>
-                            </div>
-                        </div>-->
                         <!-- END PAGINATOR -->
                     </div>
 
@@ -193,4 +142,5 @@
         </div>
     </div>
     <json-directive data="d" desc="'shop (d)'" debug="true"></json-directive>
+    <json-directive data="d.responseTime" desc="'d.responseTime'" debug="true"></json-directive>
 </div>

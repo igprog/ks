@@ -54,7 +54,6 @@ public class Products : System.Web.Services.WebService {
         public string longdesc;
         public Brands.NewBrands brand;
         public string img;
-        //public double discount;
         public Discount discount;
         public int stock;
         public bool isnew;
@@ -71,7 +70,6 @@ public class Products : System.Web.Services.WebService {
         public string relatedProductsStr;
         public List<NewProduct> relatedProducts;
         public Dimension dimension;
-        //public double power;
         public string power;
         public Colors.NewColor color; 
         public string energyClass;
@@ -111,7 +109,7 @@ public class Products : System.Web.Services.WebService {
         public Filters filters;
         public int totRecords;
         public ProductGroups.NewProductGroup parentProductGroup;
-        public double responseTime;
+        public List<double> responseTime;
     }
 
     public class PriceRange {
@@ -255,7 +253,7 @@ public class Products : System.Web.Services.WebService {
     [WebMethod]
     public string Filter(string lang, string productGroup, string brand, string search, string type, Filters filters) {
         try {
-            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, filters, true), Formatting.None);
+            return JsonConvert.SerializeObject(LoadData(lang, productGroup, brand, search, type, filters, false), Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -378,7 +376,6 @@ public class Products : System.Web.Services.WebService {
                 connection.Close();
             }
             return JsonConvert.SerializeObject(LoadData(null, null, null, null, null, true, 100), Formatting.None);
-            //return JsonConvert.SerializeObject("Proizvod izbrisan", Formatting.None);
         } catch (Exception e) {
             return JsonConvert.SerializeObject(e.Message, Formatting.None);
         }
@@ -518,19 +515,13 @@ public class Products : System.Web.Services.WebService {
                         command.Connection = connection;
                         using (SQLiteTransaction transaction = connection.BeginTransaction()) {
                             foreach (NewProduct x in xx) {
-
-                                //sql = string.Format(@"INSERT INTO products VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
-                                //, x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, productFeatures, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, relatedProducts, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, dataSheet, x.opportunity, keyFeatures, x.fireboxInsert);
-
                                 sql = string.Format(@"INSERT OR REPLACE INTO PRODUCTS (id, sku, style, productgroup, title, shortdesc, longdesc, brand, img, price, discount, discountfrom, discountto, stock, isnew, outlet, bestselling, isactive, features, deliverydays, productorder,
                                 freeshipping, bestbuy, wifi, relatedproducts, width, height, depth, power, color, energyclass, datasheet, opportunity, keyfeatures, fireboxinsert)
                                                      VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20}, '{21}', '{22}', '{23}', '{24}', '{25}', '{26}', '{27}', '{28}', '{29}', '{30}', '{31}', '{32}', '{33}', '{34}')"
                                                     , x.id, x.sku, x.style, x.productGroup.code, x.title, x.shortdesc, x.longdesc, x.brand.code, x.img, x.price.gross, x.discount.coeff, x.discount.from, x.discount.to, x.stock, x.isnew, x.outlet, x.bestselling, x.isactive, null, x.deliverydays, x.productorder, x.freeshipping, x.bestbuy, x.wifi, null, x.dimension.width, x.dimension.height, x.dimension.depth, x.power, x.color.code, x.energyClass, null, x.opportunity, null, x.fireboxInsert);
-                                //if (count == 0) {
                                     command.CommandText = sql;
                                     command.Transaction = transaction;
                                     command.ExecuteNonQuery();
-                                //}
                                 count++;
                             }
 
@@ -566,23 +557,19 @@ public class Products : System.Web.Services.WebService {
                    , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
                    , string.IsNullOrEmpty(productGroup) ? "" :
                             productGroup.Split(';').Length == 2 ? string.Format("((LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}') AND (LOWER(p.productGroup) = '{1}' OR LOWER(pg.parent) = '{1}'))", productGroup_[0].ToLower(), productGroup_[1].ToLower()) : 
-                            string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
+                            string.Format("(LOWER(p.productGroup) LIKE '%{0}%' OR LOWER(pg.parent) LIKE '%{0}%')", productGroup.ToLower())
                    , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("LOWER(p.brand) = '{0}'", brand.ToLower()) : string.Format("AND p.brand = '{0}'", brand))
                    , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
                    , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type)));
-
-        //string searchSql = string.Format(@"{0} {1} {2} {3} {4}"
-        //           , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) ? "" : "WHERE"
-        //           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
-        //           , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("LOWER(p.brand) = '{0}'", brand.ToLower()) : string.Format("AND p.brand = '{0}'", brand))
-        //           , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%'", search) : string.Format("AND p.title LIKE '{0}%'", brand))
-        //           , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type)));
 
         string sql = string.Format(@"{0} {1} ORDER BY p.productorder DESC", mainSql, searchSql);
 
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
+        xxx.responseTime = new List<double>();
+        xxx.responseTime.Add(Math.Round(stopwatch.Elapsed.TotalSeconds, 5));
         xxx.filters = LoadFilters(xxx);
+        xxx.responseTime.Add(Math.Round(stopwatch.Elapsed.TotalSeconds, 5));
         if (isDistinctStyle) {
             List<NewProduct> distinstStyle = (from x in xxx.data
                                               select x).GroupBy(n => new { n.style })
@@ -594,8 +581,9 @@ public class Products : System.Web.Services.WebService {
         }
 
         xxx.totRecords = GetTotRecords(searchSql);
+        xxx.responseTime.Add(Math.Round(stopwatch.Elapsed.TotalSeconds, 5));
         xxx.parentProductGroup = PG.GetParentGroupData(productGroup);
-        xxx.responseTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 5);
+        xxx.responseTime.Add(Math.Round(stopwatch.Elapsed.TotalSeconds, 5));
         return xxx;
     }
 
@@ -608,7 +596,7 @@ public class Products : System.Web.Services.WebService {
 
         string searchSql = string.Format(@"{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}"
            , string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) && string.IsNullOrEmpty(type) && (filters.price.maxVal == 0 && filters.price.maxVal == 0 && !filters.isnew.val && !filters.outlet.val && !filters.bestselling.val && !filters.bestbuy.val && !filters.wifi.val) ? "" : "WHERE"
-           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(LOWER(p.productGroup) = '{0}' OR LOWER(pg.parent) = '{0}')", productGroup.ToLower())
+           , string.IsNullOrEmpty(productGroup) ? "" : string.Format("(LOWER(p.productGroup) LIKE '%{0}%' OR LOWER(pg.parent) LIKE '%{0}%')", productGroup.ToLower())
            , string.IsNullOrEmpty(brand) ? "" : (string.IsNullOrEmpty(productGroup) ? string.Format("LOWER(p.brand) = '{0}'", brand.ToLower()) : string.Format("AND p.brand = '{0}'", brand))
            , string.IsNullOrEmpty(search) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) ? string.Format("(p.title LIKE '%{0}%' OR p.shortdesc LIKE '%{0}%' OR p.sku LIKE '{0}%' OR p.style LIKE '{0}%')", search) : string.Format("AND p.title LIKE '{0}%'", brand))
            , string.IsNullOrEmpty(type) ? "" : (string.IsNullOrEmpty(productGroup) && string.IsNullOrEmpty(brand) && string.IsNullOrEmpty(search) ? string.Format("p.{0}='True'", type) : string.Format("AND p.{0}='True''", type))
@@ -632,10 +620,12 @@ public class Products : System.Web.Services.WebService {
                                                                 ? ""
                                                                 : string.Format("{0}", filters.isnew.val == false || filters.outlet.val == false ? "AND" : "OR")), filters.color.val.code)
                                         );
-        string sql = string.Format(@"{0} {1} {2}"
+        string sql = string.Format(@"{0} {1} {2} LIMIT {3}  OFFSET {4}"
                    , mainSql
                    , searchSql
-                   , string.Format("ORDER BY {0}", SortBySql(filters.sortBy.val)));
+                   , string.Format("ORDER BY {0}", SortBySql(filters.sortBy.val))
+                   , filters.show.val
+                   , (filters.page - 1) * filters.show.val);
 
         ProductsData xxx = new ProductsData();
         xxx.data = DataCollection(sql, lang, true);
@@ -647,7 +637,8 @@ public class Products : System.Web.Services.WebService {
             xxx.data = distinstStyle;
         }
         xxx.totRecords = GetTotRecords(searchSql);
-        xxx.responseTime = Math.Round(stopwatch.Elapsed.TotalSeconds, 5);
+        xxx.responseTime = new List<double>();
+        xxx.responseTime.Add(Math.Round(stopwatch.Elapsed.TotalSeconds, 5));
         return xxx;
     }
 
@@ -766,7 +757,6 @@ public class Products : System.Web.Services.WebService {
                     x = ReadDataRow(reader, lang, true, features);
                 }
             }
-            connection.Close();
         }
         Review R = new Review();
         x.reviews = R.GetData(x.sku);
@@ -777,10 +767,10 @@ public class Products : System.Web.Services.WebService {
     public List<NewProduct> DataCollection(string sql, string lang, bool loadAllData) {
         List<NewProduct> xx = new List<NewProduct>();
         List<Features.NewFeature> features = F.Get(G.featureType.product);
-        using (var connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
+        using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + DB.GetDataBasePath(G.dataBase))) {
             connection.Open();
-            using (var command = new SQLiteCommand(sql, connection)) {
-                using (var reader = command.ExecuteReader()) {
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection)) {
+                using (SQLiteDataReader reader = command.ExecuteReader()) {
                     xx = new List<NewProduct>();
                     while (reader.Read()) {
                         NewProduct x = ReadDataRow(reader, lang, loadAllData, features);
@@ -788,7 +778,6 @@ public class Products : System.Web.Services.WebService {
                     }
                 }
             }
-            connection.Close();
         }
         return xx;
     }
@@ -1148,7 +1137,6 @@ public class Products : System.Web.Services.WebService {
 
     /***** Import CSV file *****/
     private string GetProductGroupCode(string pg, string parentGroup) {
-        /***** Import CSV file *****/
         string code = null;
         switch (pg.ToLower().Trim()) {
             case "mill uljni radijatori":
@@ -1170,10 +1158,10 @@ public class Products : System.Web.Services.WebService {
                 code = "UGRADBENIEL";
                 break;
             case "ugradbeni kamini/zidni kamin":
-                code = "UGRADBENIZIDNIEL";
+                code = "UGRADBENIEL;ZIDNIEL";
                 break;
             case "ugradbeni kamini/inserti":
-                code = "UGRADBENIKAMINIINSERTI";
+                code = "UGRADBENIEL;INSERTI";
                 break;
             case "zidni kamini":
                 code = "ZIDNIEL";

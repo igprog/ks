@@ -9,19 +9,6 @@
             </ul>
             <!-- BEGIN SIDEBAR & CONTENT -->
             <div class="row margin-bottom-40">
-                <!-- BEGIN SIDEBAR -->
-                <!--<div class="sidebar col-md-3 col-sm-5">
-                    <pg-directive pg="d.productGroups" record="d.record"></pg-directive>
-                    <div ng-if="d.bestselling.length>0" class="sidebar-products clearfix">
-                        <h2>Najprodavanije</h2>
-                        <div class="item" ng-repeat="x in d.bestselling">
-                            <a href=""><img src="../upload/{{x.id}}/gallery/{{x.img}}" alt="{{x.title}}"></a>
-                            <h3><a href="" ng-click="get(x)">{{x.title}}</a></h3>
-                            <div class="price">{{x.price.grossWithDiscount}} kn</div>
-                        </div>
-                    </div>
-                </div>-->
-                <!-- END SIDEBAR -->
                 <!-- BEGIN CONTENT -->
                 <div class="col-md-12 col-sm-12">
                     <div class="product-page">
@@ -72,21 +59,12 @@
                                 <h2>{{'sku' | translate}}: {{d.record.sku}}</h2>
                                 <div class="price-availability-block clearfix">
                                     <div class="price">
-                                        <strong>{{d.record.price.grossWithDiscount | number}} <span>kn</span></strong>
+                                        <strong>{{d.record.price.grossWithDiscount | currency : ''}} <span>kn</span></strong>
                                         <span ng-if="d.record.discount.isValid">
-                                            <em><span>{{d.record.price.gross}}</span> kn</em>
+                                            <em><span>{{d.record.price.gross | currency : ''}}</span> kn</em>
+
                                         </span>
                                     </div>
-                                    <!--<div class="price">
-                                        <strong>MPC: {{d.record.price.grossWithDiscount | number}} <span>kn</span></strong>
-                                        <span ng-if="d.record.discount>0">
-                                            <em>kn<span>{{d.record.price.gross | number}}</span> kn</em>
-                                        </span>
-                                    </div>-->
-                                    <!--<div ng-if="d.record.deliverydays&&d.record.stock>d.record.qty-1" class="availability">
-                                        Availability: <strong>In Stock</strong>
-                                        {{'delivery date' | translate}}: <strong>{{d.record.deliverydays}} <span ng-if="d.record.deliverydays==1">{{'day' | translate}}</span><span ng-if="d.record.deliverydays!=1">{{'days' | translate}}</span></strong>
-                                    </div>-->
                                 </div>
                                 <div class="description">
                                     <p ng-bind-html="d.record.shortdesc"></p>

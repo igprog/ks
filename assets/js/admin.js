@@ -102,9 +102,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
 
     /********* Login **********/
     var login = (x) => {
-        debugger;
         f.post(service, 'Login', { username: x.userName, password: x.password }).then((d) => {
-            debugger;
             $scope.d.isLogin = d.isLogin;
             $sessionStorage.islogin = d.isLogin;
             $scope.d.adminType = d.adminType;
@@ -163,7 +161,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     loadProductGroups();
 
     var setSepcialProductGroup = (x) => {
-        debugger;
         $scope.d.specialProductGroup = x.code;
     }
 
@@ -347,7 +344,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             f.post(service, 'Load', {}).then((d) => {
                 $scope.d.records = d;
                 angular.forEach(d, function (val, key) {
-                    debugger;
                     if (val.discount.from !== null) {
                         $scope.d.records[key].discount.from = new Date(val.discount.from);
                     }
@@ -356,7 +352,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                     }
                     /***** SubGroups Date *****/
                     angular.forEach(val.subGroups, function (val1, key1) {
-                        debugger;
                         if (val1.discount.from !== null) {
                             $scope.d.records[key].subGroups[key1].discount.from = new Date(val1.discount.from);
                         }
@@ -371,7 +366,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         load();
 
         var save = (x, idx) => {
-            debugger;
             var data = angular.copy(x);
             if (x.discount.from !== null) {
                 data.discount.from = f.setDate(x.discount.from);
@@ -380,11 +374,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 data.discount.to = f.setDate(x.discount.to);
             }
             f.post(service, 'Save', { x: data }).then((d) => {
-                debugger;
-                //$scope.d.records[idx] = d;
                 x = d;
                 load();
-                //alert(d);
             });
         }
 
@@ -396,15 +387,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             }
         }
 
-        //var loadImg = (x) => {
-        //    f.post(service, 'LoadImg', { x: x }).then((d) => {
-        //        //$scope.d.records = d;
-        //    });
-        //}
-
         var upload = (x, idx) => {
-            //delete previous image from folder
-            debugger;
             var content = new FormData(document.getElementById('formUpload_' + x.id));
             $http({
                 url: '../UploadHandler.ashx',
@@ -412,11 +395,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 headers: { 'Content-Type': undefined },
                 data: content,
             }).then(function (response) {
-                debugger;
-                //$scope.d.records[idx].img = response.data;
                 x.img = response.data;
                 save(x, idx)
-                //TODO save productImg to bd
             },
             function (response) {
                 alert(response.data.d);
@@ -438,7 +418,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
                 return remove(x)
             },
             initSubGroup: (x) => {
-                debugger;
                 f.post(service, 'Init', {}).then((d) => {
                     d.parent.code = x.code;
                     x.subGroups.push(d);
@@ -647,11 +626,8 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
             headers: { 'Content-Type': undefined },
             data: content,
         }).then(function (response) {
-            debugger;
             x.dataSheet.push(response.data);
-            //x.dataSheet[] = response.data;
             save(x, idx);
-            //loadProductGallery(x);
         },
         function (response) {
             alert(response.data.d);
@@ -892,9 +868,7 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         load();
 
         var save = (x) => {
-            debugger;
             f.post(service, 'Save', { x: x }).then((d) => {
-                //$scope.d.records = d;
             });
         }
 
@@ -937,24 +911,18 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
     load();
 
     var getUser = (id, idx) => {
-        debugger;
         f.post('Users', 'Get', { id: id }).then((d) => {
             $scope.d.records[idx].user = d;
         });
     }
 
     var save = (x) => {
-        debugger;
-        f.post(service, 'Save', { x: x }).then((d) => {
-            //$scope.d.records = d;
-        });
+        f.post(service, 'Save', { x: x }).then((d) => {});
     }
 
     var remove = (x) => {
         if (confirm('Briši narudžbu?')) {
-            f.post(service, 'Delete', { x: x }).then((d) => {
-                //$scope.d.records = d;
-            });
+            f.post(service, 'Delete', { x: x }).then((d) => {});
         }
     }
 
@@ -987,8 +955,6 @@ angular.module('admin', ['ngStorage', 'pascalprecht.translate', 'ngMaterial'])
         f.post(service, 'Init', { x: x }).then((d) => {
             x.push(d);
         });
-        
-        //$scope.d.records.push({});
     }
 
     var save = (x) => {

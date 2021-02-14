@@ -9,9 +9,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         .state('home', {
             url: '/', templateUrl: './assets/partials/home.html', controller: 'homeCtrl'
         })
-        //.state('shop', {
-        //    url: '/shop/:productgroup/:subgroup', params: { pg_code: null }, templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
-        //})
         .state('shop', {
             url: '/shop/', templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
         })
@@ -27,9 +24,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         .state('type', {
             url: '/type/:type', templateUrl: './assets/partials/shop.html', controller: 'shopCtrl'
         })
-        //.state('product', {
-        //    url: '/:title_seo', params: { id: null }, templateUrl: './assets/partials/product.html', controller: 'productCtrl'
-        //})
         .state('product', {
             url: '/:title_seo/:sku', templateUrl: './assets/partials/product.html', controller: 'productCtrl'
         })
@@ -106,32 +100,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             m = m < 10 ? '0' + m : m;
             return day + '.' + mo + '.' + yr + ' - ' + h + ':' + m;
         }
-        //sticker: (x) => {
-        //    var a = {
-        //        style: null,
-        //        title: null
-        //    }
-        //    if (x.outlet) {
-        //        a.style = 'type-2';
-        //        a.title = 'outlet';
-        //    } else if (x.isnew) {
-        //        a.style = 'type-1';
-        //        a.title = 'new';
-        //    } else if (x.freeshipping) {
-        //        a.style = 'type-4';
-        //        a.title = 'free shipping';
-        //    } else if (x.bestbuy) {
-        //        a.style = 'type-5';
-        //        a.title = 'best buy';
-        //    } else if (x.wifi) {
-        //        a.style = 'type-6';
-        //        a.title = 'wi-fi';
-        //    } else {
-        //        a.style = null;
-        //        a.title = null;
-        //    }
-        //    return a;
-        //}
     }
 }])
 
@@ -155,11 +123,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     $rootScope.d = data;
 
-    //$scope.shop = (code, productgroup, subgroup) => {
-    //    $state.go('shop', { pg_code: code, productgroup: productgroup, subgroup: subgroup });
-    //}
     $scope.shop = (pg_code, productgroup, subgroup) => {
-        //$state.go('shop', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
         $state.go('shop');
     }
 
@@ -170,13 +134,9 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
             $(".header-navigation").hide();
         });
         /***** Hide menu on mobile after click *****/
-
-        //location.reload();
-        //$rootScope.d.autoscroll = false;
     }
 
     $rootScope.search = (search) => {
-        debugger;
         $stateParams.pg_code = null;
         $stateParams.productgroup = null;
         $stateParams.subgroup = null;
@@ -250,9 +210,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $scope.removeCartItem = function (x, idx) {
         $scope.d.cart.items.splice(idx, 1);
-        //$rootScope.d.cart.items.splice(idx, 1);
         $scope.calcTotPrice($scope.d.cart);
-        
     }
     /***** Cart *****/
 
@@ -304,9 +262,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     var loadData = () => {
         loadProductGroups();
-        //loadBrands();
-        //loadOutlet('hr', null, 4);
-        //loadNewProducts('hr', null, 4);
         loadInfo($rootScope.lang);
     }
 
@@ -446,34 +401,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
     loadBanners();
 
-    //Slick
-    //$scope.slickConfig = {};
-    //$scope.items = [];
-    //$timeout(function () {
-
-    //    $scope.slickConfig = {
-    //        enabled: true,
-    //        autoplay: true,
-    //        infinite: true,
-    //        draggable: true,
-    //        autoplayspeed: 1000,
-    //        variablewidth: true,
-    //        centermode: true,
-    //        arrows: false,
-    //        method: {},
-    //        event: {
-    //            beforechange: function (event, slick, currentslide, nextslide) {
-    //            },
-    //            afterchange: function (event, slick, currentslide, nextslide) {
-    //            }
-    //        }
-    //    };
-
-
-    //    $scope.dataLoaded = true;
-
-    //}, 2000);
-
 }])
 
 .controller('shopCtrl', ['$scope', '$http', '$rootScope', 'f', '$sessionStorage', '$translate', '$state', '$stateParams', function ($scope, $http, $rootScope, f, $sessionStorage, $translate, $state, $stateParams) {
@@ -520,7 +447,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     loadProductGroups();
 
     var load = (param) => {
-        debugger;
         if ($sessionStorage.filters !== undefined) { $sessionStorage.filters = null; };
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         if ($sessionStorage.pg_code !== undefined) {
@@ -534,14 +460,12 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var type = param.type !== undefined ? param.type : null;
 
         $scope.d.loading = true;
-        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, isDistinctStyle: true, limit: null }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, isDistinctStyle: false, limit: 12 }).then((d) => {
             $scope.d.records = d.data;
-            //$scope.d.priceRange = d.priceRange;
             $scope.d.filters = d.filters;
             $scope.d.totRecords = d.totRecords;
             $scope.d.parentProductGroup = d.parentProductGroup;
             setTotPages();
-            //$scope.d.sortTypes = d.sortTypes;
 
             $scope.slider.minValue = $scope.d.filters.price.min;
             $scope.slider.maxValue = $scope.d.filters.price.max;
@@ -556,7 +480,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.filter = (filters, slider) => {
-        filters.page = 1;
         var param = $stateParams;
         var pg_code = param.pg_code !== undefined ? param.pg_code : null;
         var brand_code = param.brand_code !== undefined ? param.brand_code : null;
@@ -576,11 +499,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.search = (search) => {
-        debugger;
-        //$stateParams.pg_code = null;
-        //$stateParams.productgroup = null;
-        //$stateParams.subgroup = null;
-        //$sessionStorage.pg_code = null;
         $rootScope.search(search);
     }
 
@@ -592,9 +510,11 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         }
     }
 
-    $scope.setCurrPage = (x) => {
+    $scope.setCurrPage = (x, slider) => {
         if (x <= 0 || x > $scope.d.totPages) { return false; }
         $scope.d.filters.page = x;
+        $scope.filter($scope.d.filters, slider);
+
     }
 
     $scope.filterColor = (filters, slider, x) => {
@@ -643,12 +563,14 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     }
 
     $scope.toPage = () => {
-        if ($scope.d.records.length > $scope.d.filters.show.val) {
-            var rest = ($scope.d.filters.show.val * $scope.d.filters.page) % $scope.d.records.length;
-            var rest_ = rest < $scope.d.filters.show.val ? rest : 0;
-            return ($scope.d.filters.show.val * $scope.d.filters.page) - rest_;
-        } else {
-            return $scope.d.records.length;
+        if ($scope.d.filters !== null) {
+            if ($scope.d.records.length > $scope.d.filters.show.val) {
+                var rest = ($scope.d.filters.show.val * $scope.d.filters.page) % $scope.d.records.length;
+                var rest_ = rest < $scope.d.filters.show.val ? rest : 0;
+                return ($scope.d.filters.show.val * $scope.d.filters.page) - rest_;
+            } else {
+                return $scope.d.records.length;
+            }
         }
     }
 
@@ -1044,13 +966,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
     $rootScope.d.autoscroll = true;
 
-    //var load = (lang) => {
-    //    f.post('Info', 'Load', { lang: lang }).then((d) => {
-    //        $scope.d.info = d;
-    //    });
-    //}
-    //load('hr');
-
 }])
 
 .controller('supportCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', function ($scope, $http, $rootScope, f, $translate) {
@@ -1060,13 +975,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
     $scope.d = data;
 
     $rootScope.d.autoscroll = true;
-
-    //var load = (lang) => {
-    //    f.post('Info', 'Load', { lang: lang }).then((d) => {
-    //        $scope.d.info = d;
-    //    });
-    //}
-    //load('hr');
 
 }])
 
@@ -1094,59 +1002,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 }])
 
-//.controller('postsCtrl', ['$scope', '$http', '$rootScope', 'f', '$translate', '$timeout', function ($scope, $http, $rootScope, f, $translate, $timeout) {
-//    var service = 'Products';
-//    var data = {
-//        loading: false,
-//        records: [],
-//        info: null,
-//        mainGallery: null,
-//        services: []
-//    }
-//    $scope.d = data;
-
-
-//    var loadPosts = (lang) => {
-//        $scope.d.loading = true;
-//        f.post(service, 'Load', { lang: lang, order: true, productGroupId: $rootScope.config.postsId }).then((d) => {
-//            $scope.d.records = d;
-//            $scope.d.loading = false;
-//        });
-//    }
-//    $timeout(function () {
-//        loadPosts($rootScope.lang);
-//    }, 500);
-
-//}])
-
-/********** Directives **********/
-//.directive('reservationDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            service: '='
-//        },
-//        templateUrl: '../assets/partials/reservation.html'
-//    };
-//})
-
-//.directive('detailsDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            id: '=',
-//            product: '=',
-//            shortdesc: '=',
-//            longdesc: '=',
-//            img: '=',
-//            price: '=',
-//            gallery: '=',
-//            options: '='
-//        },
-//        templateUrl: '../assets/partials/directive/details.html'
-//    };
-//})
-
 .directive('pgDirective', () => {
     return {
         restrict: 'E',
@@ -1163,30 +1018,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         $state.go('category', { pg_code: pg_code, productgroup: productgroup, subgroup: subgroup });
     }
 }])
-
-//.directive('bestsellingDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            data: '=',
-//            record: '='
-//        },
-//        templateUrl: '../assets/partials/directive/bestselling.html',
-//        controller: 'bestsellingCtrl'
-//    };
-//})
-//.controller('bestsellingCtrl', ['$scope', 'f', '$rootScope', '$state', ($scope, f, $rootScope, $state) => {
-//    $scope.get = (x) => {
-//        $state.go('product', { title_seo: x.title_seo, sku: x.sku });
-//    }
-
-//    $scope.addToCart = (x) => {
-//        f.post('Cart', 'AddToCart', { cart: $rootScope.d.cart, x: x }).then((d) => {
-//            $rootScope.d.cart = d;
-//            localStorage.cart = JSON.stringify(d);
-//        });
-//    }
-//}])
 
 .directive('specialproductsDirective', () => {
     return {
@@ -1239,66 +1070,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 
 }])
 
-//.directive('carouselDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            data: '='
-//        },
-//        templateUrl: '../assets/partials/directive/carousel.html',
-//        controller: 'carouselCtrl'
-//    };
-//})
-//.controller('carouselCtrl', ['$scope', '$timeout', ($scope, $timeout) => {
-//    $scope.slickConfig = {};
-//    $scope.items = [];
-//    $timeout(function () {
-//        $scope.slickConfig = {
-//            enabled: true,
-//            autoplay: true,
-//            infinite: true,
-//            draggable: true,
-//            autoplayspeed: 1000,
-//            variablewidth: true,
-//            centermode: true,
-//            arrows: false,
-//            method: {},
-//            event: {
-//                beforechange: function (event, slick, currentslide, nextslide) {
-//                },
-//                afterchange: function (event, slick, currentslide, nextslide) {
-//                }
-//            }
-//        };
-
-//        debugger;
-//        $scope.dataLoaded = true;
-
-//    }, 3000);
-//}])
-
-
-//.directive('detailsDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            data: '='
-//        },
-//        templateUrl: '../assets/partials/directive/details.html'
-//    };
-//})
-
-//.directive('navbarDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            site: '=',
-//            lang: '='
-//        },
-//        templateUrl: '../assets/partials/directive/navbar.html'
-//    };
-//})
-
 .directive('cardDirective', () => {
     return {
         restrict: 'E',
@@ -1337,97 +1108,6 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
 .controller('footerCtrl', ['$scope', '$translate', ($scope, $translate) => {
     $scope.year = (new Date).getFullYear();
 }])
-
-//.directive('corouselDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            showdes: '='
-//        },
-//        templateUrl: '../assets/partials/directive/corousel.html',
-//        controller: 'corouselCtrl'
-//    };
-//})
-//.controller('corouselCtrl', ['$scope', ($scope) => {
-//    $scope.tick = 0;
-//    var getTime = () => {
-//        var d = new Date();
-//        $scope.tick = d.getTime();
-//    }
-//    getTime();
-//}])
-
-//.directive('galleryDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            data: '='
-//        },
-//        templateUrl: '../assets/partials/directive/gallery.html',
-//        controller: 'galleryCtrl'
-//    };
-//})
-//.controller('galleryCtrl', ['$scope', '$translate', '$mdDialog', ($scope, $translate, $mdDialog) => {
-
-//    var openPopup = function (x, idx) {
-//        if ($(window).innerWidth() < 560) { return false; }
-//        $mdDialog.show({
-//            controller: popupCtrl,
-//            templateUrl: '../assets/partials/popup/gallery.html',
-//            parent: angular.element(document.body),
-//            clickOutsideToClose: true,
-//            d: { data: x, idx: idx }
-//        })
-//       .then(function (x) {
-//       }, function () {
-//       });
-//    }
-
-//    var popupCtrl = function ($scope, $mdDialog, $http, d, f) {
-//        $scope.d = d;
-
-//        $scope.back = (idx) => {
-//            if (idx > 0) {
-//                $scope.d.idx = idx - 1;
-//            }
-//        }
-
-//        $scope.forward = (idx) => {
-//            if (idx >= 0 && idx < $scope.d.data.gallery.length - 1) {
-//                $scope.d.idx = idx + 1;
-//            }
-//        }
-
-//        $scope.cancel = function () {
-//            $mdDialog.cancel();
-//        };
-//    };
-
-//    $scope.openPopup = (x, idx) => {
-//        return openPopup(x, idx);
-//    }
-
-//}])
-
-//.directive('servicesDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            data: '='
-//        },
-//        templateUrl: '../assets/partials/directive/services.html'
-//    };
-//})
-
-//.directive('postDirective', () => {
-//    return {
-//        restrict: 'E',
-//        scope: {
-//            data: '='
-//        },
-//        templateUrl: '../assets/partials/directive/post.html'
-//    };
-//})
 
 .directive('jsonDirective', function () {
     return {
