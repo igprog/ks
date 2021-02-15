@@ -460,7 +460,7 @@ angular.module('app', ['ui.router', 'ngStorage', 'pascalprecht.translate', 'rzSl
         var type = param.type !== undefined ? param.type : null;
 
         $scope.d.loading = true;
-        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, isDistinctStyle: false, limit: 12 }).then((d) => {
+        f.post('Products', 'Load', { lang: 'hr', productGroup: pg_code, brand: brand_code, search: search, type: type, isDistinctStyle: false, limit: $rootScope.config.limit }).then((d) => {
             $scope.d.records = d.data;
             $scope.d.filters = d.filters;
             $scope.d.totRecords = d.totRecords;

@@ -29,7 +29,7 @@ public class Products : System.Web.Services.WebService {
     Features F = new Features();
     ProductGroups PG = new ProductGroups();
     Colors C = new Colors();
-    int defaultLimit = 12;
+    int defaultLimit = Convert.ToInt32(ConfigurationManager.AppSettings["defaultLimit"]);
     string mainSql = @"SELECT p.id, p.sku, p.style, p.productgroup, p.title, p.shortdesc, p.longdesc, p.brand, p.img, p.price, p.discount, p.discountfrom, p.discountto, p.stock, p.isnew, p.outlet, p.bestselling, p.isactive, p.features, p.deliverydays, p.productorder,
                             p.freeshipping, p.bestbuy, p.wifi, p.relatedproducts, p.width, p.height, p.depth, p.power, p.color, p.energyclass, p.datasheet, p.opportunity, p.keyfeatures, p.fireboxinsert,
                             pg.title, b.title, pg.discount, pg.discountfrom, pg.discountto
