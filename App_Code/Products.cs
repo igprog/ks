@@ -565,7 +565,7 @@ public class Products : System.Web.Services.WebService {
         string sql = string.Format(@"{0} {1} ORDER BY p.productorder DESC", mainSql, searchSql);
 
         ProductsData xxx = new ProductsData();
-        xxx.data = DataCollection(sql, lang, true);
+        xxx.data = DataCollection(sql, lang, false);
         xxx.responseTime = new List<double>();
         xxx.responseTime.Add(Math.Round(stopwatch.Elapsed.TotalSeconds, 5));
         xxx.filters = LoadFilters(xxx);
@@ -628,7 +628,7 @@ public class Products : System.Web.Services.WebService {
                    , (filters.page - 1) * filters.show.val);
 
         ProductsData xxx = new ProductsData();
-        xxx.data = DataCollection(sql, lang, true);
+        xxx.data = DataCollection(sql, lang, false);
         if (isDistinctStyle) {
             List<NewProduct> distinstStyle = (from x in xxx.data
                                               select x).GroupBy(n => new { n.style })
